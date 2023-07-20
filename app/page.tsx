@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Stack } from "@mui/material";
-import PostCard from "./components/postCard";
+import BlogCard from "./components/blogCard";
 import MainSearch from "./components/mainSearch";
 
 export default function Home() {
@@ -11,16 +11,16 @@ export default function Home() {
         </Stack>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
-            <PostCard />
+            <BlogCard />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <PostCard />
+            <BlogCard />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <PostCard />
+            <BlogCard />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <PostCard />
+            <BlogCard />
           </Grid>
         </Grid>
         <Stack justifyContent={"center"} direction={"row"} mt={4}>

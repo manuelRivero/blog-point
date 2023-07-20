@@ -3,6 +3,7 @@ import { createTheme } from "@mui/material";
 
 const theme = createTheme({
   palette: {
+    
     primary: {
       dark: "#7D7463",
       main: "#787760",
@@ -20,7 +21,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    h1: { fontFamily: "Merriweather" },
+    h1: { fontFamily: "Merriweather", fontSize:'3rem' },
     h2: { fontFamily: "Merriweather" },
     h3: { fontFamily: "Merriweather" },
     h4: { fontFamily: "Merriweather" },
@@ -36,7 +37,7 @@ const theme = createTheme({
           font-style: normal;
           font-display: swap;
           font-weight: 400;
-          src: local('Merriweather'), local('Merriweather-Regular'), url('./../assets/fonts/merriweather/Merriweather-Regular') format('truetype');
+          src: local('Merriweather'), local('Merriweather-Regular'), url('/fonts/merriweather/Merriweather-Regular.ttf') format('truetype');
           unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
         };
         @font-face {
@@ -44,7 +45,7 @@ const theme = createTheme({
             font-style: normal;
             font-display: swap;
             font-weight: 400;
-            src: local('OpenSans'), local('OpenSans'), url('./../assets/fonts/open-sans/OpenSans') format('truetype');
+            src: local('OpenSans'), local('OpenSans'), url('/fonts/open-sans/OpenSans.ttf') format('truetype');
             unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
           }
       `,

@@ -5,23 +5,28 @@ import {
   CardActions,
   Button,
   Card,
-  CardMedia
+  CardMedia,
 } from "@mui/material";
 
-import Image from "./../../assets/images/post-placeholder.jpg"
+import Image from "./../../assets/images/post-placeholder.jpg";
 
-export default function PostCard() {
+export default function BlogCard() {
   return (
-    <Card sx={{padding:"1rem", borderRadius:"1rem"}}>
-         <CardMedia
-         sx={{borderRadius:"1rem"}}
+    <Card sx={{ padding: "1rem", borderRadius: "1rem" }}>
+      <CardMedia
+        sx={{ borderRadius: "1rem" }}
         component="img"
         height="194"
         image={Image.src}
         alt="Paella dish"
       />
       <CardContent>
-        <Typography variant="body1" sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
+        <Typography
+          variant="body1"
+          sx={{ fontSize: 14 }}
+          color="text.primary"
+          gutterBottom
+        >
           Word of the Day
         </Typography>
         <Typography variant="h5" color="text.primary" component="h6">
@@ -36,9 +41,16 @@ export default function PostCard() {
           {'"a benevolent smile"'}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions
+        sx={{
+          alignSelf: "stretch",
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "flex-start",
+        }}
+      >
         <Button variant="contained" size="small">
-          Learn More
+          Leer
         </Button>
       </CardActions>
     </Card>
