@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Typography,
@@ -8,7 +9,7 @@ import {
   CardMedia,
   Box,
   Stack,
-  Rating
+  Rating,
 } from "@mui/material";
 
 import Image from "./../../assets/images/post-placeholder.jpg";
@@ -25,24 +26,35 @@ interface Data {
   description: string;
   date?: string;
   link?: string;
+  rate: number;
 }
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 export default function BlogCard({ data, preview }: Props) {
-  console.log("avatarData", avatarData);
   return (
     <Card sx={{ padding: "1rem", borderRadius: "1rem", maxWidth: 335 }}>
       <CardMedia
-        sx={{ borderRadius: "1rem", width: 300, height: 300 }}
+        sx={{ borderRadius: "1rem", width: "100%" }}
         component="img"
         image={data.image ? data.image : Image.src}
         alt="Paella dish"
       />
       <CardContent>
-        <Stack direction="row" justifyContent="space-between" alignItems={"center"} mb={1}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems={"center"}
+          mb={1}
+        >
           <Rating name="simple-controlled" value={5} onChange={() => {}} />
-          <Typography fontSize={"14px"} align="right">
-            {moment().format("DD-MM-YYYY")}
-          </Typography>
+          {preview ? (
+            <Typography fontSize={"14px"} align="right">
+              {moment(data.date).format("DD-MM-YYYY")}
+            </Typography>
+          ) : (
+            <Typography fontSize={"14px"} align="right">
+              {moment().format("DD-MM-YYYY")}
+            </Typography>
+          )}
         </Stack>
         <Box sx={{ marginBottom: 2 }}>
           <Avatar user={avatarData} />
