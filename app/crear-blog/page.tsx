@@ -1,6 +1,7 @@
 "use client";
+
 import { Box, Button, Container, Grid, Modal, Typography } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useState, useId } from "react";
 import CustomCard from "../components/shared/card";
 import CustomInput from "../components/shared/customInput";
 import CustomInputFile from "../components/shared/inputFile";
@@ -63,7 +64,7 @@ export default function CreateBlog() {
     setShowCrop(true);
   };
   return (
-    <Container sx={{ marginTop: "2rem" }}>
+    <Container sx={{ marginTop: "2rem", paddingBottom:8 }}>
       <Typography variant="h1" component={"h1"}>
         Crear blog
       </Typography>
@@ -146,7 +147,7 @@ export default function CreateBlog() {
                       variant="outlined"
                       onClick={() => setShowCrop(true)}
                     >
-                      Cambiar corte
+                      Modificar imagen
                     </Button>
                   )}
                 </Box>
@@ -172,10 +173,8 @@ export default function CreateBlog() {
                     apiKey="g8clezyenv99c3qrpf04jm099smc6ldsodi90hapovrk29k4"
                     initialValue=""
                     init={{
-                      language:'es',
-                      content_langs: [
-                        { title: 'Spanish', code: 'es' },
-                      ],
+                      language: "es",
+                      content_langs: [{ title: "Spanish", code: "es" }],
                       branding: false,
                       height: 400,
                       menubar: true,
@@ -185,7 +184,7 @@ export default function CreateBlog() {
                         "formatselect | bold italic underline strikethrough | forecolor backcolor blockquote | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat",
                       image_advtab: true,
                     }}
-                    onChange={()=>{}}
+                    onChange={() => {}}
                   />
                 </Box>
               </Grid>
