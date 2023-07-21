@@ -6,53 +6,73 @@ import {
   Button,
   Card,
   CardMedia,
+  Box,
 } from "@mui/material";
 
 import Image from "./../../assets/images/post-placeholder.jpg";
 
-export default function BlogCard() {
+interface Props {
+  data: Data;
+  preview: boolean;
+}
+interface Data {
+  title: string;
+  image: string | null;
+  description: string;
+  date?: string;
+  link?: string;
+}
+
+export default function BlogCard({ data, preview }: Props) {
   return (
-    <Card sx={{ padding: "1rem", borderRadius: "1rem" }}>
+    <Card sx={{ padding: "1rem", borderRadius: "1rem", maxWidth: 335 }}>
       <CardMedia
-        sx={{ borderRadius: "1rem" }}
+        sx={{ borderRadius: "1rem", width: 300, height: 300 }}
         component="img"
-        height="194"
-        image={Image.src}
+        image={data.image ? data.image : Image.src}
         alt="Paella dish"
       />
       <CardContent>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: 14 }}
-          color="text.primary"
-          gutterBottom
-        >
-          Word of the Day
-        </Typography>
-        <Typography variant="h5" color="text.primary" component="h6">
-          benevolent
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.primary">
-          adjective
-        </Typography>
-        <Typography variant="body1" color="text.primary">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
+        {data.title ? (
+          <Typography variant="h5" color="text.primary" component="h6" sx={{ mb: 1 }}>
+            {data.title}
+          </Typography>
+        ) : (
+          <Box
+            sx={{
+              height: 20,
+              marginBottom:2,
+              width: "100%",
+              background: "#c2c2c2",
+              borderRadius: '4px',
+            }}
+          ></Box>
+        )}
+        {data.description ?<Typography sx={{ mb: 1.5 }} color="text.primary">
+          {data.description}
+        </Typography> : <Box
+            sx={{
+              height: 40,
+              width: "100%",
+              background: "#c2c2c2",
+              borderRadius: '4px',
+            }}
+          ></Box>}
       </CardContent>
-      <CardActions
-        sx={{
-          alignSelf: "stretch",
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "flex-start",
-        }}
-      >
-        <Button variant="contained" size="small">
-          Leer
-        </Button>
-      </CardActions>
+      {preview ? null : (
+        <CardActions
+          sx={{
+            alignSelf: "stretch",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "flex-start",
+          }}
+        >
+          <Button variant="contained" size="small">
+            Leer
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 }

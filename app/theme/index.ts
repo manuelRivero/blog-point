@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material";
 
 const theme = createTheme({
   palette: {
-    
+
     primary: {
       dark: "#7D7463",
       main: "#787760",
@@ -22,7 +22,7 @@ const theme = createTheme({
   },
   typography: {
     h1: { fontFamily: "Merriweather", fontSize:'3rem' },
-    h2: { fontFamily: "Merriweather" },
+    h2: { fontFamily: "Merriweather", fontSize:'2rem' },
     h3: { fontFamily: "Merriweather" },
     h4: { fontFamily: "Merriweather" },
     h5: { fontFamily: "Merriweather" },
