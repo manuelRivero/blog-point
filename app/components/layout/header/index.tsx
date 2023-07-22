@@ -1,18 +1,60 @@
-import { AppBar, IconButton, Toolbar, Typography, MenuItem, MenuList } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import {
+  AppBar,
+  IconButton,
+  Toolbar,
+  Typography,
+  MenuItem,
+  MenuList,
+  Button,
+  Stack,
+  Box,
+} from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 import React from "react";
 import HeaderMenu from "../headerMenu";
+import NotificationDropdown from "../notificationDropdown";
+import Link from "next/link";
 
 export default function Header() {
   return (
-    <AppBar position="static">
-      <Toolbar variant="dense">
-        
-        <HeaderMenu />
-        <Typography variant="h6" color="inherit" component="h1">
-          Post App
-        </Typography>
+    <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
+      <Toolbar variant="dense" sx={{ width: "100%" }}>
+        <Stack
+          direction="row"
+          sx={{
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <Typography variant="h6" color={"#fff"} component="h1">
+              Post App
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+            <Box>
+              <HeaderMenu />
+            </Box>
+            <Box>
+              <NotificationDropdown />
+            </Box>
+            <Button variant="outlined" color="primary" sx={{color:"#fff", "&:hover":{
+              borderColor:"#fff"
+            }}}>
+              Inicia sesión
+            </Button>
+            <Button variant="outlined" color="primary" sx={{color:"#fff", "&:hover":{
+              borderColor:"#fff"
+            }}}>
+              Registrate
+            </Button>
+            <Button component={Link} href="/crear-blog" variant="contained" color="secondary" startIcon={<AddIcon />}>
+              Crear Blog
+            </Button>
+          </Stack>
+        </Stack>
       </Toolbar>
     </AppBar>
   );

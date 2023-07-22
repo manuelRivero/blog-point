@@ -1,6 +1,7 @@
+"use client";
 import { Box, Button, Container, Grid, Stack } from "@mui/material";
 import BlogCard from "./components/blogCard";
-import MainSearch from "./components/mainSearch";
+import Hero from "./components/hero";
 
 export default function Home() {
   const blogs = [
@@ -9,7 +10,8 @@ export default function Home() {
       data: {
         title: "Lorem ipsum",
         image: "",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
         rate: 2,
         link: "",
         date: "14-12-2023",
@@ -20,7 +22,8 @@ export default function Home() {
       data: {
         title: "Lorem ipsum",
         image: "",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
         rate: 2,
         link: "",
         date: "14-12-2023",
@@ -31,7 +34,8 @@ export default function Home() {
       data: {
         title: "Lorem ipsum",
         image: "",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
         rate: 2,
         link: "",
         date: "14-12-2023",
@@ -42,7 +46,8 @@ export default function Home() {
       data: {
         title: "Lorem ipsum",
         image: "",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
         rate: 2,
         link: "",
         date: "14-12-2023",
@@ -53,26 +58,26 @@ export default function Home() {
       data: {
         title: "Lorem ipsum",
         image: "",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
         rate: 2,
         link: "",
         date: "14-12-2023",
       },
     },
   ];
-  console.log("page render")
   return (
     <main>
-      <Container sx={{ marginTop: "2rem", paddingBottom:8 }}>
-        <Stack justifyContent={"center"} direction={"row"} mb={4}>
-          <MainSearch />
-        </Stack>
-        <Grid container spacing={2}>
+      <Hero />
+      <Container sx={{ paddingBottom: 8 }}>
+        <Grid container spacing={4} sx={{marginTop:"-6rem"}}>
           {blogs.map((e: any, index: number) => {
-            console.log("e", e)
+            console.log("e", e);
             return (
-              <Grid key={index} item xs={12} sm={3}>
-                <BlogCard data={e.data} preview={false} />
+              <Grid key={index} item xs={12} sm={6} lg={4}>
+                <Stack direction="row" sx={{ justifyContent: "center" }}>
+                  <BlogCard data={e.data} preview={false} />
+                </Stack>
               </Grid>
             );
           })}

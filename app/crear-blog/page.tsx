@@ -65,7 +65,7 @@ export default function CreateBlog() {
   };
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom:8 }}>
-      <Typography variant="h1" component={"h1"}>
+      <Typography variant="h1" component={"h1"} align="center">
         Crear blog
       </Typography>
       <Box sx={{ marginTop: "2rem" }}>

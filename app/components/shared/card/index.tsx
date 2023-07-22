@@ -8,7 +8,7 @@ interface Props {
 export default function CustomCard({ children }: Props) {
   return (
     <Card
-      sx={{ padding: "1.5rem", borderRadius: "1rem", backgroundColor: "#fff" }}
+      sx={{ padding: "1.5rem", borderRadius: "1rem", backgroundColor: "#fff", boxShadow:" 0 0 15px -5px rgba(0,0,0, .5)" }}
     >
       {children}
     </Card>

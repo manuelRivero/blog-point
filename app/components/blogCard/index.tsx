@@ -15,6 +15,7 @@ import {
 import Image from "./../../assets/images/post-placeholder.jpg";
 import Avatar from "../shared/UserAvatar";
 import moment from "moment";
+import Link from "next/link";
 
 interface Props {
   data: Data;
@@ -31,7 +32,7 @@ interface Data {
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 export default function BlogCard({ data, preview }: Props) {
   return (
-    <Card sx={{ padding: "1rem", borderRadius: "1rem", maxWidth: 335 }}>
+    <Card sx={{ padding: "1rem", borderRadius: "1rem", maxWidth: 335, boxShadow:" 0 0 15px -5px rgba(0,0,0, .5)" }}>
       <CardMedia
         sx={{ borderRadius: "1rem", width: "100%" }}
         component="img"
@@ -39,6 +40,15 @@ export default function BlogCard({ data, preview }: Props) {
         alt="Paella dish"
       />
       <CardContent>
+        {preview ? (
+          <Typography fontSize={"14px"} align="right">
+            {moment(data.date).format("DD-MM-YYYY")}
+          </Typography>
+        ) : (
+          <Typography fontSize={"14px"} align="right">
+            {moment().format("DD-MM-YYYY")}
+          </Typography>
+        )}
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -46,15 +56,6 @@ export default function BlogCard({ data, preview }: Props) {
           mb={1}
         >
           <Rating name="simple-controlled" value={5} onChange={() => {}} />
-          {preview ? (
-            <Typography fontSize={"14px"} align="right">
-              {moment(data.date).format("DD-MM-YYYY")}
-            </Typography>
-          ) : (
-            <Typography fontSize={"14px"} align="right">
-              {moment().format("DD-MM-YYYY")}
-            </Typography>
-          )}
         </Stack>
         <Box sx={{ marginBottom: 2 }}>
           <Avatar user={avatarData} />
@@ -103,7 +104,7 @@ export default function BlogCard({ data, preview }: Props) {
             alignItems: "flex-start",
           }}
         >
-          <Button variant="contained" size="small">
+          <Button variant="contained" size="small" component={Link} href="/detalle-del-blog/1">
             Leer
           </Button>
         </CardActions>

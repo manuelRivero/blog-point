@@ -10,17 +10,20 @@ import {
   Box,
 } from "@mui/material";
 import { ClickAwayListener } from '@mui/base';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 
 export default function HeaderMenu() {
+  
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Box
       sx={{
         position: "relative",
+        color:"#fff"
       }}
     >
       <IconButton
@@ -30,7 +33,7 @@ export default function HeaderMenu() {
         aria-label="menu"
         sx={{ mr: 2 }}
       >
-        <MenuIcon />
+        <PermIdentityIcon fontSize={'medium'} />
       </IconButton>
 
       {isOpen && (
@@ -43,6 +46,7 @@ export default function HeaderMenu() {
             width: 320,
             height: "fit-content",
             transform: "translateY(100%)",
+            zIndex: 100
           }}
         >
           <MenuList>
