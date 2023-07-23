@@ -5,6 +5,8 @@ import { CssBaseline } from "@mui/material";
 import { Inter } from "next/font/google";
 import Header from "./components/layout/header";
 import { theme } from "./theme";
+import { CoreProvider } from "./context/core";
+import LoginModal from "./components/shared/loginModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Header />
-          {children}
-        </ThemeProvider>
+        <CoreProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Header />
+            {children}
+            <LoginModal />
+          </ThemeProvider>
+        </CoreProvider>
       </body>
     </html>
   );

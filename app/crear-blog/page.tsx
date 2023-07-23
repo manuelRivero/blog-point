@@ -1,11 +1,14 @@
 "use client";
 
-import { Box, Button, Container, Grid, Modal, Typography } from "@mui/material";
+import { useRouter } from 'next/navigation';
+import { Box, Button, Container, Grid, IconButton, Modal, Typography } from "@mui/material";
 import React, { useState, useId } from "react";
 import CustomCard from "../components/shared/card";
 import CustomInput from "../components/shared/customInput";
 import CustomInputFile from "../components/shared/inputFile";
 import BlogCard from "../components/blogCard";
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // editor
 // import './../assets/data/es';
@@ -29,6 +32,8 @@ interface CardData {
   image: string | null;
 }
 export default function CreateBlog() {
+  const router = useRouter();
+
   //form
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
@@ -65,6 +70,9 @@ export default function CreateBlog() {
   };
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom:8 }}>
+      <IconButton onClick={()=> router.back()}>
+      <ArrowBackIcon />
+      </IconButton>
       <Typography variant="h1" component={"h1"} align="center">
         Crear blog
       </Typography>

@@ -26,7 +26,7 @@ const theme = createTheme({
     h1: { fontFamily: "Merriweather", fontSize: "3rem" },
     h2: { fontFamily: "Merriweather", fontSize: "2rem" },
     h3: { fontFamily: "Merriweather", fontSize: "1.5rem" },
-    h4: { fontFamily: "Merriweather" },
+    h4: { fontFamily: "Merriweather", fontSize: "1.3rem" },
     h5: { fontFamily: "Merriweather" },
     h6: { fontFamily: "Merriweather" },
     body1: { fontFamily: "OpenSans" },
