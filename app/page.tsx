@@ -1,7 +1,7 @@
 "use client";
 import { Box, Button, Container, Grid, Stack } from "@mui/material";
 import BlogCard from "./components/blogCard";
-import Hero from "./components/hero";
+import Hero from "./components/home/hero";
 
 export default function Home() {
   const blogs = [
@@ -70,7 +70,8 @@ export default function Home() {
     <main>
       <Hero />
       <Container sx={{ paddingBottom: 8 }}>
-        <Grid container spacing={4} sx={{marginTop:"-6rem"}}>
+        
+        <Grid container spacing={4} sx={{ marginTop: "-6rem" }}>
           {blogs.map((e: any, index: number) => {
             console.log("e", e);
             return (
