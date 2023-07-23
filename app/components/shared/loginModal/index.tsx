@@ -1,7 +1,7 @@
 "use client";
-import { setLoginModal, useCore } from "@/app/context/core";
+import { setInfoModal, setLoginModal, useCore } from "@/app/context/core";
 import { Box, Button, Modal, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // form
 import { useForm, Controller } from "react-hook-form";
@@ -10,6 +10,7 @@ import * as yup from "yup";
 import CustomInput from "../customInput";
 import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
+import { useRouter } from "next/navigation";
 
 const schema = yup.object({
   email: yup.string().required("Campo requerido"),
@@ -17,9 +18,10 @@ const schema = yup.object({
 });
 
 export default function LoginModal() {
+  const router = useRouter();
   const [{ showLoginModal }, coreDispatch] = useCore();
   //form
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
   });
   //states
@@ -28,8 +30,26 @@ export default function LoginModal() {
   console.log("showLoginModal", showLoginModal);
   const submit = async (values: any) => {
     console.log("values");
-    setLoadingSubmit(true)
+    setLoadingSubmit(true);
+    setLoginModal(coreDispatch, false);
+    setInfoModal(coreDispatch, {
+      status: "success",
+      title: "Has iniciado sesión correctamente",
+      hasCancel: null,
+      hasSubmit: null,
+      onAnimationEnd: () => {
+        router.push("/");
+        setInfoModal(coreDispatch, null);
+      },
+    });
   };
+  useEffect(() => {
+    return () => {
+      setLoadingSubmit(false);
+      reset();
+    };
+  }, []);
+
   return (
     <Modal
       open={showLoginModal}

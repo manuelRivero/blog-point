@@ -9,6 +9,12 @@ export default function registerReducer(state:State, action:{type:string, payloa
           showLoginModal: action.payload,
         };
       }
+      case 'SET_INFO_MODAL': {
+        return {
+          ...state,
+          infoModal: action.payload,
+        };
+      }
       default:
         return state;
     }

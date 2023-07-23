@@ -1,15 +1,31 @@
-import React from 'react'
+
+"use client"
+import React from "react";
 import Lottie from "lottie-react";
-import { Box, Modal } from '@mui/material';
-import { useCore } from '@/app/context/core';
+import { Box, Modal } from "@mui/material";
+import { setInfoModal, useCore } from "@/app/context/core";
+import success from "./../../../assets/lottie/success.json";
+
+const status: any = {
+  success: success,
+};
 
 
 export default function InfoModal() {
-    const [{infoModal}, coreDispatch] = useCore()
+  const [{ infoModal }, coreDispatch] = useCore();
+  const onAnimationEnd = () => {
+      console.log("animation end")
+    if(infoModal?.onAnimationEnd){
+        infoModal.onAnimationEnd()
+    }
+  }
+  if (!infoModal) {
+    return null;
+  }
   return (
     <Modal
-      open={infoModal.status}
-      onClose={() => setLoginModal(coreDispatch, false)}
+      open={Boolean(infoModal)}
+      onClose={() => setInfoModal(coreDispatch, null)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -27,7 +43,8 @@ export default function InfoModal() {
           borderRadius: "1rem",
         }}
       >
+        <Lottie animationData={status[infoModal.status]} loop={false} onComplete={onAnimationEnd} />
       </Box>
     </Modal>
-  )
+  );
 }

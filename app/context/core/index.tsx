@@ -18,11 +18,26 @@ type User = {
 export type State = {
   showLoginModal: boolean;
   user: User | null;
+  infoModal: InfoModal | null;
 };
+interface InfoModal {
+  status: "success" | "info" | "error";
+  onAnimationEnd: null | (()=>void);
+  title: string;
+  hasCancel: null | {
+    title: string;
+    cb: () => void;
+  };
+  hasSubmit: null | {
+    title: string;
+    cb: () => void;
+  };
+}
 type Props = {
   children: JSX.Element;
 };
 const initialState: State = {
+  infoModal: null,
   showLoginModal: false,
   user: null,
 };
@@ -80,12 +95,9 @@ export async function setLoginModal(
   });
 }
 
-export async function setInfoModal(
-    dispatch: React.Dispatch<any>,
-    data: any
-  ) {
-    dispatch({
-      type: "SET_INFO",
-      payload: data,
-    });
-  }
+export async function setInfoModal(dispatch: React.Dispatch<any>, data: any) {
+  dispatch({
+    type: "SET_INFO_MODAL",
+    payload: data,
+  });
+}
