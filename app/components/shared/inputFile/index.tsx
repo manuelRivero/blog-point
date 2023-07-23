@@ -50,7 +50,7 @@ export default function CustomInputFile({ label, handlePreview, error }: Props) 
           <label htmlFor="file-input">Subir Imagen</label>
         </Button>
       </Box>
-      {error && <Typography color={"error"}>{error.message}</Typography>}
+      {error && <Typography fontSize={14} color={"error"}>{error.message}</Typography>}
     </Box>
   );
 }

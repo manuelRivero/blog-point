@@ -1,7 +1,7 @@
 "use client";
 import { setInfoModal, setLoginModal, useCore } from "@/app/context/core";
 import { Box, Button, Modal, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // form
 import { useForm, Controller } from "react-hook-form";
@@ -13,7 +13,7 @@ import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
 
 const schema = yup.object({
-  email: yup.string().required("Campo requerido"),
+  email: yup.string().email().required("Campo requerido"),
   password: yup.string().required("Campo requerido"),
 });
 
@@ -42,13 +42,9 @@ export default function LoginModal() {
         setInfoModal(coreDispatch, null);
       },
     });
+    setLoadingSubmit(false);
+    reset();
   };
-  useEffect(() => {
-    return () => {
-      setLoadingSubmit(false);
-      reset();
-    };
-  }, []);
 
   return (
     <Modal
@@ -90,6 +86,7 @@ export default function LoginModal() {
               control={control}
               render={({ field, fieldState }) => (
                 <CustomInput
+                  type="text"
                   error={fieldState.error}
                   value={field.value}
                   onChange={(
@@ -109,6 +106,7 @@ export default function LoginModal() {
               control={control}
               render={({ field, fieldState }) => (
                 <CustomInput
+                  type="password"
                   error={fieldState.error}
                   value={field.value}
                   onChange={(

@@ -1,15 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, IconButton, Input, InputLabel, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { FieldError } from "react-hook-form";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 interface Props {
   label: string;
   outline?: boolean;
   outlineColor?: string;
   multiline?: boolean;
+  type: "text" | "password";
   rows?: number;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,7 +28,9 @@ export default function CustomInput({
   value,
   onChange,
   error,
+  type,
 }: Props) {
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   return (
     <Box
       sx={{
@@ -45,11 +49,13 @@ export default function CustomInput({
         {label}
       </InputLabel>
       <Input
+        type={passwordVisible ? "text" : type}
         value={value}
         onChange={onChange}
         multiline={multiline}
         rows={rows}
         sx={(theme) => ({
+          position: "relative",
           "&: after": {
             display: "none",
           },
@@ -88,9 +94,25 @@ export default function CustomInput({
           },
         })}
         placeholder="Buscar"
+        endAdornment={
+          type === "password" ? (
+            <Box
+              onClick={() => setPasswordVisible(!passwordVisible)}
+              sx={(theme) => ({
+                cursor: "pointer",
+                color: theme.palette.primary.main,
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+              })}
+            >
+              <RemoveRedEyeIcon />
+            </Box>
+          ) : null
+        }
       />
       {error && (
-        <Typography sx={{ marginLeft: ".8rem" }} color={"error"}>
+        <Typography sx={{ marginLeft: ".8rem", fontSize: 14 }} color={"error"}>
           {error.message}
         </Typography>
       )}
