@@ -1,15 +1,21 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Box, Button, InputLabel, Stack, Typography } from "@mui/material";
-import { FieldError,  } from "react-hook-form";
+import { FieldError } from "react-hook-form";
 
 interface Props {
   label: string;
   handlePreview: (e: File) => void;
-  error: FieldError | undefined
+  handleCancel: () => void;
+  error: FieldError | undefined;
 }
 
-export default function CustomInputFile({ label, handlePreview, error }: Props) {
+export default function CustomInputFile({
+  label,
+  handlePreview,
+  error,
+  handleCancel,
+}: Props) {
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +23,11 @@ export default function CustomInputFile({ label, handlePreview, error }: Props) 
       setFile(e.target.files[0]);
       handlePreview(e.target.files[0]);
     }
+  };
+
+  const onCancel = () => {
+    setFile(null);
+    handleCancel();
   };
 
   return (
@@ -46,11 +57,24 @@ export default function CustomInputFile({ label, handlePreview, error }: Props) 
           onChange={handleFileChange}
           style={{ display: "none" }}
         />
-        <Button variant="contained">
-          <label htmlFor="file-input">Subir Imagen</label>
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button variant="contained">
+            <label htmlFor="file-input">
+              {file ? "Cambiar imágen" : "Subir Imagen"}
+            </label>
+          </Button>
+          {file && (
+            <Button variant="contained" onClick={onCancel} color="error">
+              Cancelar
+            </Button>
+          )}
+        </Stack>
       </Box>
-      {error && <Typography fontSize={14} color={"error"}>{error.message}</Typography>}
+      {error && (
+        <Typography fontSize={14} color={"error"}>
+          {error.message}
+        </Typography>
+      )}
     </Box>
   );
 }

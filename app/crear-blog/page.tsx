@@ -1,14 +1,23 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { Box, Button, Container, Grid, IconButton, Modal, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Modal,
+  Slider,
+  Typography,
+} from "@mui/material";
 import React, { useState, useId } from "react";
 import CustomCard from "../components/shared/card";
 import CustomInput from "../components/shared/customInput";
 import CustomInputFile from "../components/shared/inputFile";
 import BlogCard from "../components/blogCard";
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // editor
 // import './../assets/data/es';
@@ -63,15 +72,21 @@ export default function CreateBlog() {
     }
   };
 
+  const handleImageCancel = () => {
+    setImageSrc(undefined);
+    setCardData({ ...cardData, image: null });
+    setCropData(null);
+  };
+
   const handlePreview = async (e: File) => {
     const objectUrl: string = URL.createObjectURL(e);
     setImageSrc(objectUrl);
     setShowCrop(true);
   };
   return (
-    <Container sx={{ marginTop: "2rem", paddingBottom:8 }}>
-      <IconButton onClick={()=> router.back()}>
-      <ArrowBackIcon />
+    <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
+      <IconButton onClick={() => router.back()}>
+        <ArrowBackIcon />
       </IconButton>
       <Typography variant="h1" component={"h1"} align="center">
         Crear blog
@@ -94,6 +109,7 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInput
+                        type="text"
                         error={fieldState.error}
                         value={field.value}
                         onChange={(
@@ -116,6 +132,7 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInput
+                        type="text"
                         error={fieldState.error}
                         value={field.value}
                         onChange={(
@@ -143,6 +160,7 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInputFile
+                        handleCancel={handleImageCancel}
                         error={fieldState.error}
                         handlePreview={handlePreview}
                         label="Imagen del blog"
@@ -155,7 +173,7 @@ export default function CreateBlog() {
                       variant="outlined"
                       onClick={() => setShowCrop(true)}
                     >
-                      Modificar imagen
+                      Modificar posición de la imagen
                     </Button>
                   )}
                 </Box>
@@ -215,14 +233,17 @@ export default function CreateBlog() {
             width: "90%",
             height: "90%",
             maxWidth: 500,
-            maxHeight: 500,
+            maxHeight: 550,
             bgcolor: "background.paper",
             border: "2px solid #000",
             boxShadow: 24,
             p: 4,
           }}
         >
-          <Box position="relative" sx={{ width: "100%", height: "90%" }}>
+          <Box
+            position="relative"
+            sx={{ width: "100%", height: "75%", marginBottom: 2 }}
+          >
             <Cropper
               image={imageSrc}
               crop={crop}
@@ -234,18 +255,33 @@ export default function CreateBlog() {
               cropSize={{ width: 300, height: 300 }}
             />
           </Box>
+          <Box>
+            <Typography variant="body1" align="center">
+              Zoom
+            </Typography>
+            <Slider
+              aria-label="Zoom"
+              value={zoom}
+              min={1}
+              max={5}
+              step={0.1}
+              onChange={({ target }) => {
+                setZoom(target.value);
+              }}
+            />
+          </Box>
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
               gap: "1rem",
-              marginTop: "1rem",
+              marginTop: 1,
             }}
           >
             <Button variant={"contained"} onClick={generateCrop}>
               Aceptar
             </Button>
-            <Button variant={"outlined"} onClick={generateCrop}>
+            <Button variant={"outlined"} onClick={() => setShowCrop(false)}>
               Cancelar
             </Button>
           </Box>
