@@ -60,6 +60,11 @@ export default function HeaderMenu() {
                 Mis blogs
               </Typography>
             </MenuItem>
+            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/perfil"}>
+              <Typography variant="body1" component={"p"}>
+                Perfil
+              </Typography>
+            </MenuItem>
             <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/"}>
               <Typography variant="body1" component={"p"}></Typography>
             </MenuItem>

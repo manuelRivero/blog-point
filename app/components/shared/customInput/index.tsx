@@ -18,6 +18,7 @@ interface Props {
   ) => void;
   value: string;
   error: FieldError | undefined;
+  placeholder: string
 }
 export default function CustomInput({
   label,
@@ -29,6 +30,7 @@ export default function CustomInput({
   onChange,
   error,
   type,
+  placeholder
 }: Props) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   return (
@@ -93,7 +95,7 @@ export default function CustomInput({
             },
           },
         })}
-        placeholder="Buscar"
+        placeholder={placeholder}
         endAdornment={
           type === "password" ? (
             <Box
