@@ -51,6 +51,7 @@ export default function Profile() {
   const handleSocialEdition = (status: boolean) => {
     setIsEditingSocial(status);
   };
+
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>

@@ -10,11 +10,13 @@ import * as yup from "yup";
 import EditIcon from "@mui/icons-material/Edit";
 
 import CustomInput from "../../shared/customInput";
+import CustomButton from "../../shared/customButton";
+import { setInfoModal, useCore } from "@/app/context/core";
 
 const schema = yup.object({
   name: yup.string().required("Campo requerido"),
   lastName: yup.string().required("Campo requerido"),
-  bio: yup.string().required("Campo requerido"),
+  bio: yup.string(),
 });
 
 interface Props {
@@ -22,10 +24,13 @@ interface Props {
 }
 
 export default function ProfileInfo({ onChangeEditing }: Props) {
+  const [{ showLoginModal }, coreDispatch] = useCore();
+
   //form
   const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
   });
+  const[loadingSubmit, setLoadingSubmit] = useState<boolean>(false)
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const handleCancel = () => {
@@ -38,9 +43,27 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
     setIsEditing(true);
     onChangeEditing(true);
   };
+  const submit = (values:any)=> {
+    setLoadingSubmit(true);
+    setInfoModal(coreDispatch, {
+      status: "success",
+      title: "Tu perfil se ha actualizado correctamente",
+      hasCancel: null,
+      hasSubmit: null,
+      onAnimationEnd: () => {
+        setInfoModal(coreDispatch, null);
+        setIsEditing(false)
+        onChangeEditing(false);
+        setLoadingSubmit(false);
+
+      },
+    });
+
+  }
   return isEditing ? (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ marginBottom: "1rem" }}>
+      <form onSubmit={handleSubmit(submit)}>
+      <Box sx={{ marginBottom: 1 }}>
         <Controller
           name={"name"}
           control={control}
@@ -62,7 +85,7 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
           )}
         />
       </Box>
-      <Box sx={{ marginBottom: "1rem" }}>
+      <Box sx={{ marginBottom: 1 }}>
         <Controller
           name={"lastName"}
           control={control}
@@ -84,7 +107,7 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
           )}
         />
       </Box>
-      <Box sx={{ marginBottom: "1rem" }}>
+      <Box sx={{ marginBottom: 1 }}>
         <Controller
           name={"bio"}
           control={control}
@@ -112,10 +135,18 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
         <Button color="error" variant="outlined" onClick={handleCancel}>
           Cancelar
         </Button>
-        <Button color="primary" variant="contained">
-          Guardar
-        </Button>
+        <CustomButton
+              type="submit"
+              color="primary"
+              variant="contained"
+              title="Aceptar"
+              cb={() => {}}
+              disabled={loadingSubmit}
+              isLoading={loadingSubmit}
+            />
       </Stack>
+
+      </form>
     </Box>
   ) : (
     <Box>

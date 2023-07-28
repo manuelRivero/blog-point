@@ -131,18 +131,26 @@ export default function CustomInput({
           ) : null
         }
       />
-      {maxLength && (
-        <Stack direction="row" sx={{justifyContent:"flex-end", marginTop:"5px"}}>
-          <Typography variant={"body1"} fontSize={"10px"}>
-            {`${value ? value.length : 0}/${maxLength}`}
+      <Stack
+        direction={"row"}
+        sx={{ justifyContent: "space-between", marginTop: "5px" }}
+      >
+        {error && (
+          <Typography
+            sx={{ marginLeft: ".8rem", fontSize: 12 }}
+            color={"error"}
+          >
+            {error.message}
           </Typography>
-        </Stack>
-      )}
-      {error && (
-        <Typography sx={{ marginLeft: ".8rem", fontSize: 14 }} color={"error"}>
-          {error.message}
-        </Typography>
-      )}
+        )}
+        {maxLength && (
+          <Stack direction="row" sx={{ justifyContent: "flex-end", flex: 1 }}>
+            <Typography variant={"body1"} fontSize={"10px"}>
+              {`${value ? value.length : 0}/${maxLength}`}
+            </Typography>
+          </Stack>
+        )}
+      </Stack>
     </Box>
   );
 }
