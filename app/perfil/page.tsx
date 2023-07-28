@@ -26,6 +26,7 @@ import CustomInput from "../components/shared/customInput";
 import ProfileInfo from "../components/profile/profileInfo";
 import ProfileSocial from "../components/profile/profileSocial";
 import ProfileBlogCard from "../components/profile/profileBlogCard";
+import ProfileStats from "../components/profile/profileStats";
 
 const schema = yup.object({
   name: yup.string().required("Campo requerido"),
@@ -66,8 +67,8 @@ export default function Profile() {
           marginTop: 4,
           [theme.breakpoints.down("lg")]: {
             flexDirection: "column-reverse",
-            alignItems:"center",
-            gap:4
+            alignItems: "center",
+            gap: 4,
           },
         })}
       >
@@ -85,6 +86,7 @@ export default function Profile() {
 
                   <ProfileInfo onChangeEditing={handleProfileEdition} />
                 </Stack>
+                {!isEditingProfile && <ProfileStats />}
               </CustomCard>
             )}
             {!isEditingProfile && (

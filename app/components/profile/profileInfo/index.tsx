@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import EditIcon from "@mui/icons-material/Edit";
+
 import CustomInput from "../../shared/customInput";
 
 const schema = yup.object({
@@ -142,9 +143,7 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
       <Typography variant="h6">Manuel Rivero</Typography>
       <Typography variant="body1">
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, dicta
-        assumenda enim quas, laborum unde molestias cumque asperiores odit eos,
-        sunt expedita consectetur recusandae. Tempora est commodi repellat
-        placeat sed?
+        assumenda enim quas, laborum unde molestias cumque asperiores odit eos.
       </Typography>
     </Box>
   );
