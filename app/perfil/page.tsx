@@ -25,6 +25,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CustomInput from "../components/shared/customInput";
 import ProfileInfo from "../components/profile/profileInfo";
 import ProfileSocial from "../components/profile/profileSocial";
+import ProfileBlogCard from "../components/profile/profileBlogCard";
 
 const schema = yup.object({
   name: yup.string().required("Campo requerido"),
@@ -57,7 +58,24 @@ export default function Profile() {
       <Typography variant="h1" component={"h1"} align="center">
         Perfil
       </Typography>
-      <Stack direction="row" sx={{ justifyContent: "center", marginTop: 4 }}>
+      <Stack
+        direction="row"
+        spacing={4}
+        sx={(theme) => ({
+          justifyContent: "center",
+          marginTop: 4,
+          [theme.breakpoints.down("lg")]: {
+            flexDirection: "column-reverse",
+            alignItems:"center",
+            gap:4
+          },
+        })}
+      >
+        <Box>
+          <CustomCard>
+            <ProfileBlogCard />
+          </CustomCard>
+        </Box>
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>
           <Box>
             {!isEditingSocial && (

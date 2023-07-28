@@ -1,10 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, IconButton, Input, InputLabel, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Input,
+  InputLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { FieldError } from "react-hook-form";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { sliceText } from "@/app/helpers/text";
 
 interface Props {
   label: string;
@@ -18,7 +26,8 @@ interface Props {
   ) => void;
   value: string;
   error: FieldError | undefined;
-  placeholder: string
+  placeholder: string;
+  maxLength?: number | null;
 }
 export default function CustomInput({
   label,
@@ -30,7 +39,8 @@ export default function CustomInput({
   onChange,
   error,
   type,
-  placeholder
+  placeholder,
+  maxLength = null,
 }: Props) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   return (
@@ -53,7 +63,15 @@ export default function CustomInput({
       <Input
         type={passwordVisible ? "text" : type}
         value={value}
-        onChange={onChange}
+        onChange={(
+          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        ) => {
+          if (maxLength) {
+            onChange(sliceText(e, maxLength));
+          } else {
+            onChange(e);
+          }
+        }}
         multiline={multiline}
         rows={rows}
         sx={(theme) => ({
@@ -113,6 +131,13 @@ export default function CustomInput({
           ) : null
         }
       />
+      {maxLength && (
+        <Stack direction="row" sx={{justifyContent:"flex-end", marginTop:"5px"}}>
+          <Typography variant={"body1"} fontSize={"10px"}>
+            {`${value ? value.length : 0}/${maxLength}`}
+          </Typography>
+        </Stack>
+      )}
       {error && (
         <Typography sx={{ marginLeft: ".8rem", fontSize: 14 }} color={"error"}>
           {error.message}

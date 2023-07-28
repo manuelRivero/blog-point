@@ -1,13 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  IconButton,
-  Stack,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Box, Stack, Typography, Button } from "@mui/material";
 
 // form
 import { useForm, Controller } from "react-hook-form";
@@ -20,30 +13,29 @@ import CustomInput from "../../shared/customInput";
 const schema = yup.object({
   name: yup.string().required("Campo requerido"),
   lastName: yup.string().required("Campo requerido"),
-  image: yup.mixed().required("Campo requerido"),
+  bio: yup.string().required("Campo requerido"),
 });
 
 interface Props {
-    onChangeEditing:(e:boolean)=>void
+  onChangeEditing: (e: boolean) => void;
 }
 
-export default function ProfileInfo({onChangeEditing}:Props) {
+export default function ProfileInfo({ onChangeEditing }: Props) {
   //form
   const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
   });
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  
+
   const handleCancel = () => {
     reset();
     setIsEditing(false);
-    onChangeEditing(false)
+    onChangeEditing(false);
   };
-
 
   const handleEdit = () => {
     setIsEditing(true);
-    onChangeEditing(true)
+    onChangeEditing(true);
   };
   return isEditing ? (
     <Box sx={{ width: "100%" }}>
@@ -53,6 +45,7 @@ export default function ProfileInfo({onChangeEditing}:Props) {
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
+              maxLength={20}
               type="text"
               error={fieldState.error}
               value={field.value}
@@ -70,10 +63,11 @@ export default function ProfileInfo({onChangeEditing}:Props) {
       </Box>
       <Box sx={{ marginBottom: "1rem" }}>
         <Controller
-          name={"name"}
+          name={"lastName"}
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
+              maxLength={20}
               type="text"
               error={fieldState.error}
               value={field.value}
@@ -91,10 +85,11 @@ export default function ProfileInfo({onChangeEditing}:Props) {
       </Box>
       <Box sx={{ marginBottom: "1rem" }}>
         <Controller
-          name={"name"}
+          name={"bio"}
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
+              maxLength={120}
               type="text"
               error={fieldState.error}
               value={field.value}
