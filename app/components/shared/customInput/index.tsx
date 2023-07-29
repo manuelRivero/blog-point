@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -28,6 +28,8 @@ interface Props {
   error: FieldError | undefined;
   placeholder: string;
   maxLength?: number | null;
+  // lengthAlert?: {length:number, message:string} | null
+  lengthAlertHandler?: { handler: (e: boolean) => void; length: number } | null;
 }
 export default function CustomInput({
   label,
@@ -41,8 +43,21 @@ export default function CustomInput({
   type,
   placeholder,
   maxLength = null,
-}: Props) {
+  lengthAlertHandler,
+}: // lengthAlert = null
+Props) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (lengthAlertHandler) {
+      if (value &&  value.length >= lengthAlertHandler.length) {
+        lengthAlertHandler.handler(true);
+      } else {
+        lengthAlertHandler.handler(false);
+      }
+    }
+  }, [value]);
+
   return (
     <Box
       sx={{
@@ -143,6 +158,14 @@ export default function CustomInput({
             {error.message}
           </Typography>
         )}
+        {/* {(value && lengthAlert && value.length >= lengthAlert?.length) && (
+          <Typography
+            sx={{ marginLeft: ".8rem", fontSize: 12 }}
+            color={"info"}
+          >
+            {lengthAlert.message}
+          </Typography>
+        )} */}
         {maxLength && (
           <Stack direction="row" sx={{ justifyContent: "flex-end", flex: 1 }}>
             <Typography variant={"body1"} fontSize={"10px"}>

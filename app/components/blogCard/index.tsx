@@ -10,16 +10,20 @@ import {
   Box,
   Stack,
   Rating,
+  Tooltip,
 } from "@mui/material";
 
 import Image from "./../../assets/images/post-placeholder.jpg";
 import Avatar from "../shared/UserAvatar";
 import moment from "moment";
 import Link from "next/link";
+import { concatDots } from "@/app/helpers/text";
 
 interface Props {
   data: Data;
   preview: boolean;
+  showTitleTooltip: boolean;
+  showDescriptionTooltip: boolean;
 }
 interface Data {
   title: string;
@@ -30,9 +34,21 @@ interface Data {
   rate: number;
 }
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
-export default function BlogCard({ data, preview }: Props) {
+export default function BlogCard({
+  data,
+  preview,
+  showTitleTooltip,
+  showDescriptionTooltip,
+}: Props) {
   return (
-    <Card sx={{ padding: "1rem", borderRadius: "1rem", maxWidth: 335, boxShadow:" 0 0 15px -5px rgba(0,0,0, .5)" }}>
+    <Card
+      sx={{
+        padding: "1rem",
+        borderRadius: "1rem",
+        maxWidth: 335,
+        boxShadow: " 0 0 15px -5px rgba(0,0,0, .5)",
+      }}
+    >
       <CardMedia
         sx={{ borderRadius: "1rem", width: "100%" }}
         component="img"
@@ -64,10 +80,24 @@ export default function BlogCard({ data, preview }: Props) {
           <Typography
             variant="h5"
             color="text.primary"
-            component="h6"
+            component="h4"
             sx={{ mb: 1 }}
           >
-            {data.title}
+            {preview ? (
+              showTitleTooltip ? (
+                <Tooltip
+                  title="Tu título abarca más caracteres de los que se
+              visualizaran en la carta de tu blog pero se visualizara de
+              forma completa en el detalle del blog"
+                >
+                  <span>{concatDots(data.title, 60)}</span>
+                </Tooltip>
+              ) : (
+                concatDots(data.title, 60)
+              )
+            ) : (
+              concatDots(data.title, 60)
+            )}
           </Typography>
         ) : (
           <Box
@@ -81,9 +111,27 @@ export default function BlogCard({ data, preview }: Props) {
           ></Box>
         )}
         {data.description ? (
-          <Typography sx={{ mb: 1.5 }} color="text.primary">
-            {data.description}
-          </Typography>
+          preview ? (
+            showDescriptionTooltip ? (
+              <Tooltip
+                title="Tu descripción abarca más caracteres de los que se
+              visualizaran en la carta de tu blog pero se visualizara de
+              forma completa en el detalle del blog"
+              >
+                <Typography sx={{ mb: 1.5 }} color="text.primary">
+                  {concatDots(data.description, 120)}
+                </Typography>
+              </Tooltip>
+            ) : (
+              <Typography sx={{ mb: 1.5 }} color="text.primary">
+                {concatDots(data.description, 120)}
+              </Typography>
+            )
+          ) : (
+            <Typography sx={{ mb: 1.5 }} color="text.primary">
+              {concatDots(data.description, 120)}
+            </Typography>
+          )
         ) : (
           <Box
             sx={{
@@ -104,7 +152,12 @@ export default function BlogCard({ data, preview }: Props) {
             alignItems: "flex-start",
           }}
         >
-          <Button variant="contained" size="small" component={Link} href="/detalle-del-blog/1">
+          <Button
+            variant="contained"
+            size="small"
+            component={Link}
+            href="/detalle-del-blog/1"
+          >
             Leer
           </Button>
         </CardActions>

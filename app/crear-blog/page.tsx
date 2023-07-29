@@ -58,6 +58,9 @@ export default function CreateBlog() {
   const [zoom, setZoom] = useState(1);
   const [cropData, setCropData] = useState<Area | null>(null);
   const [showCrop, setShowCrop] = useState<boolean>(false);
+  const [showTitleAlert, setShowTitleAlert] = useState<boolean>(false);
+  const [showDescriptionAlert, setShowDescriptionAlert] =
+    useState<boolean>(false);
 
   const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
     setCropData(croppedAreaPixels);
@@ -82,6 +85,13 @@ export default function CreateBlog() {
     const objectUrl: string = URL.createObjectURL(e);
     setImageSrc(objectUrl);
     setShowCrop(true);
+  };
+  const descriptionLenghtHandler = (status: boolean) => {
+    setShowDescriptionAlert(status);
+  };
+
+  const titleLenghtHandler = (status: boolean) => {
+    setShowTitleAlert(status);
   };
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
@@ -109,6 +119,11 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInput
+                        maxLength={80}
+                        lengthAlertHandler={{
+                          handler: (e) => titleLenghtHandler(e),
+                          length: 60,
+                        }}
                         type="text"
                         error={fieldState.error}
                         value={field.value}
@@ -120,7 +135,7 @@ export default function CreateBlog() {
                           field.onChange(e.target.value);
                           setCardData({ ...cardData, title: e.target.value });
                         }}
-                        label="Titulo del blog"
+                        label="Título del blog"
                         outline={true}
                       />
                     )}
@@ -132,6 +147,11 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInput
+                      maxLength={160}
+                        lengthAlertHandler={{
+                          handler: (e) => descriptionLenghtHandler(e),
+                          length: 120,
+                        }}
                         type="text"
                         error={fieldState.error}
                         value={field.value}
@@ -182,8 +202,43 @@ export default function CreateBlog() {
                 <Typography variant="h2" component={"h2"}>
                   Previsualicación
                 </Typography>
+                <Typography
+                  variant="body1"
+                  component={"p"}
+                  sx={{ color: "#c2c2c2", marginBottom: 2 }}
+                >
+                  Esta es la visualización de tu blog en los resultados de
+                  busqueda.
+                </Typography>
+                {showTitleAlert && (
+                  <Typography
+                    variant="body1"
+                    component={"p"}
+                    sx={{ color: "#c2c2c2" }}
+                  >
+                    Pista: Tu título abarca más caracteres de los que se
+                    visualizaran en la carta de tu blog pero se visualizara de
+                    forma completa en el detalle del blog.
+                  </Typography>
+                )}
+                {showDescriptionAlert && (
+                  <Typography
+                    variant="body1"
+                    component={"p"}
+                    sx={{ color: "#c2c2c2" }}
+                  >
+                    Pista: Tu descripción abarca más caracteres de los que se
+                    visualizaran en la carta de tu blog pero se visualizara de
+                    forma completa en el detalle del blog.
+                  </Typography>
+                )}
                 <Box sx={{ marginTop: "1rem" }}>
-                  <BlogCard data={cardData} preview={true} />
+                  <BlogCard
+                    data={cardData}
+                    preview={true}
+                    showDescriptionTooltip={showDescriptionAlert}
+                    showTitleTooltip={showTitleAlert}
+                  />
                 </Box>
               </Grid>
               <Grid item xs={12}>
