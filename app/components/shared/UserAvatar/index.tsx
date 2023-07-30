@@ -14,7 +14,7 @@ export default function UserAvatar({ user }: Props) {
   return (
     <Box>
       <Stack direction={"row"} alignItems={"center"} spacing={1}>
-        <Avatar src={user.image ? user.image : placeholder.src} />
+        <Avatar sx={{width:24, height:24}} src={user.image ? user.image : placeholder.src} />
         <Typography>{`${user.name} ${user.lastName}`}</Typography>
       </Stack>
     </Box>

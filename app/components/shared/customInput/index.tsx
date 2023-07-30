@@ -30,6 +30,7 @@ interface Props {
   maxLength?: number | null;
   // lengthAlert?: {length:number, message:string} | null
   lengthAlertHandler?: { handler: (e: boolean) => void; length: number } | null;
+  hasLabel?: boolean;
 }
 export default function CustomInput({
   label,
@@ -44,13 +45,14 @@ export default function CustomInput({
   placeholder,
   maxLength = null,
   lengthAlertHandler,
+  hasLabel = true,
 }: // lengthAlert = null
 Props) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (lengthAlertHandler) {
-      if (value &&  value.length >= lengthAlertHandler.length) {
+      if (value && value.length >= lengthAlertHandler.length) {
         lengthAlertHandler.handler(true);
       } else {
         lengthAlertHandler.handler(false);
@@ -67,14 +69,16 @@ Props) {
         },
       }}
     >
-      <InputLabel
-        sx={(theme) => ({
-          marginBottom: ".25rem",
-          marginLeft: ".8rem",
-        })}
-      >
-        {label}
-      </InputLabel>
+      {hasLabel && (
+        <InputLabel
+          sx={(theme) => ({
+            marginBottom: ".25rem",
+            marginLeft: ".8rem",
+          })}
+        >
+          {label}
+        </InputLabel>
+      )}
       <Input
         type={passwordVisible ? "text" : type}
         value={value}
