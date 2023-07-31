@@ -20,7 +20,7 @@ export default function CommentInput() {
     resolver: yupResolver(schema),
   });
   return (
-    <Box>
+    <Box sx={{marginBottom:2}}>
       <UserAvatar
         user={{
           name: "María y josé",
@@ -34,7 +34,7 @@ export default function CommentInput() {
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
-              maxLength={120}
+              maxLength={160}
               type="text"
               error={fieldState.error}
               value={field.value}

@@ -43,7 +43,7 @@ export default function BlogHeaderCard() {
             <UserAvatar user={avatarData} />
           </Box>
           
-          <Typography variant="h5" component={"h1"} sx={{ marginBottom: 1 }}>
+          <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
             Titulo del Blog
           </Typography>
           <Typography
