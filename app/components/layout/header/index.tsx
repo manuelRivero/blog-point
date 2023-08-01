@@ -16,7 +16,7 @@ import React from "react";
 import HeaderMenu from "../headerMenu";
 import NotificationDropdown from "../notificationDropdown";
 import Link from "next/link";
-import { useCore, setLoginModal } from "@/app/context/core";
+import { useCore, setLoginModal, setRegisterModal } from "@/app/context/core";
 
 export default function Header() {
   const [{}, coreDispatch] = useCore();
@@ -58,6 +58,7 @@ export default function Header() {
               Inicia sesión
             </Button>
             <Button
+             onClick={() => setRegisterModal(coreDispatch, true)}
               variant="outlined"
               color="primary"
               sx={{

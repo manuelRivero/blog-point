@@ -8,6 +8,7 @@ import { theme } from "./theme";
 import { CoreProvider } from "./context/core";
 import LoginModal from "./components/shared/loginModal";
 import InfoModal from "./components/shared/infoModal";
+import RegisterModal from "./components/shared/registerModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <Header />
             {children}
             <LoginModal />
+            <RegisterModal />
             <InfoModal />
           </ThemeProvider>
         </CoreProvider>

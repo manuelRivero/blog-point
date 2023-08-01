@@ -17,6 +17,7 @@ type User = {
 };
 export type State = {
   showLoginModal: boolean;
+  showRegisterModal:boolean;
   user: User | null;
   infoModal: InfoModal | null;
 };
@@ -39,6 +40,7 @@ type Props = {
 const initialState: State = {
   infoModal: null,
   showLoginModal: false,
+  showRegisterModal:false,
   user: null,
 };
 
@@ -91,6 +93,16 @@ export async function setLoginModal(
 ) {
   dispatch({
     type: "SET_LOGIN_MODAL",
+    payload: status,
+  });
+}
+
+export async function setRegisterModal(
+  dispatch: React.Dispatch<any>,
+  status: any
+) {
+  dispatch({
+    type: "SET_REGISTER_MODAL",
     payload: status,
   });
 }

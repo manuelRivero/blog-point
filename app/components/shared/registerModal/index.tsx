@@ -1,33 +1,26 @@
 "use client";
 import { setInfoModal, setLoginModal, useCore } from "@/app/context/core";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Modal, Typography, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-// form
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import CustomInput from "../customInput";
 import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
+import ProfileAvatar from "../../profile/avatar";
+import Step1 from "./forms/step1";
+import Step2 from "./forms/step2";
+import Step3 from "./forms/step3";
 
-const schema = yup.object({
-  email: yup.string().email().required("Campo requerido"),
-  password: yup.string().required("Campo requerido"),
-});
-
-export default function LoginModal() {
+export default function RegisterModal() {
   const router = useRouter();
-  const [{ showLoginModal }, coreDispatch] = useCore();
-  //form
-  const { control, handleSubmit, reset } = useForm({
-    resolver: yupResolver(schema),
-  });
+  const [{ showRegisterModal }, coreDispatch] = useCore();
+
   //states
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1);
+  const [userData, setUserData] = useState<any>(null);
+  const [resetForms, setResetForms] = useState<boolean>(false);
 
-  console.log("showLoginModal", showLoginModal);
   const submit = async (values: any) => {
     console.log("values");
     setLoadingSubmit(true);
@@ -45,15 +38,41 @@ export default function LoginModal() {
     setLoadingSubmit(false);
     reset();
   };
- 
-  useEffect(()=>{
-    if (!showLoginModal) {
-      reset();
+
+  const handleStep1 = (values: any) => {
+    setUserData({ ...userData, ...values });
+    setStep(2);
+  };
+
+  const handleStep2 = (values: any) => {
+    setUserData({ ...userData, ...values });
+    setStep(3);
+  };
+
+  const handleStep3 = (values: any) => {
+    setUserData({ ...userData, ...values });
+    setStep(4);
+  };
+  const handleStep4 = (values: any) => {
+    console.log("step 4");
+  };
+  useEffect(() => {
+    if (!showRegisterModal) {
+      setStep(1);
     }
-  },[showLoginModal])
+  }, [showRegisterModal]);
+
+  useEffect(() => {
+    if (!showRegisterModal) {
+      setResetForms(true);
+    } else {
+      setResetForms(false);
+    }
+  }, [showRegisterModal]);
+
   return (
     <Modal
-      open={showLoginModal}
+      open={showRegisterModal}
       onClose={() => setLoginModal(coreDispatch, false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -78,63 +97,53 @@ export default function LoginModal() {
             component={"h2"}
             sx={{
               textAlign: "center",
-              marginBottom: "2rem",
+              marginBottom: "1rem",
             }}
           >
             Blog app
           </Typography>
         </Box>
-        <form onSubmit={handleSubmit(submit)}>
-          <Box sx={{ marginBottom: "1rem" }}>
-            <Controller
-              name={"email"}
-              control={control}
-              render={({ field, fieldState }) => (
-                <CustomInput
-                  type="text"
-                  error={fieldState.error}
-                  value={field.value}
-                  onChange={(
-                    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                  ) => {
-                    field.onChange(e.target.value);
-                  }}
-                  label="Email"
-                  outline={true}
-                />
-              )}
-            />
-          </Box>
-          <Box sx={{ marginBottom: "1.5rem" }}>
-            <Controller
-              name={"password"}
-              control={control}
-              render={({ field, fieldState }) => (
-                <CustomInput
-                  type="password"
-                  error={fieldState.error}
-                  value={field.value}
-                  onChange={(
-                    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                  ) => {
-                    field.onChange(e.target.value);
-                  }}
-                  label="Contraseña"
-                  outline={true}
-                />
-              )}
-            />
-          </Box>
-          <Box
+        <Box>
+          <Typography
+            variant="h5"
+            component={"h5"}
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "1rem",
-              marginTop: "1rem",
+              textAlign: "center",
+              marginBottom: "1rem",
             }}
           >
+            Registro
+          </Typography>
+        </Box>
+        {step === 4 && (
+          <Stack direction="column" alignItems={"center"} justifyContent="center">
+            <Typography
+              variant="body1"
+              align="center"
+              sx={{ color: "#c2c2c2", marginBottom: 2 }}
+            >
+              {`Agrega tu foto de perfil (Opcional)`}
+            </Typography>
+            <ProfileAvatar />
+          </Stack>
+        )}
+        {step === 1 && <Step1 onSubmit={handleStep1} resetForm={resetForms} />}
+
+        {step === 2 && <Step2 onSubmit={handleStep2} resetForm={resetForms} />}
+
+        {step === 3 && <Step3 onSubmit={handleStep3} resetForm={resetForms} />}
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "1rem",
+            marginTop: "1rem",
+          }}
+        >
+          {step === 4 && (
             <CustomButton
-              type="submit"
+              type="button"
               color="primary"
               variant="contained"
               title="Ingresar"
@@ -142,9 +151,8 @@ export default function LoginModal() {
               disabled={loadingSubmit}
               isLoading={loadingSubmit}
             />
-          </Box>
-        </form>
-
+          )}
+        </Box>
         <Box
           sx={{
             height: "1px",

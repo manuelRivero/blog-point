@@ -23,14 +23,14 @@ export default function BlogDetail() {
           <CustomCard>
             <CommentInput />
             <Stack>
-              <CommentCard />
-              <CommentCard />
-              <CommentCard />
+              {[1, 2, 3, 4, 5].map((e: any, index: number) => {
+                return <CommentCard key={index} />;
+              })}
             </Stack>
           </CustomCard>
         </Grid>
         <Grid item sm={4}>
-        <Typography
+          <Typography
             variant="h3"
             component="h3"
             sx={{ marginBottom: 2, marginTop: 2 }}
