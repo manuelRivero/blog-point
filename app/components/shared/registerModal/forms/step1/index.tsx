@@ -15,12 +15,13 @@ const schema = yup.object({
 interface Props {
   onSubmit: (values: any) => void;
   resetForm: boolean;
+  initialValues:any
 }
-export default function Step1({ onSubmit, resetForm }: Props) {
+export default function Step1({ onSubmit, resetForm, initialValues }: Props) {
   //form
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      email: "",
+      email: initialValues?.email ? initialValues.email : "",
     },
     resolver: yupResolver(schema),
   });
@@ -36,7 +37,7 @@ export default function Step1({ onSubmit, resetForm }: Props) {
   return (
     <>
     <Typography variant="body1" align="center" sx={{color:"#c2c2c2", marginBottom:2}}>
-      {`Ingresa tu email para ingresar a Blog App`}
+      {`Empecemos por tu email`}
     </Typography>
       <Box sx={{ marginBottom: "1rem" }}>
         <Controller

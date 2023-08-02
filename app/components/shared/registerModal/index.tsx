@@ -1,12 +1,14 @@
 "use client";
 import { setInfoModal, setLoginModal, useCore } from "@/app/context/core";
-import { Box, Modal, Typography, Stack } from "@mui/material";
+import { Box, Modal, Typography, Stack, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
 import ProfileAvatar from "../../profile/avatar";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import Step1 from "./forms/step1";
 import Step2 from "./forms/step2";
 import Step3 from "./forms/step3";
@@ -18,7 +20,7 @@ export default function RegisterModal() {
   //states
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<any | null>(null);
   const [resetForms, setResetForms] = useState<boolean>(false);
 
   const submit = async (values: any) => {
@@ -53,8 +55,11 @@ export default function RegisterModal() {
     setUserData({ ...userData, ...values });
     setStep(4);
   };
-  const handleStep4 = (values: any) => {
-    console.log("step 4");
+  const handleStep4 = () => {
+    console.log("step 4", userData);
+  };
+  const handleImage = (image: any) => {
+    setUserData({ ...userData, image });
   };
   useEffect(() => {
     if (!showRegisterModal) {
@@ -65,6 +70,7 @@ export default function RegisterModal() {
   useEffect(() => {
     if (!showRegisterModal) {
       setResetForms(true);
+      setUserData(null);
     } else {
       setResetForms(false);
     }
@@ -91,6 +97,11 @@ export default function RegisterModal() {
           borderRadius: "1rem",
         }}
       >
+        {step > 1 && (
+          <IconButton onClick={() => setStep(step - 1)}>
+            <ArrowBackIcon />
+          </IconButton>
+        )}
         <Box>
           <Typography
             variant="h2"
@@ -115,8 +126,13 @@ export default function RegisterModal() {
             Registro
           </Typography>
         </Box>
+
         {step === 4 && (
-          <Stack direction="column" alignItems={"center"} justifyContent="center">
+          <Stack
+            direction="column"
+            alignItems={"center"}
+            justifyContent="center"
+          >
             <Typography
               variant="body1"
               align="center"
@@ -124,14 +140,32 @@ export default function RegisterModal() {
             >
               {`Agrega tu foto de perfil (Opcional)`}
             </Typography>
-            <ProfileAvatar />
+            <ProfileAvatar onChange={handleImage} />
           </Stack>
         )}
-        {step === 1 && <Step1 onSubmit={handleStep1} resetForm={resetForms} />}
+        {step === 1 && (
+          <Step1
+            onSubmit={handleStep1}
+            resetForm={resetForms}
+            initialValues={userData}
+          />
+        )}
 
-        {step === 2 && <Step2 onSubmit={handleStep2} resetForm={resetForms} />}
+        {step === 2 && (
+          <Step2
+            onSubmit={handleStep2}
+            resetForm={resetForms}
+            initialValues={userData}
+          />
+        )}
 
-        {step === 3 && <Step3 onSubmit={handleStep3} resetForm={resetForms} />}
+        {step === 3 && (
+          <Step3
+            onSubmit={handleStep3}
+            resetForm={resetForms}
+            initialValues={userData}
+          />
+        )}
 
         <Box
           sx={{
@@ -153,29 +187,37 @@ export default function RegisterModal() {
             />
           )}
         </Box>
-        <Box
-          sx={{
-            height: "1px",
-            border: "solid 1px #c2c2c2",
-            marginTop: "1rem",
-            marginBottom: "1rem",
-          }}
-        ></Box>
-        <Box>
-          <Typography align="center" sx={{ marginBottom: 2 }}>
-            Inicia sesión con:
-          </Typography>
-          <Box sx={{ marginBottom: 2 }}>
-            <SocialLoginButton title="Google" icon="google" background="#fff" />
-          </Box>
-          <Box sx={{ marginBottom: 2 }}>
-            <SocialLoginButton
-              title="Facebook"
-              icon="facebook"
-              background="#fff"
-            />
-          </Box>
-        </Box>
+        {step <= 1 && (
+          <>
+            <Box
+              sx={{
+                height: "1px",
+                border: "solid 1px #c2c2c2",
+                marginTop: "1rem",
+                marginBottom: "1rem",
+              }}
+            ></Box>
+            <Box>
+              <Typography align="center" sx={{ marginBottom: 2 }}>
+                Ingresa con:
+              </Typography>
+              <Box sx={{ marginBottom: 2 }}>
+                <SocialLoginButton
+                  title="Google"
+                  icon="google"
+                  background="#fff"
+                />
+              </Box>
+              <Box sx={{ marginBottom: 2 }}>
+                <SocialLoginButton
+                  title="Facebook"
+                  icon="facebook"
+                  background="#fff"
+                />
+              </Box>
+            </Box>
+          </>
+        )}
         <Box
           sx={{
             display: "flex",

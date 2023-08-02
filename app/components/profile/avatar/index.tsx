@@ -15,7 +15,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import image from "./../../../assets/images/avatar-placeholder.png";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/app/helpers/cropImage";
-export default function ProfileAvatar() {
+
+interface Props {
+  onChange?: (e: string) => void;
+}
+export default function ProfileAvatar({ onChange }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | undefined>(image.src);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -32,6 +36,9 @@ export default function ProfileAvatar() {
       const croppedImage: Blob = await getCroppedImg(imageSrc, cropData);
       const objectUrl: string = URL.createObjectURL(croppedImage);
       setShowCrop(false);
+      if (onChange) {
+        onChange(objectUrl);
+      }
     }
   };
 
@@ -51,7 +58,6 @@ export default function ProfileAvatar() {
   return (
     <>
       <Box sx={{ position: "relative" }}>
-        
         <Stack direction="row" spacing={4}>
           <Badge
             sx={{ height: "fit-content" }}

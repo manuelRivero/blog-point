@@ -15,12 +15,13 @@ const schema = yup.object({
 interface Props {
   onSubmit: (values: any) => void;
   resetForm: boolean;
+  initialValues:any | null
 }
-export default function Step3({ onSubmit, resetForm }: Props) {
+export default function Step3({ onSubmit, resetForm, initialValues }: Props) {
   //form
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      password: "",
+      password:  initialValues?.password ? initialValues.password :"",
     },
     resolver: yupResolver(schema),
   });
@@ -36,7 +37,7 @@ export default function Step3({ onSubmit, resetForm }: Props) {
   return (
     <>
       <Typography variant="body1" align="center" sx={{ color: "#c2c2c2", marginBottom: 2 }}>
-        {`Asegura tu cuenta`}
+      Asegura tu cuenta
       </Typography>
       <Box sx={{ marginBottom: "1rem" }}>
         <Controller
