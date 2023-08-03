@@ -31,7 +31,7 @@ interface Data {
   description: string;
   date?: string;
   link?: string;
-  rate: number;
+  rate?: number;
 }
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 export default function BlogCard({
