@@ -77,7 +77,7 @@ export default function Home() {
             return (
               <Grid key={index} item xs={12} sm={6} lg={4}>
                 <Stack direction="row" sx={{ justifyContent: "center" }}>
-                  <BlogCard data={e.data} preview={false} />
+                  <BlogCard data={e.data} preview={false} showDescriptionTooltip={false} showTitleTooltip={false}/>
                 </Stack>
               </Grid>
             );
