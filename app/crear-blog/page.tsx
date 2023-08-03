@@ -320,8 +320,8 @@ export default function CreateBlog() {
               min={1}
               max={5}
               step={0.1}
-              onChange={({ target }) => {
-                setZoom(target.value);
+              onChange={(e: any) => {
+                setZoom(e.target.value);
               }}
             />
           </Box>
