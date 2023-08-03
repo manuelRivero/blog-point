@@ -56,6 +56,7 @@ export default function CustomInputFile({
           id="file-input"
           onChange={handleFileChange}
           style={{ display: "none" }}
+          accept="image/*"
         />
         <Stack direction="row" spacing={2}>
           <Button variant="contained">

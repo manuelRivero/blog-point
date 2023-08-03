@@ -79,6 +79,7 @@ export default function ProfileAvatar({ onChange }: Props) {
                   id="file-input"
                   onChange={handleFileChange}
                   style={{ display: "none" }}
+                  accept="image/*"
                 />
                 <label htmlFor="file-input">
                   <EditIcon />
