@@ -13,7 +13,35 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import NotificationBox from "../../shared/notificationBox";
 
+
+interface Notification {
+    user: { name: string; lastName: string; image: string | null };
+    action: "like-post" | "like-comment" | "like-response";
+    blogName: string;
+    link: string;
+}
+const notifications:Notification[] = [
+  {
+    user: { name: "María Y José", lastName: "Contreras Goméz", image: null },
+    action: 'like-post',
+    blogName: "Primer blog de prueba",
+    link: "primer-blog-de-prueba",
+  },
+  {
+    user: { name: "María Y José", lastName: "Contreras Goméz", image: null },
+    action: 'like-comment',
+    blogName: "Primer blog de prueba",
+    link: "primer-blog-de-prueba",
+  },
+  {
+    user: { name: "María Y José", lastName: "Contreras Goméz", image: null },
+    action: 'like-response',
+    blogName: "Primer blog de prueba",
+    link: "primer-blog-de-prueba",
+  },
+];
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
@@ -38,7 +66,7 @@ export default function NotificationDropdown() {
           <Paper
             sx={{
               maxHeight: 500,
-              overflow:"auto",
+              overflow: "auto",
               position: "absolute",
               bottom: 0,
               right: 0,
@@ -49,41 +77,18 @@ export default function NotificationDropdown() {
             }}
           >
             <MenuList>
-              <MenuItem
-                component={Link}
-                onClick={() => setIsOpen(false)}
-                href={"/crear-blog"}
-              >
-                <NotificationItem />
-              </MenuItem>
-              <MenuItem
-                component={Link}
-                onClick={() => setIsOpen(false)}
-                href={"/crear-blog"}
-              >
-                <NotificationItem />
-              </MenuItem>
-              <MenuItem
-                component={Link}
-                onClick={() => setIsOpen(false)}
-                href={"/crear-blog"}
-              >
-                <NotificationItem />
-              </MenuItem>
-              <MenuItem
-                component={Link}
-                onClick={() => setIsOpen(false)}
-                href={"/crear-blog"}
-              >
-                <NotificationItem />
-              </MenuItem>
-              <MenuItem
-                component={Link}
-                onClick={() => setIsOpen(false)}
-                href={"/crear-blog"}
-              >
-                <NotificationItem />
-              </MenuItem>
+              {notifications.map((e, i) => {
+                return (
+                  <MenuItem
+                    key={i}
+                    component={Link}
+                    onClick={() => setIsOpen(false)}
+                    href={"/detalle-del-blog/1"}
+                  >
+                    <NotificationBox data={e} />
+                  </MenuItem>
+                );
+              })}
             </MenuList>
           </Paper>
         </ClickAwayListener>
@@ -91,14 +96,3 @@ export default function NotificationDropdown() {
     </Box>
   );
 }
-
-const NotificationItem = () => {
-  return (
-    <Box sx={{width:"100%"}}>
-      <Stack sx={{width:"100%"}}>
-        <Typography variant="body1" component="p" sx={{whiteSpace:"break-spaces"}}>María y josé Contreras ha comentado tu blog</Typography>
-        <Typography variant="body1" component="p" fontWeight={"bold"} sx={{whiteSpace:"break-spaces"}}>Como prepararse para tu primer día de practicas</Typography>
-      </Stack>
-    </Box>
-  );
-};
