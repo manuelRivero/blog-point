@@ -55,7 +55,7 @@ export default function Step1({ onSubmit, resetForm, initialValues }: Props) {
               }}
               label="Email"
               outline={true}
-              placeholder=""
+              placeholder="Escribe tu email"
             />
           )}
         />

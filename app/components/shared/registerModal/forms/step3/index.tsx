@@ -55,7 +55,7 @@ export default function Step3({ onSubmit, resetForm, initialValues }: Props) {
               }}
               label="Contraseña"
               outline={true}
-              placeholder=""
+              placeholder="Escribe tu contraseña"
             />
           )}
         />

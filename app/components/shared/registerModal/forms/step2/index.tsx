@@ -61,7 +61,7 @@ export default function Step2({ onSubmit, resetForm, initialValues }: Props) {
               }}
               label="Nombres"
               outline={true}
-              placeholder=""
+              placeholder="Escribe tus nombres"
             />
           )}
         />
@@ -82,7 +82,7 @@ export default function Step2({ onSubmit, resetForm, initialValues }: Props) {
               }}
               label="Apellidos"
               outline={true}
-              placeholder=""
+              placeholder="Escribe tus apellidos"
             />
           )}
         />

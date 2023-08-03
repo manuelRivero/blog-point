@@ -137,7 +137,7 @@ export default function CreateBlog() {
                         }}
                         label="Título del blog"
                         outline={true}
-                        placeholder=""
+                        placeholder="Escribe el titulo del blog"
                       />
                     )}
                   />
@@ -171,7 +171,7 @@ export default function CreateBlog() {
                         outline={true}
                         multiline={true}
                         rows={5}
-                        placeholder=""
+                        placeholder="Escribe la descripción del blog"
                       />
                     )}
                   />

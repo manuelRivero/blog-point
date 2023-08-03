@@ -101,6 +101,7 @@ export default function LoginModal() {
                   }}
                   label="Email"
                   outline={true}
+                  placeholder="Escribe tu email"
                 />
               )}
             />
@@ -121,6 +122,7 @@ export default function LoginModal() {
                   }}
                   label="Contraseña"
                   outline={true}
+                  placeholder="Escribe tu contraseña"
                 />
               )}
             />
