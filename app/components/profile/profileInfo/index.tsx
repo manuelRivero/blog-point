@@ -116,7 +116,7 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
               maxLength={120}
               type="text"
               error={fieldState.error}
-              value={field.value}
+              value={field.value ? field.value : ""}
               onChange={(
                 e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
               ) => {
