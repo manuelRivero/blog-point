@@ -38,7 +38,6 @@ export default function RegisterModal() {
       },
     });
     setLoadingSubmit(false);
-    reset();
   };
 
   const handleStep1 = (values: any) => {
