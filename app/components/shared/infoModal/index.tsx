@@ -1,24 +1,30 @@
-
-"use client"
+"use client";
 import React from "react";
 import Lottie from "lottie-react";
-import { Box, Modal } from "@mui/material";
+import { Box, Modal, Stack, Typography } from "@mui/material";
 import { setInfoModal, useCore } from "@/app/context/core";
 import success from "./../../../assets/lottie/success.json";
+import error from "./../../../assets/lottie/error.json";
+import CustomButton from "../customButton";
 
 const status: any = {
   success: success,
+  error: error,
 };
-
 
 export default function InfoModal() {
   const [{ infoModal }, coreDispatch] = useCore();
   const onAnimationEnd = () => {
-      console.log("animation end")
-    if(infoModal?.onAnimationEnd){
-        infoModal.onAnimationEnd()
+    console.log("animation end");
+    if (infoModal?.onAnimationEnd) {
+      infoModal.onAnimationEnd();
     }
-  }
+  };
+  const handleSubmitCallback = () => {
+    if (infoModal?.hasSubmit?.cb) {
+      infoModal.hasSubmit.cb();
+    }
+  };
   if (!infoModal) {
     return null;
   }
@@ -43,7 +49,34 @@ export default function InfoModal() {
           borderRadius: "1rem",
         }}
       >
-        <Lottie animationData={status[infoModal.status]} loop={false} onComplete={onAnimationEnd} />
+        <Lottie
+          animationData={status[infoModal.status]}
+          loop={false}
+          onComplete={onAnimationEnd}
+        />
+        {infoModal.title && (
+          <Typography variant="h5" align="center" component="h5">
+            {infoModal.title}
+          </Typography>
+        )}
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent={"center"}
+          sx={{ marginTop: 2 }}
+        >
+          {infoModal.hasSubmit && (
+            <CustomButton
+              type="button"
+              cb={handleSubmitCallback}
+              disabled={false}
+              isLoading={false}
+              variant="contained"
+              color="primary"
+              title={infoModal.hasSubmit.title}
+            />
+          )}
+        </Stack>
       </Box>
     </Modal>
   );

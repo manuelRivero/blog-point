@@ -15,11 +15,17 @@ const schema = yup.object({
 interface Props {
   onSubmit: (values: any) => void;
   resetForm: boolean;
-  initialValues:any
+  initialValues: any;
+  error: { fieldName: "email"; error: string } | null;
 }
-export default function Step1({ onSubmit, resetForm, initialValues }: Props) {
+export default function Step1({
+  onSubmit,
+  resetForm,
+  initialValues,
+  error,
+}: Props) {
   //form
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit, reset, setError } = useForm({
     defaultValues: {
       email: initialValues?.email ? initialValues.email : "",
     },
@@ -34,11 +40,21 @@ export default function Step1({ onSubmit, resetForm, initialValues }: Props) {
       reset();
     }
   }, [resetForm]);
+
+  useEffect(() => {
+    if (error) {
+      setError(error.fieldName, { type: "custom", message: error.error });
+    }
+  }, [error]);
   return (
     <>
-    <Typography variant="body1" align="center" sx={{color:"#c2c2c2", marginBottom:2}}>
-      {`Empecemos por tu email`}
-    </Typography>
+      <Typography
+        variant="body1"
+        align="center"
+        sx={{ color: "#c2c2c2", marginBottom: 2 }}
+      >
+        {`Empecemos por tu email`}
+      </Typography>
       <Box sx={{ marginBottom: "1rem" }}>
         <Controller
           name={"email"}

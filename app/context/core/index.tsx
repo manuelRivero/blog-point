@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 
 import CoreReducer from "./reducer";
+import axios from "axios";
 
 type User = {
   data: {
@@ -53,27 +54,18 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const [state, dispatch] = React.useReducer(CoreReducer, initialState);
   const value: [State, React.Dispatch<any>] = [state, dispatch];
 
-  //   useEffect(() => {
-  //     axios.interceptors.response.use(
-  //       response => {
-  //         return response;
-  //       },
-  //       async error => {
-  //         // const deviceId = await getUniqueId();
-  //         console.log('error.response.data', error.response.data);
-  //         Sentry.captureMessage(
-  //           `request error: ${JSON.stringify({
-  //             url: error.response.config.url,
-  //             api: error.response.config.baseURL,
-  //             error: error.response.data,
-  //             data: error.response.data,
-  //             errorMetaData: _.pick(state, ['front', 'shift', 'selectedMeters']),
-  //           })}`,
-  //         );
-  //         return Promise.reject(error);
-  //       },
-  //     );
-  //   }, [state]);
+    useEffect(() => {
+      axios.interceptors.response.use(
+        response => {
+          return response;
+        },
+        async error => {
+          // const deviceId = await getUniqueId();
+          console.log('error.response.data', error.response.data);
+          return Promise.reject(error);
+        },
+      );
+    }, []);
 
   return <CoreContext.Provider value={value} {...props} />;
 };

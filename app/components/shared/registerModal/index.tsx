@@ -1,5 +1,10 @@
 "use client";
-import { setInfoModal, setLoginModal, useCore } from "@/app/context/core";
+import {
+  setInfoModal,
+  setLoginModal,
+  useCore,
+  setRegisterModal,
+} from "@/app/context/core";
 import { Box, Modal, Typography, Stack, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -12,6 +17,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Step1 from "./forms/step1";
 import Step2 from "./forms/step2";
 import Step3 from "./forms/step3";
+import { register } from "@/app/client/auth";
 
 export default function RegisterModal() {
   const router = useRouter();
@@ -22,22 +28,62 @@ export default function RegisterModal() {
   const [step, setStep] = useState<number>(1);
   const [userData, setUserData] = useState<any | null>(null);
   const [resetForms, setResetForms] = useState<boolean>(false);
+  const [step1Error, setStep1Error] = useState<null | {
+    fieldName: "email";
+    error: string;
+  }>(null);
 
-  const submit = async (values: any) => {
-    console.log("values");
+  const submit = async () => {
     setLoadingSubmit(true);
-    setLoginModal(coreDispatch, false);
-    setInfoModal(coreDispatch, {
-      status: "success",
-      title: "Has iniciado sesión correctamente",
-      hasCancel: null,
-      hasSubmit: null,
-      onAnimationEnd: () => {
-        router.push("/");
-        setInfoModal(coreDispatch, null);
-      },
+    const form = new FormData();
+    Object.keys(userData).forEach((key) => {
+      form.append(key, userData[key]);
     });
-    setLoadingSubmit(false);
+    try {
+      const response = await register(form);
+      setLoginModal(coreDispatch, false);
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Te has registrado exitosamente, ahora puedes iniciar sesión",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Excelente",
+          cb: () => {
+            setLoginModal(coreDispatch, true);
+            setInfoModal(coreDispatch, null);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } catch (error: any) {
+      console.log("error", error.response.data);
+      // set step for error
+      switch (error.response.data.ref) {
+        case "email":
+          setStep(1);
+          setStep1Error({ fieldName: "email", error: error.response.data.error });
+          break;
+
+        default:
+          break;
+      }
+      setInfoModal(coreDispatch, {
+        status: "error",
+        title: "No se ha podido completar el registro",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Intentar nuevamente",
+          cb: () => {
+            setUserData(null);
+            setStep(1);
+            setInfoModal(coreDispatch, null);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } finally {
+      setLoadingSubmit(false);
+    }
   };
 
   const handleStep1 = (values: any) => {
@@ -54,9 +100,7 @@ export default function RegisterModal() {
     setUserData({ ...userData, ...values });
     setStep(4);
   };
-  const handleStep4 = () => {
-    console.log("step 4", userData);
-  };
+  const handleStep4 = () => {};
   const handleImage = (image: any) => {
     setUserData({ ...userData, image });
   };
@@ -147,6 +191,7 @@ export default function RegisterModal() {
             onSubmit={handleStep1}
             resetForm={resetForms}
             initialValues={userData}
+            error={step1Error}
           />
         )}
 
@@ -180,7 +225,7 @@ export default function RegisterModal() {
               color="primary"
               variant="contained"
               title="Ingresar"
-              cb={() => {}}
+              cb={() => submit()}
               disabled={loadingSubmit}
               isLoading={loadingSubmit}
             />
