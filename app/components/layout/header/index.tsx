@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   AppBar,
   IconButton,
@@ -19,7 +19,7 @@ import Link from "next/link";
 import { useCore, setLoginModal, setRegisterModal } from "@/app/context/core";
 
 export default function Header() {
-  const [{}, coreDispatch] = useCore();
+  const [{ user }, coreDispatch] = useCore();
 
   return (
     <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
@@ -38,38 +38,46 @@ export default function Header() {
             </Typography>
           </Stack>
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-            <Box>
-              <HeaderMenu />
-            </Box>
-            <Box>
-              <NotificationDropdown />
-            </Box>
-            <Button
-              onClick={() => setLoginModal(coreDispatch, true)}
-              variant="outlined"
-              color="primary"
-              sx={{
-                color: "#fff",
-                "&:hover": {
-                  borderColor: "#fff",
-                },
-              }}
-            >
-              Inicia sesión
-            </Button>
-            <Button
-             onClick={() => setRegisterModal(coreDispatch, true)}
-              variant="outlined"
-              color="primary"
-              sx={{
-                color: "#fff",
-                "&:hover": {
-                  borderColor: "#fff",
-                },
-              }}
-            >
-              Registrate
-            </Button>
+            {user && (
+              <>
+                <Box>
+                  <HeaderMenu />
+                </Box>
+                <Box>
+                  <NotificationDropdown />
+                </Box>
+              </>
+            )}
+            {!user && (
+              <>
+                <Button
+                  onClick={() => setLoginModal(coreDispatch, true)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      borderColor: "#fff",
+                    },
+                  }}
+                >
+                  Inicia sesión
+                </Button>
+                <Button
+                  onClick={() => setRegisterModal(coreDispatch, true)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      borderColor: "#fff",
+                    },
+                  }}
+                >
+                  Registrate
+                </Button>
+              </>
+            )}
             <Button
               component={Link}
               href="/crear-blog"

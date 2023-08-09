@@ -3,28 +3,28 @@
 import React, { useEffect } from "react";
 
 import CoreReducer from "./reducer";
-import axios from "axios";
+import { axiosIntance } from "@/app/client";
 
 type User = {
-  data: {
+  data?: {
     names: string;
     lastname: string;
     avatar: string;
   };
-  tokens: {
-    refresh_token: string;
+  tokens?: {
+    refresh_token?: string;
     access_token: string;
   };
 };
 export type State = {
   showLoginModal: boolean;
-  showRegisterModal:boolean;
+  showRegisterModal: boolean;
   user: User | null;
   infoModal: InfoModal | null;
 };
 interface InfoModal {
   status: "success" | "info" | "error";
-  onAnimationEnd: null | (()=>void);
+  onAnimationEnd: null | (() => void);
   title: string;
   hasCancel: null | {
     title: string;
@@ -42,7 +42,7 @@ type Props = {
 const initialState: State = {
   infoModal: null,
   showLoginModal: false,
-  showRegisterModal:false,
+  showRegisterModal: false,
   user: null,
 };
 
@@ -55,18 +55,43 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const [state, dispatch] = React.useReducer(CoreReducer, initialState);
   const value: [State, React.Dispatch<any>] = [state, dispatch];
 
-    useEffect(() => {
-      axios.interceptors.response.use(
-        response => {
-          return response;
-        },
-        async error => {
-          // const deviceId = await getUniqueId();
-          console.log('error.response.data', error.response.data);
-          return Promise.reject(error);
-        },
-      );
-    }, []);
+  useEffect(() => {
+    axiosIntance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      async (error) => {
+        // const deviceId = await getUniqueId();
+        console.log("error.response.data", error.response.data);
+        return Promise.reject(error);
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    axiosIntance.interceptors.request.use(
+      function (config) {
+        // Do something before request is sent
+        const user = localStorage.getItem("user");
+        let parseUser = null;
+        if (user) {
+          parseUser = JSON.parse(user);
+          if (parseUser) {
+            console.log("if user", parseUser);
+            config.headers.Authorization = "Bearer" + " " + parseUser.token;
+          } else {
+            console.log("else user");
+            delete config.headers.Authorization
+          }
+        }
+        return config;
+      },
+      function (error) {
+        // Do something with request error
+        return Promise.reject(error);
+      }
+    );
+  }, []);
 
   return <CoreContext.Provider value={value} {...props} />;
 };
@@ -79,6 +104,32 @@ export const useCore = () => {
 
   return context;
 };
+
+export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
+  const user = localStorage.getItem("user");
+  let parseUser;
+  if (user) {
+    parseUser = JSON.parse(user);
+  }
+  localStorage.setItem("user", JSON.stringify({ ...parseUser, data }));
+  dispatch({
+    type: "SET_USER_DATA",
+    payload: data,
+  });
+}
+
+export async function setUserTokens(dispatch: React.Dispatch<any>, token: any) {
+  const user = localStorage.getItem("user");
+  let parseUser;
+  if (user) {
+    parseUser = JSON.parse(user);
+  }
+  localStorage.setItem("user", JSON.stringify({ ...parseUser, token }));
+  dispatch({
+    type: "SET_USER_TOKENS",
+    payload: token,
+  });
+}
 
 export async function setLoginModal(
   dispatch: React.Dispatch<any>,

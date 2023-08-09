@@ -17,7 +17,7 @@ import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/app/helpers/cropImage";
 
 interface Props {
-  onChange?: (e: string) => void;
+  onChange?: (e: Blob) => void;
 }
 export default function ProfileAvatar({ onChange }: Props) {
   const [file, setFile] = useState<File | null>(null);

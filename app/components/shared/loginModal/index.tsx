@@ -1,5 +1,5 @@
 "use client";
-import { setInfoModal, setLoginModal, useCore } from "@/app/context/core";
+import { setInfoModal, setLoginModal, setUserData, setUserTokens, useCore } from "@/app/context/core";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -11,6 +11,7 @@ import CustomInput from "../customInput";
 import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
+import { login, me } from "@/app/client/auth";
 
 const schema = yup.object({
   email: yup.string().email().required("Campo requerido"),
@@ -31,19 +32,39 @@ export default function LoginModal() {
   const submit = async (values: any) => {
     console.log("values");
     setLoadingSubmit(true);
-    setLoginModal(coreDispatch, false);
-    setInfoModal(coreDispatch, {
-      status: "success",
-      title: "Has iniciado sesión correctamente",
-      hasCancel: null,
-      hasSubmit: null,
-      onAnimationEnd: () => {
-        router.push("/");
-        setInfoModal(coreDispatch, null);
-      },
-    });
-    setLoadingSubmit(false);
-    reset();
+    try {
+      const {data:{token}} =  await login(values)
+      setUserTokens(coreDispatch, token)
+      const {data:{name, lastName, email, avatar}} = await me()
+      setUserData(coreDispatch, {name, lastName, email, avatar})
+
+      setLoginModal(coreDispatch, false);
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Has iniciado sesión correctamente",
+        hasCancel: null,
+        hasSubmit: null,
+        onAnimationEnd: () => {
+          router.push("/");
+          setInfoModal(coreDispatch, null);
+          reset();
+        },
+      });
+    } catch (error) {
+      setInfoModal(coreDispatch, {
+        status: "error",
+        title: "No se ha podido iniciar sesión",
+        hasCancel: null,
+        hasSubmit: {
+          title:"Intentar nuevamente",
+          cb: ()=> setInfoModal(coreDispatch, false)
+        },
+        onAnimationEnd: null,
+      });
+    } finally {
+      setLoadingSubmit(false);
+
+    }
   };
  
   useEffect(()=>{
