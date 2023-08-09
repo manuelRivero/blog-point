@@ -22,6 +22,7 @@ interface Props {
 export default function ProfileAvatar({ onChange }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | undefined>(image.src);
+  const [cropImageSrc, setCropImageSrc] = useState< string | null>(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [cropData, setCropData] = useState<Area | null>(null);
@@ -36,8 +37,9 @@ export default function ProfileAvatar({ onChange }: Props) {
       const croppedImage: Blob = await getCroppedImg(imageSrc, cropData);
       const objectUrl: string = URL.createObjectURL(croppedImage);
       setShowCrop(false);
+      setCropImageSrc(objectUrl)
       if (onChange) {
-        onChange(objectUrl);
+        onChange(croppedImage);
       }
     }
   };
@@ -88,7 +90,7 @@ export default function ProfileAvatar({ onChange }: Props) {
             }
           >
             <Avatar
-              src={imageSrc}
+              src={cropImageSrc ? cropImageSrc : image.src }
               sx={{ width: 100, height: 100 }}
               alt="foto de perfil"
             />

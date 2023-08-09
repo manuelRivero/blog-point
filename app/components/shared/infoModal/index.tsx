@@ -59,6 +59,11 @@ export default function InfoModal() {
             {infoModal.title}
           </Typography>
         )}
+         {infoModal.title && (
+          <Typography variant="body1" color="error" mt={2} align="center" component="p">
+            {infoModal.message}
+          </Typography>
+        )}
         <Stack
           direction="row"
           spacing={2}

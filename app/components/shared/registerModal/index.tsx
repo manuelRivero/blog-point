@@ -58,25 +58,20 @@ export default function RegisterModal() {
     } catch (error: any) {
       console.log("error", error.response.data);
       // set step for error
-      switch (error.response.data.ref) {
-        case "email":
-          setStep(1);
-          setStep1Error({ fieldName: "email", error: error.response.data.error });
-          break;
-
-        default:
-          break;
-      }
+      setRegisterModal(coreDispatch, false)
+     
       setInfoModal(coreDispatch, {
         status: "error",
         title: "No se ha podido completar el registro",
         hasCancel: null,
+        message: error.response.data.error,
         hasSubmit: {
           title: "Intentar nuevamente",
           cb: () => {
             setUserData(null);
             setStep(1);
             setInfoModal(coreDispatch, null);
+            setRegisterModal(coreDispatch, true)
           },
         },
         onAnimationEnd: null,

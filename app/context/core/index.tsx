@@ -34,6 +34,7 @@ interface InfoModal {
     title: string;
     cb: () => void;
   };
+  message?: string;
 }
 type Props = {
   children: JSX.Element;

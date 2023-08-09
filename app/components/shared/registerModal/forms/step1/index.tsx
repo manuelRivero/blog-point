@@ -25,7 +25,7 @@ export default function Step1({
   error,
 }: Props) {
   //form
-  const { control, handleSubmit, reset, setError } = useForm({
+  const { control, handleSubmit, reset, setError, clearErrors } = useForm({
     defaultValues: {
       email: initialValues?.email ? initialValues.email : "",
     },
@@ -38,6 +38,7 @@ export default function Step1({
   useEffect(() => {
     if (resetForm) {
       reset();
+      clearErrors()
     }
   }, [resetForm]);
 
