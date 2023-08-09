@@ -1,7 +1,10 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Button } from "@mui/material";
 import React from "react";
 import MainSearch from "../../mainSearch";
 import CategoryRow from "../categoryRow";
+import AddIcon from "@mui/icons-material/Add";
+import Link from "next/link";
+
 
 export default function Hero() {
   return (
@@ -11,24 +14,35 @@ export default function Hero() {
         height: 470,
       })}
     >
-      <Stack sx={{ paddingTop:"2rem", height: "100%" }}>
+      <Stack sx={{ paddingTop: "2rem", height: "100%" }}>
         <Typography
           variant={"h1"}
           component={"h1"}
           align={"center"}
           color={"#fff"}
-          sx={{ marginBottom: 4 }}
+          sx={{ marginBottom: 1 }}
         >
-          Lorem ipsum dolor sit amet
+          Crea contenido a tu medida
         </Typography>
+        <Stack direction="row" justifyContent="center" mb={3}>
+          <Button
+            component={Link}
+            href="/crear-blog"
+            variant="contained"
+            color="secondary"
+            startIcon={<AddIcon />}
+          >
+            Crear Blog
+          </Button>
+        </Stack>
         <Typography
           variant={"h3"}
           component={"h3"}
           align={"center"}
           color={"#fff"}
-          sx={{ marginBottom: 4 }}
+          sx={{ marginBottom: 2 }}
         >
-          Lorem ipsum dolor sit amet
+          Encuentra apuntes, casos clinicos y resumenes de profesores y compañeros
         </Typography>
         <Stack justifyContent={"center"} direction={"row"} mb={2}>
           <MainSearch />
