@@ -17,29 +17,31 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import CustomCard from "../components/shared/card";
-import ProfileAvatar from "../components/profile/avatar";
+import CustomCard from "../../components/shared/card";
+import ProfileAvatar from "../../components/profile/avatar";
 
 //images
 import EditIcon from "@mui/icons-material/Edit";
-import CustomInput from "../components/shared/customInput";
-import ProfileInfo from "../components/profile/profileInfo";
-import ProfileSocial from "../components/profile/profileSocial";
-import ProfileBlogCard from "../components/profile/profileBlogCard";
-import ProfileStats from "../components/profile/profileStats";
+import CustomInput from "../../components/shared/customInput";
+import ProfileInfo from "../../components/profile/profileInfo";
+import ProfileSocial from "../../components/profile/profileSocial";
+import ProfileBlogCard from "../../components/profile/profileBlogCard";
+import ProfileStats from "../../components/profile/profileStats";
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import { getProfile } from "@/app/client/user";
 
-const schema = yup.object({
-  name: yup.string().required("Campo requerido"),
-  lastName: yup.string().required("Campo requerido"),
-  image: yup.mixed().required("Campo requerido"),
-  facebook: yup.string().required("Campo requerido"),
-});
+// export const getServerSideProps: GetServerSideProps<{
+//   repo: Repo
+// }> = async () => {
+//   const res = await getProfile()
+//   const repo = await res.json()
+//   return { props: { repo } }
+// }
+ 
+
 
 export default function Profile() {
-  //form
-  const { control, handleSubmit, reset } = useForm({
-    resolver: yupResolver(schema),
-  });
+  
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
 

@@ -35,7 +35,7 @@ export default function LoginModal() {
     try {
       const {data:{token}} =  await login(values)
       setUserTokens(coreDispatch, token)
-      const {data:{name, lastName, email, avatar}} = await me()
+      const {data:{data:{name, lastName, email, avatar}}} = await me()
       setUserData(coreDispatch, {name, lastName, email, avatar})
 
       setLoginModal(coreDispatch, false);

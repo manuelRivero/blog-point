@@ -5,6 +5,12 @@ export default function registerReducer(
   action: { type: string; payload: any }
 ) {
   switch (action.type) {
+    case "LOGOUT": {
+      return {
+        ...state,
+        user: null,
+      };
+    }
     case "SET_USER_TOKENS": {
       return {
         ...state,

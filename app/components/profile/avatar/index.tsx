@@ -15,14 +15,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import image from "./../../../assets/images/avatar-placeholder.png";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/app/helpers/cropImage";
+import { useCore } from "@/app/context/core";
 
 interface Props {
   onChange?: (e: Blob) => void;
 }
 export default function ProfileAvatar({ onChange }: Props) {
+  const [{ showLoginModal, user }, coreDispatch] = useCore();
+
   const [file, setFile] = useState<File | null>(null);
-  const [imageSrc, setImageSrc] = useState<string | undefined>(image.src);
-  const [cropImageSrc, setCropImageSrc] = useState< string | null>(null)
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [cropData, setCropData] = useState<Area | null>(null);
@@ -37,7 +40,7 @@ export default function ProfileAvatar({ onChange }: Props) {
       const croppedImage: Blob = await getCroppedImg(imageSrc, cropData);
       const objectUrl: string = URL.createObjectURL(croppedImage);
       setShowCrop(false);
-      setCropImageSrc(objectUrl)
+      setCropImageSrc(objectUrl);
       if (onChange) {
         onChange(croppedImage);
       }
@@ -90,7 +93,13 @@ export default function ProfileAvatar({ onChange }: Props) {
             }
           >
             <Avatar
-              src={cropImageSrc ? cropImageSrc : image.src }
+              src={
+                cropImageSrc
+                  ? cropImageSrc
+                  : user?.data?.avatar
+                  ? user?.data?.avatar
+                  : image.src
+              }
               sx={{ width: 100, height: 100 }}
               alt="foto de perfil"
             />
@@ -145,7 +154,7 @@ export default function ProfileAvatar({ onChange }: Props) {
               min={1}
               max={5}
               step={0.1}
-              onChange={(e:any) => {
+              onChange={(e: any) => {
                 setZoom(e.target.value);
               }}
             />

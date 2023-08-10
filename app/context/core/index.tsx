@@ -4,12 +4,28 @@ import React, { useEffect } from "react";
 
 import CoreReducer from "./reducer";
 import { axiosIntance } from "@/app/client";
-
+const getUser = () => {
+  const user = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  let parseUser = null;
+  if(user){
+    parseUser = JSON.parse(user)
+  }
+  return parseUser
+}
 type User = {
   data?: {
-    names: string;
-    lastname: string;
+    name: string;
+    lastName: string;
     avatar: string;
+    bio:string;
+    fallow: number;
+    blogs:number;
+    fallowers: number;
+    social:{
+      facebook:string;
+      instagram:string;
+      twitter:string
+    }
   };
   tokens?: {
     refresh_token?: string;
@@ -43,7 +59,7 @@ const initialState: State = {
   infoModal: null,
   showLoginModal: false,
   showRegisterModal: false,
-  user: null,
+  user: getUser(),
 };
 
 const CoreContext = React.createContext<[State, React.Dispatch<any>]>([
@@ -104,7 +120,12 @@ export const useCore = () => {
 
   return context;
 };
-
+export async function logout(dispatch: React.Dispatch<any>) {
+  const user = localStorage.removeItem("user");
+  dispatch({
+    type: "LOGOUT",
+  });
+}
 export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
   const user = localStorage.getItem("user");
   let parseUser;

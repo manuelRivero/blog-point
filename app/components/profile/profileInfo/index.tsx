@@ -24,13 +24,18 @@ interface Props {
 }
 
 export default function ProfileInfo({ onChangeEditing }: Props) {
-  const [{ showLoginModal }, coreDispatch] = useCore();
+  const [{ showLoginModal, user }, coreDispatch] = useCore();
 
   //form
   const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: user?.data?.name,
+      lastName: user?.data?.lastName,
+      bio: user?.data?.bio ? user?.data.bio : "",
+    },
     resolver: yupResolver(schema),
   });
-  const[loadingSubmit, setLoadingSubmit] = useState<boolean>(false)
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const handleCancel = () => {
@@ -43,7 +48,7 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
     setIsEditing(true);
     onChangeEditing(true);
   };
-  const submit = (values:any)=> {
+  const submit = (values: any) => {
     setLoadingSubmit(true);
     setInfoModal(coreDispatch, {
       status: "success",
@@ -52,100 +57,97 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
       hasSubmit: null,
       onAnimationEnd: () => {
         setInfoModal(coreDispatch, null);
-        setIsEditing(false)
+        setIsEditing(false);
         onChangeEditing(false);
         setLoadingSubmit(false);
-
       },
     });
-
-  }
+  };
   return isEditing ? (
     <Box sx={{ width: "100%" }}>
       <form onSubmit={handleSubmit(submit)}>
-      <Box sx={{ marginBottom: 1 }}>
-        <Controller
-          name={"name"}
-          control={control}
-          render={({ field, fieldState }) => (
-            <CustomInput
-              maxLength={20}
-              type="text"
-              error={fieldState.error}
-              value={field.value}
-              onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                field.onChange(e.target.value);
-              }}
-              label="Nombres"
-              outline={true}
-              placeholder="Escribe tu nombre"
-            />
-          )}
-        />
-      </Box>
-      <Box sx={{ marginBottom: 1 }}>
-        <Controller
-          name={"lastName"}
-          control={control}
-          render={({ field, fieldState }) => (
-            <CustomInput
-              maxLength={20}
-              type="text"
-              error={fieldState.error}
-              value={field.value}
-              onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                field.onChange(e.target.value);
-              }}
-              label="Apellidos"
-              outline={true}
-              placeholder="Escribe tu apellido"
-            />
-          )}
-        />
-      </Box>
-      <Box sx={{ marginBottom: 1 }}>
-        <Controller
-          name={"bio"}
-          control={control}
-          render={({ field, fieldState }) => (
-            <CustomInput
-              maxLength={120}
-              type="text"
-              error={fieldState.error}
-              value={field.value ? field.value : ""}
-              onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                field.onChange(e.target.value);
-              }}
-              label="Acerca de tí"
-              outline={true}
-              multiline={true}
-              rows={3}
-              placeholder="Escribe acerca de tí"
-            />
-          )}
-        />
-      </Box>
-      <Stack direction="row" spacing={4} sx={{ justifyContent: "center" }}>
-        <Button color="error" variant="outlined" onClick={handleCancel}>
-          Cancelar
-        </Button>
-        <CustomButton
-              type="submit"
-              color="primary"
-              variant="contained"
-              title="Aceptar"
-              cb={() => {}}
-              disabled={loadingSubmit}
-              isLoading={loadingSubmit}
-            />
-      </Stack>
-
+        <Box sx={{ marginBottom: 1 }}>
+          <Controller
+            name={"name"}
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                maxLength={20}
+                type="text"
+                error={fieldState.error}
+                value={field.value}
+                onChange={(
+                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  field.onChange(e.target.value);
+                }}
+                label="Nombres"
+                outline={true}
+                placeholder="Escribe tu nombre"
+              />
+            )}
+          />
+        </Box>
+        <Box sx={{ marginBottom: 1 }}>
+          <Controller
+            name={"lastName"}
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                maxLength={20}
+                type="text"
+                error={fieldState.error}
+                value={field.value}
+                onChange={(
+                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  field.onChange(e.target.value);
+                }}
+                label="Apellidos"
+                outline={true}
+                placeholder="Escribe tu apellido"
+              />
+            )}
+          />
+        </Box>
+        <Box sx={{ marginBottom: 1 }}>
+          <Controller
+            name={"bio"}
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                maxLength={120}
+                type="text"
+                error={fieldState.error}
+                value={field.value ? field.value : ""}
+                onChange={(
+                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  field.onChange(e.target.value);
+                }}
+                label="Acerca de tí"
+                outline={true}
+                multiline={true}
+                rows={3}
+                placeholder="Escribe acerca de tí"
+              />
+            )}
+          />
+        </Box>
+        <Stack direction="row" spacing={4} sx={{ justifyContent: "center" }}>
+          <Button color="error" variant="outlined" onClick={handleCancel}>
+            Cancelar
+          </Button>
+          <CustomButton
+            type="submit"
+            color="primary"
+            variant="contained"
+            title="Aceptar"
+            cb={() => {}}
+            disabled={loadingSubmit}
+            isLoading={loadingSubmit}
+          />
+        </Stack>
       </form>
     </Box>
   ) : (
@@ -171,11 +173,14 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
       >
         <EditIcon />
       </Box>
-      <Typography variant="h6">Manuel Rivero</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, dicta
-        assumenda enim quas, laborum unde molestias cumque asperiores odit eos.
-      </Typography>
+      <Typography variant="h6">{user?.data?.name}</Typography>
+      {user?.data?.bio ? (
+        <Typography variant="body1">{user?.data?.bio}</Typography>
+      ) : (
+        <Typography variant="body1" sx={{ color: "#c2c2c2" }}>
+          Aun no has agregado contenido a tu biografía
+        </Typography>
+      )}
     </Box>
   );
 }

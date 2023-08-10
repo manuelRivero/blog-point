@@ -15,9 +15,10 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
+import { useCore, logout } from "@/app/context/core";
 
 export default function HeaderMenu() {
-  
+  const [, coreDispatch] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Box
@@ -74,7 +75,7 @@ export default function HeaderMenu() {
                 Iniciar sesión
               </Typography>
             </MenuItem>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/"}>
+            <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch)}} href={"/"}>
               <Typography variant="body1" component={"p"}>
                 Cerrar sesión
               </Typography>
