@@ -92,17 +92,18 @@ export default function ProfileAvatar({ onChange }: Props) {
               </Box>
             }
           >
-            <Avatar
-              src={
-                cropImageSrc
-                  ? cropImageSrc
-                  : user?.data?.avatar
-                  ? user?.data?.avatar
-                  : image.src
-              }
+            {cropImageSrc && (
+              <Avatar
+                src={cropImageSrc}
+                sx={{ width: 100, height: 100 }}
+                alt="foto de perfil"
+              />
+            )}
+            {!cropImageSrc && <Avatar
+              src={user?.data?.avatar ? user?.data?.avatar : image.src}
               sx={{ width: 100, height: 100 }}
               alt="foto de perfil"
-            />
+            />}
           </Badge>
         </Stack>
       </Box>
