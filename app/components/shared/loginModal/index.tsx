@@ -35,7 +35,9 @@ export default function LoginModal() {
     try {
       const {data:{token}} =  await login(values)
       setUserTokens(coreDispatch, token)
-      const {data:{data:{name, lastName, email, avatar}}} = await me()
+      const data = await me()
+      console.log("me data", data)
+      const {name, lastName, email, avatar} = data.data
       setUserData(coreDispatch, {name, lastName, email, avatar})
 
       setLoginModal(coreDispatch, false);
@@ -51,6 +53,7 @@ export default function LoginModal() {
         },
       });
     } catch (error) {
+      console.log("login error", error)
       setInfoModal(coreDispatch, {
         status: "error",
         title: "No se ha podido iniciar sesión",

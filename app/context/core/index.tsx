@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-
 import CoreReducer from "./reducer";
 import { axiosIntance } from "@/app/client";
+import Cookies from "js-cookie"
 const getUser = () => {
   const user = typeof window !== "undefined" ? localStorage.getItem("user") : null;
   let parseUser = null;
@@ -98,6 +98,8 @@ export const CoreProvider: React.FC<Props> = (props) => {
           } else {
             console.log("else user");
             delete config.headers.Authorization
+            config.withCredentials = false
+
           }
         }
         return config;
@@ -121,13 +123,15 @@ export const useCore = () => {
   return context;
 };
 export async function logout(dispatch: React.Dispatch<any>) {
-  const user = localStorage.removeItem("user");
+  localStorage.removeItem("user");
+  Cookies.remove('token')
   dispatch({
     type: "LOGOUT",
   });
 }
 export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
   const user = localStorage.getItem("user");
+ 
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
@@ -141,6 +145,7 @@ export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
 
 export async function setUserTokens(dispatch: React.Dispatch<any>, token: any) {
   const user = localStorage.getItem("user");
+  Cookies.set('token', token)
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
