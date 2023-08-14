@@ -1,5 +1,11 @@
 "use client";
-import { setInfoModal, setLoginModal, setUserData, setUserTokens, useCore } from "@/app/context/core";
+import {
+  setInfoModal,
+  setLoginModal,
+  setUserData,
+  setUserTokens,
+  useCore,
+} from "@/app/context/core";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -33,12 +39,19 @@ export default function LoginModal() {
     console.log("values");
     setLoadingSubmit(true);
     try {
-      const {data:{token}} =  await login(values)
-      setUserTokens(coreDispatch, token)
-      const data = await me()
-      console.log("me data", data)
-      const {name, lastName, email, avatar} = data.data
-      setUserData(coreDispatch, {name, lastName, email, avatar})
+      const {
+        data: { token },
+      } = await login(values);
+      await setUserTokens(coreDispatch, token);
+      const data = await me();
+      const { name, lastName, email, avatar, slug, social,  } = data.data.data;
+      await setUserData(coreDispatch, {
+        name,
+        lastName,
+        email,
+        avatar,
+        slug,
+      });
 
       setLoginModal(coreDispatch, false);
       setInfoModal(coreDispatch, {
@@ -53,28 +66,27 @@ export default function LoginModal() {
         },
       });
     } catch (error) {
-      console.log("login error", error)
+      console.log("login error", error);
       setInfoModal(coreDispatch, {
         status: "error",
         title: "No se ha podido iniciar sesión",
         hasCancel: null,
         hasSubmit: {
-          title:"Intentar nuevamente",
-          cb: ()=> setInfoModal(coreDispatch, false)
+          title: "Intentar nuevamente",
+          cb: () => setInfoModal(coreDispatch, false),
         },
         onAnimationEnd: null,
       });
     } finally {
       setLoadingSubmit(false);
-
     }
   };
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     if (!showLoginModal) {
       reset();
     }
-  },[showLoginModal])
+  }, [showLoginModal]);
   return (
     <Modal
       open={showLoginModal}

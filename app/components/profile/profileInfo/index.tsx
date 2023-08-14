@@ -21,17 +21,29 @@ const schema = yup.object({
 
 interface Props {
   onChangeEditing: (e: boolean) => void;
+  data: {
+    isSameUser: boolean;
+    profileData:{
+      name: string,
+      lastName: string,
+      email: string,
+      bio?: string
+    }
+  };
 }
 
-export default function ProfileInfo({ onChangeEditing }: Props) {
+export default function ProfileInfo({
+  onChangeEditing,
+  data,
+}: Props) {
   const [{ showLoginModal, user }, coreDispatch] = useCore();
 
   //form
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      name: user?.data?.name,
-      lastName: user?.data?.lastName,
-      bio: user?.data?.bio ? user?.data.bio : "",
+      name: data.profileData.name,
+      lastName: data.profileData.lastName,
+      bio: data.profileData.bio ? data.profileData.bio : "",
     },
     resolver: yupResolver(schema),
   });
@@ -152,30 +164,32 @@ export default function ProfileInfo({ onChangeEditing }: Props) {
     </Box>
   ) : (
     <Box>
-      <Box
-        onClick={handleEdit}
-        sx={(theme) => ({
-          background: "#fff",
-          color: theme.palette.primary.main,
-          borderRadius: 9999,
-          padding: "2px",
-          cursor: "pointer",
-          boxShadow: "0 0 5px 0 rgba(0,0,0, .5)",
-          position: "absolute",
-          top: -10,
-          right: -10,
-          height: 35,
-          width: 35,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        })}
-      >
-        <EditIcon />
-      </Box>
-      <Typography variant="h6">{user?.data?.name}</Typography>
-      {user?.data?.bio ? (
-        <Typography variant="body1">{user?.data?.bio}</Typography>
+      {data.isSameUser && (
+        <Box
+          onClick={handleEdit}
+          sx={(theme) => ({
+            background: "#fff",
+            color: theme.palette.primary.main,
+            borderRadius: 9999,
+            padding: "2px",
+            cursor: "pointer",
+            boxShadow: "0 0 5px 0 rgba(0,0,0, .5)",
+            position: "absolute",
+            top: -10,
+            right: -10,
+            height: 35,
+            width: 35,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          })}
+        >
+          <EditIcon />
+        </Box>
+      )}
+      <Typography variant="h6">{data.profileData.name}</Typography>
+      {data.profileData.bio ? (
+        <Typography variant="body1">{data.profileData.bio}</Typography>
       ) : (
         <Typography variant="body1" sx={{ color: "#c2c2c2" }}>
           Aun no has agregado contenido a tu biografía

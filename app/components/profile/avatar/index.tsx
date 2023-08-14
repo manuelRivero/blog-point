@@ -19,8 +19,10 @@ import { useCore } from "@/app/context/core";
 
 interface Props {
   onChange?: (e: Blob) => void;
+  isSameUser?:boolean;
+  avatar:string | null
 }
-export default function ProfileAvatar({ onChange }: Props) {
+export default function ProfileAvatar({ onChange, isSameUser, avatar = null }: Props) {
   const [{ showLoginModal, user }, coreDispatch] = useCore();
 
   const [file, setFile] = useState<File | null>(null);
@@ -69,6 +71,7 @@ export default function ProfileAvatar({ onChange }: Props) {
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             badgeContent={
+              isSameUser ? 
               <Box
                 sx={(theme) => ({
                   background: "#fff",
@@ -89,7 +92,7 @@ export default function ProfileAvatar({ onChange }: Props) {
                 <label htmlFor="file-input">
                   <EditIcon />
                 </label>
-              </Box>
+              </Box> : null
             }
           >
             {cropImageSrc && (
@@ -100,7 +103,7 @@ export default function ProfileAvatar({ onChange }: Props) {
               />
             )}
             {!cropImageSrc && <Avatar
-              src={user?.data?.avatar ? user?.data?.avatar : image.src}
+              src={avatar ? avatar : image.src}
               sx={{ width: 100, height: 100 }}
               alt="foto de perfil"
             />}

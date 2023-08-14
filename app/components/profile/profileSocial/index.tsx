@@ -30,20 +30,29 @@ const schema = yup.object({
 });
 interface Props {
   onChangeEditing: (e: boolean) => void;
+  data: {
+    facebook: string;
+    instagram: string;
+    twitter: string;
+    isSameUser: boolean;
+  };
 }
 export interface SocialForm {
   facebook: string | undefined;
   instagram: string | undefined;
   twitter: string | undefined;
 }
-export default function ProfileSocial({ onChangeEditing }: Props) {
+export default function ProfileSocial({
+  onChangeEditing,
+  data,
+}: Props) {
   //form
   const { control, handleSubmit, reset } = useForm<SocialForm>({
     resolver: yupResolver(schema),
     defaultValues: {
-      facebook: "",
-      instagram: "",
-      twitter: "",
+      facebook: data.facebook || "",
+      instagram: data.instagram || "",
+      twitter: data.twitter || "",
     },
   });
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -61,7 +70,7 @@ export default function ProfileSocial({ onChangeEditing }: Props) {
   return (
     <Box sx={{ position: "relative", marginTop: 2 }}>
       <CustomCard>
-        {!isEditing && (
+        {!isEditing && data.isSameUser && (
           <Box
             onClick={handleEdit}
             sx={(theme) => ({

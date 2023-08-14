@@ -1,30 +1,23 @@
-"use client"
+"use client";
 
-import {
-    Box,
-    Container,
-    IconButton,
-    Stack,
-    Typography,
-  } from "@mui/material";
-  import { useRouter } from "next/navigation";
-  import React, { useState } from "react";
-  // icons
-  import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-  
-  import CustomCard from "../../shared/card";
-  import ProfileAvatar from "../../profile/avatar";
-  
-  import ProfileInfo from "../../profile/profileInfo";
-  import ProfileSocial from "../../profile/profileSocial";
-  import ProfileBlogCard from "../../profile/profileBlogCard";
-  import ProfileStats from "../../profile/profileStats";
+import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+// icons
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export default function MainWrapper({data}:any) {
-    console.log("data", data)
+import CustomCard from "../../shared/card";
+import ProfileAvatar from "../../profile/avatar";
+
+import ProfileInfo from "../../profile/profileInfo";
+import ProfileSocial from "../../profile/profileSocial";
+import ProfileBlogCard from "../../profile/profileBlogCard";
+import ProfileStats from "../../profile/profileStats";
+
+export default function MainWrapper({ data }: any) {
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
-
+  console.log("avatar data", data.data.profileData.avatar);
   const router = useRouter();
 
   const handleProfileEdition = (status: boolean) => {
@@ -54,29 +47,42 @@ export default function MainWrapper({data}:any) {
           },
         })}
       >
-        <Box>
-          <CustomCard>
-            <ProfileBlogCard />
-          </CustomCard>
-        </Box>
+        {!data.data.isSameUser && (
+          <Box>
+            <CustomCard>
+              <ProfileBlogCard />
+            </CustomCard>
+          </Box>
+        )}
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>
           <Box>
             {!isEditingSocial && (
               <CustomCard>
                 <Stack direction="row" spacing={4}>
-                  {!isEditingProfile && <ProfileAvatar />}
+                  {!isEditingProfile && (
+                    <ProfileAvatar
+                      isSameUser={data.data.isSameUser}
+                      avatar={data.data.profileData.avatar}
+                    />
+                  )}
 
-                  <ProfileInfo onChangeEditing={handleProfileEdition} />
+                  <ProfileInfo
+                    data={data.data}
+                    onChangeEditing={handleProfileEdition}
+                  />
                 </Stack>
                 {!isEditingProfile && <ProfileStats />}
               </CustomCard>
             )}
             {!isEditingProfile && (
-              <ProfileSocial onChangeEditing={handleSocialEdition} />
+              <ProfileSocial
+                data={data.data}
+                onChangeEditing={handleSocialEdition}
+              />
             )}
           </Box>
         </Box>
       </Stack>
     </Container>
-  )
+  );
 }

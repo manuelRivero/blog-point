@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useCore, logout } from "@/app/context/core";
 
 export default function HeaderMenu() {
-  const [, coreDispatch] = useCore();
+  const [{user}, coreDispatch] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Box
@@ -61,7 +61,7 @@ export default function HeaderMenu() {
                 Mis blogs
               </Typography>
             </MenuItem>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/perfil"}>
+            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={`/perfil/${user?.data?.slug}`}>
               <Typography variant="body1" component={"p"}>
                 Perfil
               </Typography>
@@ -70,11 +70,6 @@ export default function HeaderMenu() {
               <Typography variant="body1" component={"p"}></Typography>
             </MenuItem>
             <Divider />
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/"}>
-              <Typography variant="body1" component={"p"}>
-                Iniciar sesión
-              </Typography>
-            </MenuItem>
             <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch)}} href={"/"}>
               <Typography variant="body1" component={"p"}>
                 Cerrar sesión

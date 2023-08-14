@@ -18,9 +18,10 @@ export default function registerReducer(
       };
     }
     case "SET_USER_DATA": {
+      console.log("user data reducer")
       return {
         ...state,
-        user: { ...state.user, data: {...action.payload} },
+        user: { ...state.user, data: action.payload },
       };
     }
     case "SET_REGISTER_MODAL": {

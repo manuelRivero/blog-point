@@ -18,10 +18,11 @@ type User = {
     lastName: string;
     avatar: string;
     bio:string;
-    fallow: number;
-    blogs:number;
-    fallowers: number;
-    social:{
+    fallow?: number;
+    blogs?:number;
+    fallowers?: number;
+    slug:string;
+    social?:{
       facebook:string;
       instagram:string;
       twitter:string
@@ -130,13 +131,14 @@ export async function logout(dispatch: React.Dispatch<any>) {
   });
 }
 export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
+  console.log("set user data")
   const user = localStorage.getItem("user");
  
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
-  }
-  localStorage.setItem("user", JSON.stringify({ ...parseUser, data }));
+    localStorage.setItem("user", JSON.stringify({ ...parseUser, data }));
+  } 
   dispatch({
     type: "SET_USER_DATA",
     payload: data,
@@ -149,8 +151,11 @@ export async function setUserTokens(dispatch: React.Dispatch<any>, token: any) {
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
+    localStorage.setItem("user", JSON.stringify({ ...parseUser, token }));
+  } else {
+    localStorage.setItem("user", JSON.stringify({ token }));
+
   }
-  localStorage.setItem("user", JSON.stringify({ ...parseUser, token }));
   dispatch({
     type: "SET_USER_TOKENS",
     payload: token,
