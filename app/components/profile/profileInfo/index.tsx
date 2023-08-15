@@ -23,19 +23,16 @@ interface Props {
   onChangeEditing: (e: boolean) => void;
   data: {
     isSameUser: boolean;
-    profileData:{
-      name: string,
-      lastName: string,
-      email: string,
-      bio?: string
-    }
+    profileData: {
+      name: string;
+      lastName: string;
+      email: string;
+      bio?: string;
+    };
   };
 }
 
-export default function ProfileInfo({
-  onChangeEditing,
-  data,
-}: Props) {
+export default function ProfileInfo({ onChangeEditing, data }: Props) {
   const [{ showLoginModal, user }, coreDispatch] = useCore();
 
   //form
@@ -187,13 +184,15 @@ export default function ProfileInfo({
           <EditIcon />
         </Box>
       )}
-      <Typography variant="h6">{data.profileData.name}</Typography>
+      <Typography variant="h6">{`${data.profileData.name} ${data.profileData.lastName}`}</Typography>
       {data.profileData.bio ? (
         <Typography variant="body1">{data.profileData.bio}</Typography>
       ) : (
-        <Typography variant="body1" sx={{ color: "#c2c2c2" }}>
-          Aun no has agregado contenido a tu biografía
-        </Typography>
+        data.isSameUser && (
+          <Typography variant="body1" sx={{ color: "#c2c2c2" }}>
+            Aun no has agregado contenido a tu biografía
+          </Typography>
+        )
       )}
     </Box>
   );

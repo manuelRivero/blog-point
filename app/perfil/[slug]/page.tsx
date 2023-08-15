@@ -8,7 +8,7 @@ async function getData(slug:string) {
   const cookie = cookies().get("token");
   const { data } = await axiosIntance.get("/user/profile/" + slug, {
     headers: {
-      Cookie: `token=${cookie?.value}`,
+      Cookie: cookie ? `token=${cookie?.value}` : '',
     },
   });
 

@@ -16,8 +16,10 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { useCore, logout } from "@/app/context/core";
+import { useRouter } from "next/navigation";
 
 export default function HeaderMenu() {
+  const router = useRouter()
   const [{user}, coreDispatch] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
@@ -66,11 +68,8 @@ export default function HeaderMenu() {
                 Perfil
               </Typography>
             </MenuItem>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/"}>
-              <Typography variant="body1" component={"p"}></Typography>
-            </MenuItem>
             <Divider />
-            <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch)}} href={"/"}>
+            <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch); router.push("/")}} >
               <Typography variant="body1" component={"p"}>
                 Cerrar sesión
               </Typography>
