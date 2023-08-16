@@ -145,6 +145,21 @@ export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
   });
 }
 
+export async function setUserProfileData(dispatch: React.Dispatch<any>, profileData: any) {
+  console.log("set user data")
+  const user = localStorage.getItem("user");
+ 
+  let parseUser;
+  if (user) {
+    parseUser = JSON.parse(user);
+    localStorage.setItem("user", JSON.stringify({ ...parseUser, slug:profileData.slug, name: profileData.name, lastName:profileData.lastName, bio:profileData.bio}));
+  } 
+  dispatch({
+    type: "SET_USER_PROFILE_DATA",
+    payload: profileData,
+  });
+}
+
 export async function setUserTokens(dispatch: React.Dispatch<any>, token: any) {
   const user = localStorage.getItem("user");
   Cookies.set('token', token)

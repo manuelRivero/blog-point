@@ -11,12 +11,30 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import CustomInput from "../../shared/customInput";
 import CustomButton from "../../shared/customButton";
-import { setInfoModal, useCore } from "@/app/context/core";
+import { setInfoModal, setUserProfileData, useCore } from "@/app/context/core";
+import { updateProfile } from "@/app/client/user";
+import { useRouter } from "next/navigation";
 
 const schema = yup.object({
-  name: yup.string().required("Campo requerido"),
-  lastName: yup.string().required("Campo requerido"),
-  bio: yup.string(),
+  name: yup
+    .string()
+    .required("Campo requerido")
+    .min(3, 'Mínimo 3 caracteres')
+    .matches(/^((?!\s{2}).)*$/, 'No se permiten dobles espacios')
+    .matches(
+      /^([a-zA-Z\sÁÉÍÓÚáéíóúÑñ]+)$/,
+      "No se permiten caracteres especiales o numeros"
+    ),
+  lastName: yup
+    .string()
+    .required("Campo requerido")
+    .min(3, 'Mínimo 3 caracteres')
+    .matches(/^((?!\s{2}).)*$/, 'No se permiten dobles espacios')
+    .matches(
+      /^([a-zA-Z\sÁÉÍÓÚáéíóúÑñ]+)$/,
+      "No se permiten caracteres especiales o numeros"
+    ),
+  bio: yup.string().matches(/^((?!\s{2}).)*$/, 'No se permiten dobles espacios'),
 });
 
 interface Props {
@@ -33,7 +51,8 @@ interface Props {
 }
 
 export default function ProfileInfo({ onChangeEditing, data }: Props) {
-  const [{ showLoginModal, user }, coreDispatch] = useCore();
+  const [, coreDispatch] = useCore();
+  const router = useRouter();
 
   //form
   const { control, handleSubmit, reset } = useForm({
@@ -57,20 +76,45 @@ export default function ProfileInfo({ onChangeEditing, data }: Props) {
     setIsEditing(true);
     onChangeEditing(true);
   };
-  const submit = (values: any) => {
-    setLoadingSubmit(true);
-    setInfoModal(coreDispatch, {
-      status: "success",
-      title: "Tu perfil se ha actualizado correctamente",
-      hasCancel: null,
-      hasSubmit: null,
-      onAnimationEnd: () => {
-        setInfoModal(coreDispatch, null);
-        setIsEditing(false);
-        onChangeEditing(false);
-        setLoadingSubmit(false);
-      },
-    });
+  const submit = async (values: any) => {
+    console.log("submit");
+    const form = new FormData();
+    form.append(
+      "profileData",
+      JSON.stringify({
+        name: values.name,
+        lastName: values.lastName,
+        bio: values.bio || null,
+      })
+    );
+    try {
+      setLoadingSubmit(true);
+      const { data } = await updateProfile(form);
+      setUserProfileData(coreDispatch, {
+        slug: data.user.slug,
+        name: values.name,
+        lastName: values.lastName,
+        bio: values.bio || null,
+      });
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Tu perfil se ha actualizado correctamente",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Ok",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            setIsEditing(false);
+            onChangeEditing(false);
+            router.push(`/perfil/${data.user.slug}`);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } catch (error) {
+    } finally {
+      setLoadingSubmit(false);
+    }
   };
   return isEditing ? (
     <Box sx={{ width: "100%" }}>

@@ -31,7 +31,7 @@ export default function InfoModal() {
   return (
     <Modal
       open={Boolean(infoModal)}
-      onClose={() => setInfoModal(coreDispatch, null)}
+      onClose={() => {}}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

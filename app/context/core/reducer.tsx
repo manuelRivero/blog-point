@@ -11,6 +11,12 @@ export default function registerReducer(
         user: null,
       };
     }
+    case "SET_USER_PROFILE_DATA": {
+      return {
+        ...state,
+        user: { ...state.user,  data:{...state.user?.data, ...action.payload} },
+      };
+    }
     case "SET_USER_TOKENS": {
       return {
         ...state,
