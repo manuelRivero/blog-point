@@ -22,6 +22,9 @@ const schema = yup.object({
   password: yup
     .string()
     .required("Campo requerido")
+    .matches(/^\S*$/, {
+      message: "No se permiten espacios en blanco",
+    })
     .matches(upperCaseRegex, {
       message: "La contraseña debe tener al menos una mayúscula",
     })
