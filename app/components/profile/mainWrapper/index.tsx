@@ -13,8 +13,11 @@ import ProfileInfo from "../../profile/profileInfo";
 import ProfileSocial from "../../profile/profileSocial";
 import ProfileBlogCard from "../../profile/profileBlogCard";
 import ProfileStats from "../../profile/profileStats";
+import { setInfoModal, useCore } from "@/app/context/core";
+import { updateProfile } from "@/app/client/user";
 
 export default function MainWrapper({ data }: any) {
+  const [, coreDispatch]= useCore();
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
   console.log("avatar data", data.data.profileData.avatar);
@@ -25,6 +28,47 @@ export default function MainWrapper({ data }: any) {
   };
   const handleSocialEdition = (status: boolean) => {
     setIsEditingSocial(status);
+  };
+
+  const onChangeAvatar = async (avatar:Blob)=> {
+    console.log("submit");
+    const form = new FormData();
+    form.append(
+      "image",
+      avatar
+    );
+    try {
+      const { data } = await updateProfile(form);
+
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Tu perfil se ha actualizado correctamente",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Ok",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            router.push(`/perfil/${data.user.slug}`);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } catch (error) {
+      setInfoModal(coreDispatch, {
+        status: "error",
+        title: "No se pudo actualizar tu avatar",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Intentar nuevamente",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            router.push(`/perfil/${data.user.slug}`);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    }
+    
   };
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
@@ -63,6 +107,7 @@ export default function MainWrapper({ data }: any) {
                     <ProfileAvatar
                       isSameUser={data.data.isSameUser}
                       avatar={data.data.profileData.avatar}
+                      onChange={onChangeAvatar}
                     />
                   )}
 
