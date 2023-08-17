@@ -76,7 +76,7 @@ export default function MainWrapper({ data }: any) {
             )}
             {!isEditingProfile && (
               <ProfileSocial
-                data={data.data}
+                data={{...data.data.profileData.social, isSameUser:data.data.isSameUser}}
                 onChangeEditing={handleSocialEdition}
               />
             )}

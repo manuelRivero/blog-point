@@ -22,6 +22,11 @@ import CustomInput from "../../shared/customInput";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import CustomButton from "../../shared/customButton";
+import { setInfoModal, useCore } from "@/app/context/core";
+import { updateProfile } from "@/app/client/user";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const schema = yup.object({
   facebook: yup.string(),
@@ -31,9 +36,9 @@ const schema = yup.object({
 interface Props {
   onChangeEditing: (e: boolean) => void;
   data: {
-    facebook: string;
-    instagram: string;
-    twitter: string;
+    facebook: string | null;
+    instagram: string | null;
+    twitter: string | null;
     isSameUser: boolean;
   };
 }
@@ -42,10 +47,9 @@ export interface SocialForm {
   instagram: string | undefined;
   twitter: string | undefined;
 }
-export default function ProfileSocial({
-  onChangeEditing,
-  data,
-}: Props) {
+export default function ProfileSocial({ onChangeEditing, data }: Props) {
+  const [, coreDispatch] = useCore();
+  const router = useRouter();
   //form
   const { control, handleSubmit, reset } = useForm<SocialForm>({
     resolver: yupResolver(schema),
@@ -56,6 +60,7 @@ export default function ProfileSocial({
     },
   });
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
 
   const handleCancel = () => {
     reset();
@@ -67,6 +72,41 @@ export default function ProfileSocial({
     setIsEditing(true);
     onChangeEditing(true);
   };
+
+  const submit = async (values: any) => {
+    const form = new FormData();
+    form.append(
+      "socialData",
+      JSON.stringify({
+        facebook: values.facebook || null,
+        instagram: values.instagram || null,
+        twitter: values.twitter || null,
+      })
+    );
+    try {
+      setLoadingSubmit(true);
+      const { data } = await updateProfile(form);
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Tu perfil se ha actualizado correctamente",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Ok",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            setIsEditing(false);
+            onChangeEditing(false);
+            router.push(`/perfil/${data.user.slug}`);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } catch (error) {
+    } finally {
+      setLoadingSubmit(false);
+    }
+  };
+  console.log("data", data);
   return (
     <Box sx={{ position: "relative", marginTop: 2 }}>
       <CustomCard>
@@ -95,74 +135,112 @@ export default function ProfileSocial({
         )}
         {!isEditing ? (
           <Stack direction="row" spacing={2} sx={{ justifyContent: "center" }}>
-            <Box
-              sx={(theme) => ({
-                borderRadius: "100%",
-                height: 40,
-                width: 40,
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              })}
-            >
-              <InstagramIcon />
-            </Box>
-            <Box
-              sx={(theme) => ({
-                borderRadius: "100%",
-                height: 40,
-                width: 40,
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              })}
-            >
-              <FacebookIcon />
-            </Box>
-            <Box
-              sx={(theme) => ({
-                borderRadius: "100%",
-                height: 40,
-                width: 40,
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              })}
-            >
-              <TwitterIcon />
-            </Box>
+            {data.instagram && (
+              <a href={data.instagram} target="_blank">
+                <Box
+                  sx={(theme) => ({
+                    borderRadius: "100%",
+                    height: 40,
+                    width: 40,
+                    backgroundColor: theme.palette.primary.main,
+                    color: "#fff",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  })}
+                >
+                  <InstagramIcon />
+                </Box>
+              </a>
+            )}
+            {data.facebook && (
+              <a href={data.facebook} target="_blank">
+                <Box
+                  sx={(theme) => ({
+                    borderRadius: "100%",
+                    height: 40,
+                    width: 40,
+                    backgroundColor: theme.palette.primary.main,
+                    color: "#fff",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  })}
+                >
+                  <FacebookIcon />
+                </Box>
+              </a>
+            )}
+            {data.twitter && (
+              <a href={data.twitter} target="_blank">
+                {" "}
+                <Box
+                  sx={(theme) => ({
+                    borderRadius: "100%",
+                    height: 40,
+                    width: 40,
+                    backgroundColor: theme.palette.primary.main,
+                    color: "#fff",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  })}
+                >
+                  <TwitterIcon />
+                </Box>
+              </a>
+            )}
+            {!data.facebook && !data.instagram && !data.twitter && (
+              <Box>
+                {data.isSameUser ? (
+                  <Typography variant={"body1"} component={"p"}>
+                    Aún no has agregado tus redes sociales
+                  </Typography>
+                ) : (
+                  <Typography variant={"body1"} component={"p"}>
+                    Este usuario no cuenta con información de sus redes sociales
+                  </Typography>
+                )}
+              </Box>
+            )}
           </Stack>
         ) : (
-          <>
+          <form onSubmit={handleSubmit(submit)}>
             <Box sx={{ marginBottom: "1rem" }}>
               <Controller
                 name={"facebook"}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <CustomInput
-                    type="text"
-                    error={fieldState.error}
-                    value={field.value ? field.value : ""}
-                    onChange={(
-                      e: React.ChangeEvent<
-                        HTMLInputElement | HTMLTextAreaElement
+                  <>
+                    <CustomInput
+                      type="text"
+                      error={fieldState.error}
+                      value={field.value ? field.value : ""}
+                      onChange={(
+                        e: React.ChangeEvent<
+                          HTMLInputElement | HTMLTextAreaElement
+                        >
+                      ) => {
+                        field.onChange(e.target.value);
+                      }}
+                      label="Facebook"
+                      outline={true}
+                      placeholder="ingresa en elace a tu perfil de Facebook"
+                    />
+
+                    {field.value !== "" && (
+                      <Button
+                        component={Link}
+                        href={field.value}
+                        target={"_blank"}
                       >
-                    ) => {
-                      field.onChange(e.target.value);
-                    }}
-                    label="Facebook"
-                    outline={true}
-                    placeholder="ingresa en elace a tu perfil de Facebook"
-                  />
+                        Probar
+                      </Button>
+                    )}
+                  </>
                 )}
               />
             </Box>
@@ -171,21 +249,32 @@ export default function ProfileSocial({
                 name={"instagram"}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <CustomInput
-                    type="text"
-                    error={fieldState.error}
-                    value={field.value ? field.value : ""}
-                    onChange={(
-                      e: React.ChangeEvent<
-                        HTMLInputElement | HTMLTextAreaElement
+                  <>
+                    <CustomInput
+                      type="text"
+                      error={fieldState.error}
+                      value={field.value ? field.value : ""}
+                      onChange={(
+                        e: React.ChangeEvent<
+                          HTMLInputElement | HTMLTextAreaElement
+                        >
+                      ) => {
+                        field.onChange(e.target.value);
+                      }}
+                      label="Instagram"
+                      outline={true}
+                      placeholder="Ingresa el enlace a tu perfil Instagram"
+                    />
+                    {field.value !== "" && (
+                      <Button
+                        component={Link}
+                        href={field.value}
+                        target={"_blank"}
                       >
-                    ) => {
-                      field.onChange(e.target.value);
-                    }}
-                    label="Instagram"
-                    outline={true}
-                    placeholder="Ingresa el enlace a tu perfil Instagram"
-                  />
+                        Probar
+                      </Button>
+                    )}
+                  </>
                 )}
               />
             </Box>
@@ -194,21 +283,32 @@ export default function ProfileSocial({
                 name={"twitter"}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <CustomInput
-                    type="text"
-                    error={fieldState.error}
-                    value={field.value ? field.value : ""}
-                    onChange={(
-                      e: React.ChangeEvent<
-                        HTMLInputElement | HTMLTextAreaElement
+                  <>
+                    <CustomInput
+                      type="text"
+                      error={fieldState.error}
+                      value={field.value ? field.value : ""}
+                      onChange={(
+                        e: React.ChangeEvent<
+                          HTMLInputElement | HTMLTextAreaElement
+                        >
+                      ) => {
+                        field.onChange(e.target.value);
+                      }}
+                      label="Twitter"
+                      outline={true}
+                      placeholder="Ingresa el enlace a tu perfil de Twitter"
+                    />
+                    {field.value !== "" && (
+                      <Button
+                        component={Link}
+                        href={field.value}
+                        target={"_blank"}
                       >
-                    ) => {
-                      field.onChange(e.target.value);
-                    }}
-                    label="Twitter"
-                    outline={true}
-                    placeholder="Ingresa el enlace a tu perfil de Twitter"
-                  />
+                        Probar
+                      </Button>
+                    )}
+                  </>
                 )}
               />
             </Box>
@@ -217,14 +317,25 @@ export default function ProfileSocial({
               spacing={4}
               sx={{ justifyContent: "center" }}
             >
-              <Button color="error" variant="outlined" onClick={handleCancel}>
+              <Button
+                color="error"
+                disabled={loadingSubmit}
+                variant="outlined"
+                onClick={handleCancel}
+              >
                 Cancelar
               </Button>
-              <Button color="primary" variant="contained">
-                Guardar
-              </Button>
+              <CustomButton
+                type="submit"
+                color="primary"
+                variant="contained"
+                title="Guardar"
+                cb={() => {}}
+                disabled={loadingSubmit}
+                isLoading={loadingSubmit}
+              />
             </Stack>
-          </>
+          </form>
         )}
       </CustomCard>
     </Box>

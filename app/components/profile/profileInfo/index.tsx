@@ -188,7 +188,7 @@ export default function ProfileInfo({ onChangeEditing, data }: Props) {
           />
         </Box>
         <Stack direction="row" spacing={4} sx={{ justifyContent: "center" }}>
-          <Button color="error" variant="outlined" onClick={handleCancel}>
+          <Button color="error" disabled={loadingSubmit} variant="outlined" onClick={handleCancel}>
             Cancelar
           </Button>
           <CustomButton
