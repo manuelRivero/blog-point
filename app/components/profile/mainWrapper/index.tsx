@@ -71,12 +71,23 @@ export default function MainWrapper({ data }: any) {
                     onChangeEditing={handleProfileEdition}
                   />
                 </Stack>
-                {!isEditingProfile && <ProfileStats />}
+                {!isEditingProfile && (
+                  <ProfileStats
+                    data={{
+                      fallow: data.data.profileData.fallow,
+                      fallowers: data.data.profileData.fallowers,
+                      blogs: data.data.profileData.blogs,
+                    }}
+                  />
+                )}
               </CustomCard>
             )}
             {!isEditingProfile && (
               <ProfileSocial
-                data={{...data.data.profileData.social, isSameUser:data.data.isSameUser}}
+                data={{
+                  ...data.data.profileData.social,
+                  isSameUser: data.data.isSameUser,
+                }}
                 onChangeEditing={handleSocialEdition}
               />
             )}
