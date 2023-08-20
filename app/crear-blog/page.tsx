@@ -29,6 +29,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "../helpers/cropImage";
+import { uploadImage } from "../client/uploads";
 
 const schema = yup.object({
   title: yup.string().required("Campo requerido"),
@@ -148,7 +149,7 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInput
-                      maxLength={160}
+                        maxLength={160}
                         lengthAlertHandler={{
                           handler: (e) => descriptionLenghtHandler(e),
                           length: 120,
@@ -256,6 +257,21 @@ export default function CreateBlog() {
                     apiKey="g8clezyenv99c3qrpf04jm099smc6ldsodi90hapovrk29k4"
                     initialValue=""
                     init={{
+                      images_upload_handler: async (blobInfo: any) => {
+                        return new Promise(async (success, failure) => {
+                          const form = new FormData();
+                          form.append("image", blobInfo.blob(), blobInfo.filename());
+                          try {
+                            const { data } = await uploadImage(form);
+                            console.log("data", data.url)
+                            success(data.url);
+                          } catch (error) {
+                            failure(
+                              "Error al subir la imagen"
+                            );
+                          }
+                        });
+                      },
                       language: "es",
                       content_langs: [{ title: "Spanish", code: "es" }],
                       branding: false,
