@@ -2,7 +2,7 @@
 
 import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // icons
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -13,14 +13,14 @@ import ProfileInfo from "../../profile/profileInfo";
 import ProfileSocial from "../../profile/profileSocial";
 import ProfileBlogCard from "../../profile/profileBlogCard";
 import ProfileStats from "../../profile/profileStats";
-import { setInfoModal, useCore } from "@/app/context/core";
+import { logout, setInfoModal, setLoginModal, useCore } from "@/app/context/core";
 import { updateProfile } from "@/app/client/user";
 
 export default function MainWrapper({ data }: any) {
-  const [, coreDispatch]= useCore();
+  const [, coreDispatch] = useCore();
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
-  console.log("avatar data", data.data.profileData.avatar);
+
   const router = useRouter();
 
   const handleProfileEdition = (status: boolean) => {
@@ -30,13 +30,10 @@ export default function MainWrapper({ data }: any) {
     setIsEditingSocial(status);
   };
 
-  const onChangeAvatar = async (avatar:Blob)=> {
+  const onChangeAvatar = async (avatar: Blob) => {
     console.log("submit");
     const form = new FormData();
-    form.append(
-      "image",
-      avatar
-    );
+    form.append("image", avatar);
     try {
       const { data } = await updateProfile(form);
 
@@ -68,8 +65,27 @@ export default function MainWrapper({ data }: any) {
         onAnimationEnd: null,
       });
     }
-    
   };
+
+  if (!data) {
+    router.replace("/");
+    logout(coreDispatch);
+    setInfoModal(coreDispatch, {
+      status: "error",
+      title: "Tu sesión ha expirado",
+      hasCancel: null,
+      hasSubmit: {
+        title: "Iniciar sesión",
+        cb: () => {
+          setInfoModal(coreDispatch, null);
+          setLoginModal(coreDispatch, true)
+        },
+      },
+      onAnimationEnd: null,
+    });
+    return null
+  }
+
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>

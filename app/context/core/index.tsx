@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import CoreReducer from "./reducer";
 import { axiosIntance } from "@/app/client";
 import Cookies from "js-cookie"
+import { useRouter } from "next/navigation";
 const getUser = () => {
   const user = typeof window !== "undefined" ? localStorage.getItem("user") : null;
   let parseUser = null;
@@ -71,15 +72,20 @@ const CoreContext = React.createContext<[State, React.Dispatch<any>]>([
 export const CoreProvider: React.FC<Props> = (props) => {
   const [state, dispatch] = React.useReducer(CoreReducer, initialState);
   const value: [State, React.Dispatch<any>] = [state, dispatch];
+  const router = useRouter()
 
   useEffect(() => {
     axiosIntance.interceptors.response.use(
       (response) => {
+        if(response.status === 401){
+          logout(dispatch)
+          router.push("/")
+        }
         return response;
       },
       async (error) => {
         // const deviceId = await getUniqueId();
-        console.log("error.response.data", error.response.data);
+        // console.log("error.response.data", error.response.data);
         return Promise.reject(error);
       }
     );
