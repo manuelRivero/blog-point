@@ -10,6 +10,7 @@ import {
   Modal,
   Slider,
   Typography,
+  Stack,
 } from "@mui/material";
 import React, { useState, useId } from "react";
 import CustomCard from "../components/shared/card";
@@ -30,11 +31,15 @@ import * as yup from "yup";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "../helpers/cropImage";
 import { uploadImage } from "../client/uploads";
+import CustomButton from "../components/shared/customButton";
+import { createBlog } from "../client/blogs";
+import { setInfoModal, useCore } from "../context/core";
 
 const schema = yup.object({
   title: yup.string().required("Campo requerido"),
   description: yup.string().required("Campo requerido"),
   image: yup.mixed().required("Campo requerido"),
+  content: yup.string().required("Campo requerido"),
 });
 interface CardData {
   title: string;
@@ -42,10 +47,11 @@ interface CardData {
   image: string | null;
 }
 export default function CreateBlog() {
+  const [, coreDispatch] = useCore();
   const router = useRouter();
 
   //form
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, formState:{errors}, setValue } = useForm({
     resolver: yupResolver(schema),
   });
 
@@ -62,6 +68,7 @@ export default function CreateBlog() {
   const [showTitleAlert, setShowTitleAlert] = useState<boolean>(false);
   const [showDescriptionAlert, setShowDescriptionAlert] =
     useState<boolean>(false);
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
 
   const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
     setCropData(croppedAreaPixels);
@@ -80,6 +87,7 @@ export default function CreateBlog() {
     setImageSrc(undefined);
     setCardData({ ...cardData, image: null });
     setCropData(null);
+
   };
 
   const handlePreview = async (e: File) => {
@@ -94,6 +102,43 @@ export default function CreateBlog() {
   const titleLenghtHandler = (status: boolean) => {
     setShowTitleAlert(status);
   };
+
+  const submit = async (values: any) => {
+    const form = new FormData();
+    form.append("title", values.title);
+    form.append("description", values.description);
+    form.append("image", values.image);
+    form.append("content", values.content);
+    try {
+      const { data } = await createBlog(form);
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Tu blog se ha publicado",
+        hasCancel: null,
+        hasSubmit: {
+          title: "¡Genial!",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            router.push(`/`);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } catch (error) {
+      setInfoModal(coreDispatch, {
+        status: "error",
+        title: "Hubo un error",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Intentar nuevamente",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    }
+  };
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -104,7 +149,7 @@ export default function CreateBlog() {
       </Typography>
       <Box sx={{ marginTop: "2rem" }}>
         <CustomCard>
-          <form onSubmit={handleSubmit(() => console.log("values"))}>
+          <form onSubmit={handleSubmit(submit)}>
             <Grid container spacing={8} sx={{ placeContent: "center" }}>
               <Grid item xs={12} sm={6} lg={6}>
                 <Typography
@@ -183,9 +228,9 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInputFile
-                        handleCancel={handleImageCancel}
+                        handleCancel={()=>{handleImageCancel(); field.onChange("")}}
                         error={fieldState.error}
-                        handlePreview={handlePreview}
+                        handlePreview={(e)=>{handlePreview(e); field.onChange(e)}}
                         label="Imagen del blog"
                       />
                     )}
@@ -253,39 +298,84 @@ export default function CreateBlog() {
                   Contenido de tu blog
                 </Typography>
                 <Box>
-                  <Editor
-                    apiKey="g8clezyenv99c3qrpf04jm099smc6ldsodi90hapovrk29k4"
-                    initialValue=""
-                    init={{
-                      images_upload_handler: async (blobInfo: any) => {
-                        return new Promise(async (success, failure) => {
-                          const form = new FormData();
-                          form.append("image", blobInfo.blob(), blobInfo.filename());
-                          try {
-                            const { data } = await uploadImage(form);
-                            console.log("data", data.url)
-                            success(data.url);
-                          } catch (error) {
-                            failure(
-                              "Error al subir la imagen"
-                            );
-                          }
-                        });
-                      },
-                      language: "es",
-                      content_langs: [{ title: "Spanish", code: "es" }],
-                      branding: false,
-                      height: 400,
-                      menubar: true,
-                      plugins:
-                        "print preview paste searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern",
-                      toolbar:
-                        "formatselect | bold italic underline strikethrough | forecolor backcolor blockquote | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat",
-                      image_advtab: true,
+                  <Controller
+                    name="content"
+                    control={control}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <Editor
+                            apiKey="g8clezyenv99c3qrpf04jm099smc6ldsodi90hapovrk29k4"
+                            initialValue=""
+                            init={{
+                              images_upload_handler: async (blobInfo: any) => {
+                                return new Promise(async (success, failure) => {
+                                  const form = new FormData();
+                                  form.append(
+                                    "image",
+                                    blobInfo.blob(),
+                                    blobInfo.filename()
+                                  );
+                                  try {
+                                    const { data } = await uploadImage(form);
+                                    console.log("data", data.url);
+                                    success(data.url);
+                                  } catch (error) {
+                                    failure("Error al subir la imagen");
+                                  }
+                                });
+                              },
+                              language: "es",
+                              content_langs: [{ title: "Spanish", code: "es" }],
+                              branding: false,
+                              height: 400,
+                              menubar: true,
+                              plugins:
+                                "print preview paste searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern",
+                              toolbar:
+                                "formatselect | bold italic underline strikethrough | forecolor backcolor blockquote | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat",
+                              image_advtab: true,
+                            }}
+                            onEditorChange={(e) => {
+                              console.log("text editor on change", e);
+                              field.onChange(e);
+                            }}
+                          />
+                          {fieldState.error && (
+                            <Typography
+                              sx={{ marginLeft: ".8rem", fontSize: 12 }}
+                              color={"error"}
+                            >
+                              {fieldState.error.message}
+                            </Typography>
+                          )}
+                        </>
+                      );
                     }}
-                    onChange={() => {}}
                   />
                 </Box>
+              </Grid>
+              <Grid item xs={12}>
+              {errors && (
+                            <Typography
+                              sx={{ marginLeft: ".8rem", fontSize: 12, marginBottom:2 }}
+                              align="center"
+                              color={"error"}
+                            >
+                              Parece que la información de tu blog está incompleta, por favor verificala antes de continuar.
+                            </Typography>
+                          )}
+                <Stack direction="row" justifyContent="center">
+                  <CustomButton
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    title="Guardar"
+                    cb={() => {}}
+                    disabled={loadingSubmit}
+                    isLoading={loadingSubmit}
+                  />
+                </Stack>
               </Grid>
             </Grid>
           </form>
@@ -354,7 +444,7 @@ export default function CreateBlog() {
             <Button variant={"contained"} onClick={generateCrop}>
               Aceptar
             </Button>
-            <Button variant={"outlined"} onClick={() => setShowCrop(false)}>
+            <Button variant={"outlined"} onClick={() => {setShowCrop(false); handleImageCancel()}}>
               Cancelar
             </Button>
           </Box>
