@@ -12,7 +12,7 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import React, { useState, useId } from "react";
+import React, { useState, useId, useEffect } from "react";
 import CustomCard from "../components/shared/card";
 import CustomInput from "../components/shared/customInput";
 import CustomInputFile from "../components/shared/inputFile";
@@ -33,7 +33,7 @@ import { getCroppedImg } from "../helpers/cropImage";
 import { uploadImage } from "../client/uploads";
 import CustomButton from "../components/shared/customButton";
 import { createBlog } from "../client/blogs";
-import { setInfoModal, useCore } from "../context/core";
+import { setInfoModal, setLoginModal, useCore } from "../context/core";
 
 const schema = yup.object({
   title: yup.string().required("Campo requerido"),
@@ -47,7 +47,7 @@ interface CardData {
   image: string | null;
 }
 export default function CreateBlog() {
-  const [, coreDispatch] = useCore();
+  const [{user}, coreDispatch] = useCore();
   const router = useRouter();
 
   //form
@@ -97,7 +97,7 @@ export default function CreateBlog() {
   };
 
   const handlePreview = async (e: File) => {
-    setResetFile(false)
+    setResetFile(false);
     const objectUrl: string = URL.createObjectURL(e);
     setImageSrc(objectUrl);
     setShowCrop(true);
@@ -132,6 +132,9 @@ export default function CreateBlog() {
         onAnimationEnd: null,
       });
     } catch (error) {
+      if (error.response.status === 401) {
+        return;
+      }
       setInfoModal(coreDispatch, {
         status: "error",
         title: "Hubo un error",
@@ -146,6 +149,27 @@ export default function CreateBlog() {
       });
     }
   };
+
+  useEffect(()=>{
+    if(!user){
+      
+      setInfoModal(coreDispatch, {
+        status: "error",
+        title: "Inicia sesión para crear nuevos blogs",
+        hasCancel: null,
+        hasSubmit: {
+          title: "ok",
+          cb: () => {
+            router.push("/")
+            setInfoModal(coreDispatch, null);
+            setLoginModal(coreDispatch, true)
+          },
+        },
+        onAnimationEnd: null,
+      });
+      
+    }
+  },[])
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -370,7 +394,7 @@ export default function CreateBlog() {
                 </Box>
               </Grid>
               <Grid item xs={12}>
-                {errors && (
+                {Object.keys(errors).length > 0 && (
                   <Typography
                     sx={{ marginLeft: ".8rem", fontSize: 12, marginBottom: 2 }}
                     align="center"
@@ -464,7 +488,7 @@ export default function CreateBlog() {
               onClick={() => {
                 setShowCrop(false);
                 handleImageCancel();
-                setResetFile(true)
+                setResetFile(true);
               }}
             >
               Cancelar

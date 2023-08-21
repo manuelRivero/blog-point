@@ -3,31 +3,32 @@
 import React, { useEffect } from "react";
 import CoreReducer from "./reducer";
 import { axiosIntance } from "@/app/client";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 const getUser = () => {
-  const user = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const user =
+    typeof window !== "undefined" ? localStorage.getItem("user") : null;
   let parseUser = null;
-  if(user){
-    parseUser = JSON.parse(user)
+  if (user) {
+    parseUser = JSON.parse(user);
   }
-  return parseUser
-}
+  return parseUser;
+};
 type User = {
   data?: {
     name: string;
     lastName: string;
     avatar: string;
-    bio:string;
+    bio: string;
     fallow?: number;
-    blogs?:number;
+    blogs?: number;
     fallowers?: number;
-    slug:string;
-    social?:{
-      facebook:string;
-      instagram:string;
-      twitter:string
-    }
+    slug: string;
+    social?: {
+      facebook: string;
+      instagram: string;
+      twitter: string;
+    };
   };
   tokens?: {
     refresh_token?: string;
@@ -72,20 +73,37 @@ const CoreContext = React.createContext<[State, React.Dispatch<any>]>([
 export const CoreProvider: React.FC<Props> = (props) => {
   const [state, dispatch] = React.useReducer(CoreReducer, initialState);
   const value: [State, React.Dispatch<any>] = [state, dispatch];
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     axiosIntance.interceptors.response.use(
       (response) => {
-        if(response.status === 401){
-          logout(dispatch)
-          router.push("/")
+        if (response.status === 401) {
+          logout(dispatch);
+          router.push("/");
         }
         return response;
       },
       async (error) => {
         // const deviceId = await getUniqueId();
-        // console.log("error.response.data", error.response.data);
+        if (error.response.status === 401) {
+          setInfoModal(dispatch, {
+            status: "error",
+            title: "Tu sesión ha expirado",
+            hasCancel: null,
+            hasSubmit: {
+              title: "Iniciar sesión",
+              cb: () => {
+                setInfoModal(dispatch, null);
+                logout(dispatch);
+                setLoginModal(dispatch, true)
+                router.push("/");
+              },
+            },
+            onAnimationEnd: null,
+          });
+        }
+        console.log("error.response.data", error.response);
         return Promise.reject(error);
       }
     );
@@ -104,9 +122,8 @@ export const CoreProvider: React.FC<Props> = (props) => {
             config.headers.Authorization = "Bearer" + " " + parseUser.token;
           } else {
             console.log("else user");
-            delete config.headers.Authorization
-            config.withCredentials = false
-
+            delete config.headers.Authorization;
+            config.withCredentials = false;
           }
         }
         return config;
@@ -131,35 +148,47 @@ export const useCore = () => {
 };
 export async function logout(dispatch: React.Dispatch<any>) {
   localStorage.removeItem("user");
-  Cookies.remove('token')
+  Cookies.remove("token");
   dispatch({
     type: "LOGOUT",
   });
 }
 export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
-  console.log("set user data")
+  console.log("set user data");
   const user = localStorage.getItem("user");
- 
+
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
     localStorage.setItem("user", JSON.stringify({ ...parseUser, data }));
-  } 
+  }
   dispatch({
     type: "SET_USER_DATA",
     payload: data,
   });
 }
 
-export async function setUserProfileData(dispatch: React.Dispatch<any>, profileData: any) {
-  console.log("set user data")
+export async function setUserProfileData(
+  dispatch: React.Dispatch<any>,
+  profileData: any
+) {
+  console.log("set user data");
   const user = localStorage.getItem("user");
- 
+
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
-    localStorage.setItem("user", JSON.stringify({ ...parseUser, slug:profileData.slug, name: profileData.name, lastName:profileData.lastName, bio:profileData.bio}));
-  } 
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        ...parseUser,
+        slug: profileData.slug,
+        name: profileData.name,
+        lastName: profileData.lastName,
+        bio: profileData.bio,
+      })
+    );
+  }
   dispatch({
     type: "SET_USER_PROFILE_DATA",
     payload: profileData,
@@ -168,14 +197,13 @@ export async function setUserProfileData(dispatch: React.Dispatch<any>, profileD
 
 export async function setUserTokens(dispatch: React.Dispatch<any>, token: any) {
   const user = localStorage.getItem("user");
-  Cookies.set('token', token)
+  Cookies.set("token", token);
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
     localStorage.setItem("user", JSON.stringify({ ...parseUser, token }));
   } else {
     localStorage.setItem("user", JSON.stringify({ token }));
-
   }
   dispatch({
     type: "SET_USER_TOKENS",
