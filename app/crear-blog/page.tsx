@@ -51,7 +51,12 @@ export default function CreateBlog() {
   const router = useRouter();
 
   //form
-  const { control, handleSubmit, formState:{errors}, setValue } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
     resolver: yupResolver(schema),
   });
 
@@ -66,6 +71,7 @@ export default function CreateBlog() {
   const [cropData, setCropData] = useState<Area | null>(null);
   const [showCrop, setShowCrop] = useState<boolean>(false);
   const [showTitleAlert, setShowTitleAlert] = useState<boolean>(false);
+  const [resetFile, setResetFile] = useState<boolean>(false);
   const [showDescriptionAlert, setShowDescriptionAlert] =
     useState<boolean>(false);
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
@@ -84,13 +90,14 @@ export default function CreateBlog() {
   };
 
   const handleImageCancel = () => {
+    setValue("image", "");
     setImageSrc(undefined);
     setCardData({ ...cardData, image: null });
     setCropData(null);
-
   };
 
   const handlePreview = async (e: File) => {
+    setResetFile(false)
     const objectUrl: string = URL.createObjectURL(e);
     setImageSrc(objectUrl);
     setShowCrop(true);
@@ -228,9 +235,16 @@ export default function CreateBlog() {
                     control={control}
                     render={({ field, fieldState }) => (
                       <CustomInputFile
-                        handleCancel={()=>{handleImageCancel(); field.onChange("")}}
+                        reset={resetFile}
+                        handleCancel={() => {
+                          handleImageCancel();
+                          field.onChange("");
+                        }}
                         error={fieldState.error}
-                        handlePreview={(e)=>{handlePreview(e); field.onChange(e)}}
+                        handlePreview={(e) => {
+                          handlePreview(e);
+                          field.onChange(e);
+                        }}
                         label="Imagen del blog"
                       />
                     )}
@@ -356,15 +370,16 @@ export default function CreateBlog() {
                 </Box>
               </Grid>
               <Grid item xs={12}>
-              {errors && (
-                            <Typography
-                              sx={{ marginLeft: ".8rem", fontSize: 12, marginBottom:2 }}
-                              align="center"
-                              color={"error"}
-                            >
-                              Parece que la información de tu blog está incompleta, por favor verificala antes de continuar.
-                            </Typography>
-                          )}
+                {errors && (
+                  <Typography
+                    sx={{ marginLeft: ".8rem", fontSize: 12, marginBottom: 2 }}
+                    align="center"
+                    color={"error"}
+                  >
+                    Parece que la información de tu blog está incompleta, por
+                    favor verificala antes de continuar.
+                  </Typography>
+                )}
                 <Stack direction="row" justifyContent="center">
                   <CustomButton
                     type="submit"
@@ -444,7 +459,14 @@ export default function CreateBlog() {
             <Button variant={"contained"} onClick={generateCrop}>
               Aceptar
             </Button>
-            <Button variant={"outlined"} onClick={() => {setShowCrop(false); handleImageCancel()}}>
+            <Button
+              variant={"outlined"}
+              onClick={() => {
+                setShowCrop(false);
+                handleImageCancel();
+                setResetFile(true)
+              }}
+            >
               Cancelar
             </Button>
           </Box>

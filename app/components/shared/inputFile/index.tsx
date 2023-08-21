@@ -8,6 +8,7 @@ interface Props {
   handlePreview: (e: File) => void;
   handleCancel: () => void;
   error: FieldError | undefined;
+  reset: boolean;
 }
 
 export default function CustomInputFile({
@@ -15,6 +16,7 @@ export default function CustomInputFile({
   handlePreview,
   error,
   handleCancel,
+  reset,
 }: Props) {
   const [file, setFile] = useState<File | null>(null);
 
@@ -29,6 +31,12 @@ export default function CustomInputFile({
     setFile(null);
     handleCancel();
   };
+  useEffect(() => {
+    if (reset) {
+      setFile(null);
+    }
+    console.log("reset", reset);
+  }, [reset]);
 
   return (
     <Box sx={{ marginLeft: ".8rem" }}>
