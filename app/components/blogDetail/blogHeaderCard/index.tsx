@@ -21,8 +21,20 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { usePathname } from "next/navigation";
 
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
-
-export default function BlogHeaderCard() {
+interface Props {
+  data: {
+    _id: string;
+    user: { _id: string };
+    title: string;
+    description: string;
+    content: string;
+    likes: [];
+    slug: string;
+    image: string;
+    createdAt: string
+  };
+}
+export default function BlogHeaderCard({ data }: Props) {
   const pathname = usePathname();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -42,18 +54,16 @@ export default function BlogHeaderCard() {
           <Box sx={{ marginBottom: 1 }}>
             <UserAvatar user={avatarData} />
           </Box>
-          
+
           <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
-            Titulo del Blog
+            {data.title}
           </Typography>
           <Typography
             variant="body1"
             component={"p"}
             sx={{ marginBottom: "1rem" }}
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In interdum
-            orci vitae ipsum venenatis, in porta lacus sagittis. Phasellus
-            efficitur interdum lorem, sit amet tincidunt enim elementum vitae
+           {data.description}
           </Typography>
           <Box sx={{ marginBottom: 1 }}>
             <CustomTag
@@ -134,7 +144,7 @@ export default function BlogHeaderCard() {
               </Box>
             </Stack>
             <Typography fontSize={"14px"}>
-              {moment().format("DD-MM-YYYY")}
+              {moment(data.createdAt).format("DD-MM-YYYY")}
             </Typography>
           </Stack>
         </Grid>
@@ -160,8 +170,8 @@ export default function BlogHeaderCard() {
             })}
           >
             <img
-              src={Image.src}
-              style={{ width: "100%", height:"100%",objectFit: "cover" }}
+              src={data.image}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
               alt="Imagen del post"
             />
           </Box>
