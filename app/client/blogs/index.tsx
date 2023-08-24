@@ -23,14 +23,21 @@ export const getBlogComments = (
 
 export const getCommentsResponses = (
   slug: string,
-  commentId:string,
+  commentId: string,
   page: number
 ): Promise<AxiosResponse> => {
   return axiosIntance.get("/blogs/responses", {
     params: {
       slug,
       page,
-      commentId
+      commentId,
     },
   });
+};
+
+export const createComment = (form: {
+  slug: string;
+  content: string;
+}): Promise<AxiosResponse> => {
+  return axiosIntance.post("/blogs/create-comment", form);
 };

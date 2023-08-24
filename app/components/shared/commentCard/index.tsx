@@ -23,28 +23,30 @@ const schema = yup.object({
 interface Props {
   data: {
     content: string;
-    createAt: string;
+    createdAt: string;
     user: [
       {
-        _id: string;
+        _id?: string;
         avatar: string;
         slug: string;
         lastName: string;
         name: string;
       }
     ];
-    _id: string;
+    _id?: string;
   };
 }
 interface Response {
   _id: string;
-  user: [ {
-    "_id": string,
-    "avatar": string,
-    "slug": string,
-    "lastName": string,
-    "name": string
-}];
+  user: [
+    {
+      _id: string;
+      avatar: string;
+      slug: string;
+      lastName: string;
+      name: string;
+    }
+  ];
   content: string;
 }
 export default function CommentCard({ data }: Props) {
@@ -75,9 +77,15 @@ export default function CommentCard({ data }: Props) {
   };
   useEffect(() => {
     const getData = async () => {
-      const response = await getCommentsResponses(slug.toString(), data._id, 0);
-      console.log("response data", response.data);
-      setResponses(response.data.responses);
+      if (data._id) {
+        const response = await getCommentsResponses(
+          slug.toString(),
+          data._id,
+          0
+        );
+        console.log("response data", response.data);
+        setResponses(response.data.responses);
+      }
     };
     getData();
   }, []);
@@ -90,7 +98,7 @@ export default function CommentCard({ data }: Props) {
         <Stack direction="row" alignItems={"center"} spacing={2}>
           <UserAvatar user={userData} />
           <Typography fontSize={"14px"} align="right">
-            {moment(data.createAt).format("DD-MM-YYYY")}
+            {moment(data.createdAt).format("DD-MM-YYYY")}
           </Typography>
         </Stack>
         <Typography>{data.content}</Typography>
@@ -136,9 +144,7 @@ export default function CommentCard({ data }: Props) {
                     {moment().format("DD-MM-YYYY")}
                   </Typography>
                 </Stack>
-                <Typography>
-                  {e.content}
-                </Typography>
+                <Typography>{e.content}</Typography>
               </Stack>
             </Stack>
           );
