@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Box,
   Stack,
@@ -14,14 +14,52 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import CustomInput from "../customInput";
+import { getCommentsResponses } from "@/app/client/blogs";
+import { useParams } from "next/navigation";
 
 const schema = yup.object({
   comment: yup.string().required("Campo requerido"),
 });
-
-export default function CommentCard() {
+interface Props {
+  data: {
+    content: string;
+    createAt: string;
+    user: [
+      {
+        _id: string;
+        avatar: string;
+        slug: string;
+        lastName: string;
+        name: string;
+      }
+    ];
+    _id: string;
+  };
+}
+interface Response {
+  _id: string;
+  user: [ {
+    "_id": string,
+    "avatar": string,
+    "slug": string,
+    "lastName": string,
+    "name": string
+}];
+  content: string;
+}
+export default function CommentCard({ data }: Props) {
+  const { slug } = useParams();
   const inputRef = useRef<HTMLElement | null>(null);
   const [showCommentInput, setShowCommentInput] = useState<boolean>(false);
+  const [responses, setResponses] = useState<Response[]>([]);
+  const userData = useMemo(
+    () => ({
+      name: data.user[0].name,
+      lastName: data.user[0].lastName,
+      image: data.user[0].avatar,
+    }),
+    [data]
+  );
   //form
   const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
@@ -35,6 +73,14 @@ export default function CommentCard() {
   const hideInput = () => {
     setShowCommentInput(false);
   };
+  useEffect(() => {
+    const getData = async () => {
+      const response = await getCommentsResponses(slug.toString(), data._id, 0);
+      console.log("response data", response.data);
+      setResponses(response.data.responses);
+    };
+    getData();
+  }, []);
   return (
     <Box>
       <Stack
@@ -42,20 +88,12 @@ export default function CommentCard() {
         sx={{ width: "fit-content", padding: 1, borderRadius: 2 }}
       >
         <Stack direction="row" alignItems={"center"} spacing={2}>
-          <UserAvatar
-            user={{
-              name: "María y josé",
-              lastName: "Contreras Goméz",
-              image: null,
-            }}
-          />
+          <UserAvatar user={userData} />
           <Typography fontSize={"14px"} align="right">
-            {moment().format("DD-MM-YYYY")}
+            {moment(data.createAt).format("DD-MM-YYYY")}
           </Typography>
         </Stack>
-        <Typography>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit
-        </Typography>
+        <Typography>{data.content}</Typography>
       </Stack>
       <Stack direction="row" spacing={2}>
         <Button
@@ -70,69 +108,42 @@ export default function CommentCard() {
       </Stack>
 
       <Box>
-        <Stack direction="row">
-          <Box
-            sx={{
-              borderLeft: "solid 1px rgba(194, 194, 194, .5)",
-              height: 50,
-              width: 50,
-              marginLeft: 2,
-              borderBottom: "solid 1px rgba(194, 194, 194, .5)",
-            }}
-          ></Box>
-          <Stack
-            direction="column"
-            sx={{ width: "fit-content", padding: 1, borderRadius: 2 }}
-          >
-            <Stack direction="row" alignItems={"center"} spacing={2}>
-              <UserAvatar
-                user={{
-                  name: "María y josé",
-                  lastName: "Contreras Goméz",
-                  image: null,
+        {responses.map((e, index) => {
+          return (
+            <Stack direction="row" key={e._id}>
+              <Box
+                sx={{
+                  borderLeft: "solid 1px rgba(194, 194, 194, .5)",
+                  height: 50,
+                  width: 50,
+                  marginLeft: 2,
+                  borderBottom: "solid 1px rgba(194, 194, 194, .5)",
                 }}
-              />
-              <Typography fontSize={"14px"} align="right">
-                {moment().format("DD-MM-YYYY")}
-              </Typography>
+              ></Box>
+              <Stack
+                direction="column"
+                sx={{ width: "fit-content", padding: 1, borderRadius: 2 }}
+              >
+                <Stack direction="row" alignItems={"center"} spacing={2}>
+                  <UserAvatar
+                    user={{
+                      name: e.user[0].name,
+                      lastName: e.user[0].lastName,
+                      image: e.user[0].avatar,
+                    }}
+                  />
+                  <Typography fontSize={"14px"} align="right">
+                    {moment().format("DD-MM-YYYY")}
+                  </Typography>
+                </Stack>
+                <Typography>
+                  {e.content}
+                </Typography>
+              </Stack>
             </Stack>
-            <Typography>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit
-            </Typography>
-          </Stack>
-        </Stack>
+          );
+        })}
 
-        <Stack direction="row">
-          <Box
-            sx={{
-              borderLeft: "solid 1px rgba(194, 194, 194, .5)",
-              height: 50,
-              width: 50,
-              marginLeft: 2,
-              borderBottom: "solid 1px rgba(194, 194, 194, .5)",
-            }}
-          ></Box>
-          <Stack
-            direction="column"
-            sx={{ width: "fit-content", padding: 1, borderRadius: 2 }}
-          >
-            <Stack direction="row" alignItems={"center"} spacing={2}>
-              <UserAvatar
-                user={{
-                  name: "María y josé",
-                  lastName: "Contreras Goméz",
-                  image: null,
-                }}
-              />
-              <Typography fontSize={"14px"} align="right">
-                {moment().format("DD-MM-YYYY")}
-              </Typography>
-            </Stack>
-            <Typography>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit
-            </Typography>
-          </Stack>
-        </Stack>
         <Box ref={inputRef}>
           {showCommentInput && (
             <ClickAwayListener onClickAway={hideInput}>
