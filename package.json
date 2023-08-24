@@ -23,6 +23,7 @@
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
     "lottie-react": "^2.4.0",
     "moment": "^2.29.4",

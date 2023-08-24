@@ -5,6 +5,8 @@ import CoreReducer from "./reducer";
 import { axiosIntance } from "@/app/client";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import jwt_decode from "jwt-decode";
+
 const getUser = () => {
   const user =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
@@ -118,10 +120,29 @@ export const CoreProvider: React.FC<Props> = (props) => {
         if (user) {
           parseUser = JSON.parse(user);
           if (parseUser) {
-            console.log("if user", parseUser);
-            config.headers.Authorization = "Bearer" + " " + parseUser.token;
+            let decodedToken:any = jwt_decode(parseUser.token);
+            let currentDate = new Date();
+            if (decodedToken.exp * 1000 < currentDate.getTime()) {
+              logout(dispatch)
+              setInfoModal(dispatch, {
+                status: "error",
+                title: "Tu sesión ha expirado",
+                hasCancel: null,
+                hasSubmit: {
+                  title: "Iniciar sesión",
+                  cb: () => {
+                    setInfoModal(dispatch, null);
+                    logout(dispatch);
+                    setLoginModal(dispatch, true)
+                    router.push("/");
+                  },
+                },
+                onAnimationEnd: null,
+              });
+            } else {
+              config.headers.Authorization = "Bearer" + " " + parseUser.token;
+            }
           } else {
-            console.log("else user");
             delete config.headers.Authorization;
             config.withCredentials = false;
           }
