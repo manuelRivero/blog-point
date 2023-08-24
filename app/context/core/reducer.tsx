@@ -37,6 +37,12 @@ export default function registerReducer(
         showRegisterModal: true,
       };
     }
+    case "SET_LOGIN_REDIRECTION": {
+      return {
+        ...state,
+        loginRedirection: action.payload
+      };
+    }
 
     case "SET_LOGIN_MODAL": {
       return {

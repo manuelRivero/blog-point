@@ -39,6 +39,7 @@ type User = {
 };
 export type State = {
   showLoginModal: boolean;
+  loginRedirection: string;
   showRegisterModal: boolean;
   user: User | null;
   infoModal: InfoModal | null;
@@ -61,6 +62,7 @@ type Props = {
   children: JSX.Element;
 };
 const initialState: State = {
+  loginRedirection: "/",
   infoModal: null,
   showLoginModal: false,
   showRegisterModal: false,
@@ -239,6 +241,15 @@ export async function setLoginModal(
   dispatch({
     type: "SET_LOGIN_MODAL",
     payload: status,
+  });
+}
+export async function setLoginRedirection(
+  dispatch: React.Dispatch<any>,
+  path:string
+) {
+  dispatch({
+    type: "SET_LOGIN_REDIRECTION",
+    payload: path,
   });
 }
 

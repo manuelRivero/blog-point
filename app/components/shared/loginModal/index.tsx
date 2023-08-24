@@ -26,7 +26,7 @@ const schema = yup.object({
 
 export default function LoginModal() {
   const router = useRouter();
-  const [{ showLoginModal }, coreDispatch] = useCore();
+  const [{ showLoginModal, loginRedirection }, coreDispatch] = useCore();
   //form
   const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
@@ -60,7 +60,7 @@ export default function LoginModal() {
         hasCancel: null,
         hasSubmit: null,
         onAnimationEnd: () => {
-          router.push("/");
+          router.push(loginRedirection);
           setInfoModal(coreDispatch, null);
           reset();
         },
