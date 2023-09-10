@@ -34,12 +34,14 @@ import { uploadImage } from "../client/uploads";
 import CustomButton from "../components/shared/customButton";
 import { createBlog } from "../client/blogs";
 import { setInfoModal, setLoginModal, useCore } from "../context/core";
+import CategoryDropdown from "../components/createBlog/categoryDropdown";
 
 const schema = yup.object({
   title: yup.string().required("Campo requerido"),
   description: yup.string().required("Campo requerido"),
   image: yup.mixed().required("Campo requerido"),
   content: yup.string().required("Campo requerido"),
+  category: yup.string().required("Campo requerido")
 });
 interface CardData {
   title: string;
@@ -47,7 +49,7 @@ interface CardData {
   image: string | null;
 }
 export default function CreateBlog() {
-  const [{user}, coreDispatch] = useCore();
+  const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
 
   //form
@@ -150,9 +152,8 @@ export default function CreateBlog() {
     }
   };
 
-  useEffect(()=>{
-    if(!user){
-      
+  useEffect(() => {
+    if (!user) {
       setInfoModal(coreDispatch, {
         status: "error",
         title: "Inicia sesión para crear nuevos blogs",
@@ -160,16 +161,15 @@ export default function CreateBlog() {
         hasSubmit: {
           title: "ok",
           cb: () => {
-            router.push("/")
+            router.push("/");
             setInfoModal(coreDispatch, null);
-            setLoginModal(coreDispatch, true)
+            setLoginModal(coreDispatch, true);
           },
         },
         onAnimationEnd: null,
       });
-      
     }
-  },[])
+  }, []);
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -190,6 +190,13 @@ export default function CreateBlog() {
                 >
                   Información de tu blog
                 </Typography>
+                <Box sx={{ marginBottom: "1rem" }}>
+                <Controller
+                    name={"category"}
+                    control={control}
+                    render={({ field, fieldState }) => (
+                  <CategoryDropdown field={field} fieldState={fieldState} />)} />
+                </Box>
                 <Box sx={{ marginBottom: "1rem" }}>
                   <Controller
                     name={"title"}

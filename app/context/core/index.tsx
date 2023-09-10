@@ -6,6 +6,7 @@ import { axiosIntance } from "@/app/client";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
+import axios from "axios";
 
 const getUser = () => {
   const user =
@@ -119,12 +120,15 @@ export const CoreProvider: React.FC<Props> = (props) => {
         // Do something before request is sent
         const user = localStorage.getItem("user");
         let parseUser = null;
+        const CancelToken = axios.CancelToken;
         if (user) {
           parseUser = JSON.parse(user);
           if (parseUser) {
             let decodedToken:any = jwt_decode(parseUser.token);
             let currentDate = new Date();
             if (decodedToken.exp * 1000 < currentDate.getTime()) {
+             
+                config = {...config, cancelToken: new CancelToken((cancel) => cancel('Cancel repeated request'))}
               logout(dispatch)
               setInfoModal(dispatch, {
                 status: "error",

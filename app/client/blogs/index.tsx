@@ -41,3 +41,11 @@ export const createComment = (form: {
 }): Promise<AxiosResponse> => {
   return axiosIntance.post("/blogs/create-comment", form);
 };
+
+export const createResponse = (form: {
+  slug: string;
+  commentId:string;
+  content: string;
+}): Promise<AxiosResponse> => {
+  return axiosIntance.post("/blogs/create-response", form);
+};

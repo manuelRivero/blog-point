@@ -23,7 +23,27 @@ interface Comment {
       name: string;
     }
   ];
-  _id?: string;
+  _id: string;
+}
+interface NewComment {
+  _id: string;
+  comments: {
+    user: string;
+    content: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    responses: [];
+  };
+  user: [
+    {
+      _id: string;
+      avatar: string;
+      slug: string;
+      lastName: string;
+      name: string;
+    }
+  ];
 }
 export default function MainWrapper({ data }: any) {
   const [{ user }] = useCore();
@@ -32,19 +52,20 @@ export default function MainWrapper({ data }: any) {
   const [page, setPage] = useState<number>(0);
   const [comments, setComments] = useState<Comment[] | null>(null);
 
-  const addComment = (comment: string) => {
+  const addComment = (data: NewComment) => {
     const newCommentsList = comments ? [...comments] : [];
     if (user?.data) {
       setComments([
         {
-          content: comment,
-          createdAt: new Date().toString(),
+          _id: data.comments._id,
+          content: data.comments.content,
+          createdAt: data.comments.createdAt,
           user: [
             {
-              avatar: user.data.avatar,
-              slug: user.data.slug,
-              lastName: user.data.lastName,
-              name: user.data.name,
+              avatar: data.user[0].avatar,
+              slug: data.user[0].slug,
+              lastName: data.user[0].lastName,
+              name: data.user[0].name,
             },
           ],
         },
@@ -92,7 +113,7 @@ export default function MainWrapper({ data }: any) {
             <Stack>
               {comments &&
                 comments.map((e: any, index: number) => {
-                  return <CommentCard data={e} key={index} />;
+                  return <CommentCard data={e} key={e._id} />;
                 })}
             </Stack>
           </CustomCard>

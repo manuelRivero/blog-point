@@ -24,8 +24,29 @@ const schema = yup.object({
   comment: yup.string().required("Campo requerido"),
 });
 
+interface NewComment {
+  _id: string;
+  comments: {
+    user: string;
+    content: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    responses: [];
+  };
+  user: [
+    {
+      _id: string;
+      avatar: string;
+      slug: string;
+      lastName: string;
+      name: string;
+    }
+  ];
+}
+
 interface Props {
-  addComment: (e: string) => void;
+  addComment: (e: NewComment) => void;
 }
 
 export default function CommentInput({ addComment }: Props) {
@@ -44,7 +65,7 @@ export default function CommentInput({ addComment }: Props) {
         slug: slug.toString(),
         content: values.comment,
       });
-      addComment(values.comment);
+      addComment(data.comment[0]);
       setValue("comment", "");
       setInfoModal(coreDispatch, {
         status: "success",
