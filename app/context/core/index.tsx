@@ -83,6 +83,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
   useEffect(() => {
     axiosIntance.interceptors.response.use(
       (response) => {
+        console.log("axiosIntance.interceptors.response", response)
         if (response.status === 401) {
           logout(dispatch);
           router.push("/");
@@ -91,6 +92,8 @@ export const CoreProvider: React.FC<Props> = (props) => {
       },
       async (error) => {
         // const deviceId = await getUniqueId();
+        console.log("axiosIntance.interceptors.error", error)
+
         if (error.response.status === 401) {
           setInfoModal(dispatch, {
             status: "error",
@@ -117,10 +120,12 @@ export const CoreProvider: React.FC<Props> = (props) => {
   useEffect(() => {
     axiosIntance.interceptors.request.use(
       function (config) {
+        console.log("request")
         // Do something before request is sent
         const user = localStorage.getItem("user");
         let parseUser = null;
         const CancelToken = axios.CancelToken;
+        console.log("user", user)
         if (user) {
           parseUser = JSON.parse(user);
           if (parseUser) {

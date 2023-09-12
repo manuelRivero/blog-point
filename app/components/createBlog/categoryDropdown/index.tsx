@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -12,15 +13,12 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useCore } from "@/app/context/core";
-import { createCategory } from "@/app/client/category";
+import { setInfoModal, useCore } from "@/app/context/core";
+import { createCategory, getCategories } from "@/app/client/category";
 import CustomButton from "../../shared/customButton";
+import { Category } from "@/app/data/categories";
 
 interface Form {
-  name: string;
-}
-interface Category {
-  _id: string;
   name: string;
 }
 interface Props {
@@ -46,11 +44,10 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
     resolver: yupResolver(schema),
   });
   //states
+  const [page, setPage] = React.useState(0)
   const [formAlert, setFormAlert] = React.useState<null | string>(null);
   const [loadingSubmit, setLoadingSubmit] = React.useState<boolean>(false);
-  const [categories, setCategories] = React.useState<Category[] | null>(
-    categoriesList
-  );
+  const [categories, setCategories] = React.useState<Category[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openCategoryModal, setOpenCategoryModal] =
     React.useState<boolean>(false);
@@ -72,16 +69,54 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
 
   const submit = async (values: Form) => {
     try {
-      setLoadingSubmit(true)
+      setLoadingSubmit(true);
       const { data } = await createCategory({ ...values });
       const newCategoriesList = categories ? categories : [];
-      setCategories([...newCategoriesList, data.category]);
-    } catch (error) {
-      console.log("error", error);
-    } finally{
-      setLoadingSubmit(false)
+      setCategories([data.category, ...newCategoriesList]);
+      setInfoModal(coreDispatch, {
+        status: "success",
+        title: "Se ha creado la categoría",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Ok",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            reset({});
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } catch (error:any) {
+      setInfoModal(coreDispatch, {
+        status: "error",
+        title: error.response.data.error,
+        hasCancel: null,
+        hasSubmit: {
+          title: "Intentar nuevamente",
+          cb: () => {
+            setInfoModal(coreDispatch, null);
+            setOpenCategoryModal(false)
+            reset({});
+          },
+        },
+        onAnimationEnd: null,
+      });
+    } finally {
+      setLoadingSubmit(false);
     }
   };
+  React.useEffect(()=>{
+    const getData = async ()=>{
+      try {
+        const {data} = await getCategories({page})
+        setCategories(data.categories)
+        
+      } catch (error) {
+        console.log("error", error)
+      }
+    }
+    getData()
+  },[page])
   return (
     <div>
       <Box
@@ -206,7 +241,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
               />
               <Button
                 variant={"outlined"}
-                onClick={() => setOpenCategoryModal(false)}
+                onClick={() => {setOpenCategoryModal(false); reset({})}}
               >
                 Cancelar
               </Button>
