@@ -46,7 +46,10 @@ const schema = yup.object({
   description: yup.string().required("Campo requerido"),
   image: yup.mixed().required("Campo requerido"),
   content: yup.string().required("Campo requerido"),
-  category: yup.string().required("Campo requerido"),
+  category: yup.object({
+    title: yup.string().required("Campo requerido"),
+    id: yup.string().required("Campo requerido"),
+  }),
 });
 interface CardData {
   title: string;
@@ -129,6 +132,7 @@ export default function CreateBlog() {
     form.append("description", values.description);
     form.append("image", values.image);
     form.append("content", values.content);
+    form.append("category", values.category);
     try {
       const { data } = await createBlog(form);
       setInfoModal(coreDispatch, {
@@ -164,9 +168,8 @@ export default function CreateBlog() {
   };
 
   useEffect(() => {
-    console.log("watchCategory", watchCategory);
     if (watchCategory) {
-      setCardData({ ...cardData, category: watchCategory });
+      setCardData({ ...cardData, category: watchCategory.title });
     }
   }, [watchCategory]);
 
@@ -189,6 +192,7 @@ export default function CreateBlog() {
       });
     }
   }, []);
+
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -347,12 +351,19 @@ export default function CreateBlog() {
                   </Typography>
                 )}
                 <Box sx={{ marginTop: "1rem" }}>
-                  <BlogCard
-                    data={cardData}
-                    preview={true}
-                    showDescriptionTooltip={showDescriptionAlert}
-                    showTitleTooltip={showTitleAlert}
-                  />
+                  {user?.data && (
+                    <BlogCard
+                      data={cardData}
+                      preview={true}
+                      showDescriptionTooltip={showDescriptionAlert}
+                      showTitleTooltip={showTitleAlert}
+                      userAvatar={{
+                        name: user.data.name,
+                        lastName: user.data.name,
+                        image: user.data.avatar,
+                      }}
+                    />
+                  )}
                 </Box>
               </Grid>
               <Grid item xs={12}>

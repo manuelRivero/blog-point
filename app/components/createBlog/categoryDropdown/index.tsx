@@ -63,6 +63,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
   };
   const handleCategoryClick = (e: Category) => {
     setSelectedValue(e);
+    field.onChange({ title: e.name, id: e._id });
   };
 
   const handleNewCategory = () => {};
@@ -107,7 +108,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
   };
   React.useEffect(() => {
     const getData = async () => {
-      console.log("category call")
+      console.log("category call");
       try {
         const { data } = await getCategories({ page });
         setCategories(data.categories);
@@ -203,7 +204,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
                 control={control}
                 render={({ field, fieldState }) => (
                   <CustomInput
-                    maxLength={20}
+                    maxLength={15}
                     type="text"
                     error={fieldState.error}
                     value={field.value}

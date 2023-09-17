@@ -25,6 +25,7 @@ interface Props {
   preview: boolean;
   showTitleTooltip: boolean;
   showDescriptionTooltip: boolean;
+  userAvatar: { name: string; lastName: string; image: string | null };
 }
 interface Data {
   title: string;
@@ -35,12 +36,12 @@ interface Data {
   rate?: number;
   category: string;
 }
-const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 export default function BlogCard({
   data,
   preview,
   showTitleTooltip,
   showDescriptionTooltip,
+  userAvatar,
 }: Props) {
   return (
     <Card
@@ -58,15 +59,6 @@ export default function BlogCard({
         alt="Paella dish"
       />
       <CardContent>
-        {preview ? (
-          <Typography fontSize={"14px"} align="right">
-            {moment(data.date).format("DD-MM-YYYY")}
-          </Typography>
-        ) : (
-          <Typography fontSize={"14px"} align="right">
-            {moment().format("DD-MM-YYYY")}
-          </Typography>
-        )}
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -75,15 +67,24 @@ export default function BlogCard({
         >
           {data.category && (
             <CustomTag
-              color={'secundary'}
+              color="secondary"
               linkCallback={null}
               crossCallback={null}
               title={data.category}
             />
           )}
+          {preview ? (
+            <Typography fontSize={"14px"} align="right">
+              {moment(data.date).format("DD-MM-YYYY")}
+            </Typography>
+          ) : (
+            <Typography fontSize={"14px"} align="right">
+              {moment().format("DD-MM-YYYY")}
+            </Typography>
+          )}
         </Stack>
         <Box sx={{ marginBottom: 2 }}>
-          <Avatar user={avatarData} />
+          <Avatar user={userAvatar} />
         </Box>
         {data.title ? (
           <Typography

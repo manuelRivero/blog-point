@@ -3,6 +3,7 @@ import React from "react";
 
 //icons
 import CloseIcon from "@mui/icons-material/Close";
+import { concatDots } from "@/app/helpers/text";
 
 interface Props {
   color: "primary" | "secondary";
