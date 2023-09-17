@@ -15,11 +15,21 @@ import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import HeaderMenu from "../headerMenu";
 import NotificationDropdown from "../notificationDropdown";
-import Link from "next/link";
-import { useCore, setLoginModal, setRegisterModal } from "@/app/context/core";
+import { useCore, setLoginModal, setRegisterModal, setLoginRedirection } from "@/app/context/core";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [{ user }, coreDispatch] = useCore();
+  const router = useRouter();
+
+  const handleCreateBlog = () => {
+    if(!user){
+      setLoginRedirection(coreDispatch,"/crear-blog")
+      setLoginModal(coreDispatch, true);
+    }else {
+      router.push("/crear-blog");
+    }
+  }
 
   return (
     <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
@@ -79,8 +89,7 @@ export default function Header() {
               </>
             )}
             <Button
-              component={Link}
-              href="/crear-blog"
+              onClick={handleCreateBlog}
               variant="contained"
               color="secondary"
               startIcon={<AddIcon />}

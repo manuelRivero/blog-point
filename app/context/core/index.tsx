@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import CoreReducer from "./reducer";
 import { axiosIntance } from "@/app/client";
 import Cookies from "js-cookie";
@@ -80,10 +80,10 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const value: [State, React.Dispatch<any>] = [state, dispatch];
   const router = useRouter();
 
-  useEffect(() => {
+  useMemo(() => {
     axiosIntance.interceptors.response.use(
       (response) => {
-        console.log("axiosIntance.interceptors.response", response)
+        console.log("axiosIntance.interceptors.response", response);
         if (response.status === 401) {
           logout(dispatch);
           router.push("/");
@@ -92,7 +92,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
       },
       async (error) => {
         // const deviceId = await getUniqueId();
-        console.log("axiosIntance.interceptors.error", error)
+        console.log("axiosIntance.interceptors.error", error);
 
         if (error.response.status === 401) {
           setInfoModal(dispatch, {
@@ -104,7 +104,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
               cb: () => {
                 setInfoModal(dispatch, null);
                 logout(dispatch);
-                setLoginModal(dispatch, true)
+                setLoginModal(dispatch, true);
                 router.push("/");
               },
             },
@@ -117,24 +117,28 @@ export const CoreProvider: React.FC<Props> = (props) => {
     );
   }, []);
 
-  useEffect(() => {
+  useMemo(() => {
     axiosIntance.interceptors.request.use(
-      function (config) {
-        console.log("request")
+      (config) => {
+        console.log("request on use memo", config.url);
         // Do something before request is sent
         const user = localStorage.getItem("user");
         let parseUser = null;
         const CancelToken = axios.CancelToken;
-        console.log("user", user)
+        console.log("user", user);
         if (user) {
           parseUser = JSON.parse(user);
           if (parseUser) {
-            let decodedToken:any = jwt_decode(parseUser.token);
+            let decodedToken: any = jwt_decode(parseUser.token);
             let currentDate = new Date();
             if (decodedToken.exp * 1000 < currentDate.getTime()) {
-             
-                config = {...config, cancelToken: new CancelToken((cancel) => cancel('Cancel repeated request'))}
-              logout(dispatch)
+              config = {
+                ...config,
+                cancelToken: new CancelToken((cancel) =>
+                  cancel("Cancel repeated request")
+                ),
+              };
+              logout(dispatch);
               setInfoModal(dispatch, {
                 status: "error",
                 title: "Tu sesión ha expirado",
@@ -144,7 +148,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
                   cb: () => {
                     setInfoModal(dispatch, null);
                     logout(dispatch);
-                    setLoginModal(dispatch, true)
+                    setLoginModal(dispatch, true);
                     router.push("/");
                   },
                 },
@@ -161,6 +165,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
         return config;
       },
       function (error) {
+        console.log("axiosIntance.interceptors.request error", error);
         // Do something with request error
         return Promise.reject(error);
       }
@@ -254,7 +259,7 @@ export async function setLoginModal(
 }
 export async function setLoginRedirection(
   dispatch: React.Dispatch<any>,
-  path:string
+  path: string
 ) {
   dispatch({
     type: "SET_LOGIN_REDIRECTION",

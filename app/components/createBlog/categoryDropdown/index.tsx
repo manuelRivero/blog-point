@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -44,7 +44,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
     resolver: yupResolver(schema),
   });
   //states
-  const [page, setPage] = React.useState(0)
+  const [page, setPage] = React.useState(0);
   const [formAlert, setFormAlert] = React.useState<null | string>(null);
   const [loadingSubmit, setLoadingSubmit] = React.useState<boolean>(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -86,7 +86,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
         },
         onAnimationEnd: null,
       });
-    } catch (error:any) {
+    } catch (error: any) {
       setInfoModal(coreDispatch, {
         status: "error",
         title: error.response.data.error,
@@ -95,7 +95,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
           title: "Intentar nuevamente",
           cb: () => {
             setInfoModal(coreDispatch, null);
-            setOpenCategoryModal(false)
+            setOpenCategoryModal(false);
             reset({});
           },
         },
@@ -105,18 +105,18 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
       setLoadingSubmit(false);
     }
   };
-  React.useEffect(()=>{
-    const getData = async ()=>{
+  React.useEffect(() => {
+    const getData = async () => {
+      console.log("category call")
       try {
-        const {data} = await getCategories({page})
-        setCategories(data.categories)
-        
+        const { data } = await getCategories({ page });
+        setCategories(data.categories);
       } catch (error) {
-        console.log("error", error)
+        console.log("error", error);
       }
-    }
-    getData()
-  },[page])
+    };
+    getData();
+  }, [page]);
   return (
     <div>
       <Box
@@ -241,7 +241,10 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
               />
               <Button
                 variant={"outlined"}
-                onClick={() => {setOpenCategoryModal(false); reset({})}}
+                onClick={() => {
+                  setOpenCategoryModal(false);
+                  reset({});
+                }}
               >
                 Cancelar
               </Button>

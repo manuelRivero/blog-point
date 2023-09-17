@@ -33,7 +33,12 @@ import { getCroppedImg } from "../helpers/cropImage";
 import { uploadImage } from "../client/uploads";
 import CustomButton from "../components/shared/customButton";
 import { createBlog } from "../client/blogs";
-import { setInfoModal, setLoginModal, useCore } from "../context/core";
+import {
+  setInfoModal,
+  setLoginModal,
+  setLoginRedirection,
+  useCore,
+} from "../context/core";
 import CategoryDropdown from "../components/createBlog/categoryDropdown";
 
 const schema = yup.object({
@@ -41,12 +46,13 @@ const schema = yup.object({
   description: yup.string().required("Campo requerido"),
   image: yup.mixed().required("Campo requerido"),
   content: yup.string().required("Campo requerido"),
-  category: yup.string().required("Campo requerido")
+  category: yup.string().required("Campo requerido"),
 });
 interface CardData {
   title: string;
   description: string;
   image: string | null;
+  category: string;
 }
 export default function CreateBlog() {
   const [{ user }, coreDispatch] = useCore();
@@ -56,6 +62,7 @@ export default function CreateBlog() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
     setValue,
   } = useForm({
@@ -66,6 +73,7 @@ export default function CreateBlog() {
     title: "",
     description: "",
     image: null,
+    category: "",
   });
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -77,6 +85,8 @@ export default function CreateBlog() {
   const [showDescriptionAlert, setShowDescriptionAlert] =
     useState<boolean>(false);
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+
+  const watchCategory = watch("category");
 
   const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
     setCropData(croppedAreaPixels);
@@ -104,6 +114,7 @@ export default function CreateBlog() {
     setImageSrc(objectUrl);
     setShowCrop(true);
   };
+
   const descriptionLenghtHandler = (status: boolean) => {
     setShowDescriptionAlert(status);
   };
@@ -153,6 +164,13 @@ export default function CreateBlog() {
   };
 
   useEffect(() => {
+    console.log("watchCategory", watchCategory);
+    if (watchCategory) {
+      setCardData({ ...cardData, category: watchCategory });
+    }
+  }, [watchCategory]);
+
+  useEffect(() => {
     if (!user) {
       setInfoModal(coreDispatch, {
         status: "error",
@@ -162,6 +180,7 @@ export default function CreateBlog() {
           title: "ok",
           cb: () => {
             router.push("/");
+            setLoginRedirection(coreDispatch, "/crear-blog");
             setInfoModal(coreDispatch, null);
             setLoginModal(coreDispatch, true);
           },
@@ -191,11 +210,13 @@ export default function CreateBlog() {
                   Información de tu blog
                 </Typography>
                 <Box sx={{ marginBottom: "1rem" }}>
-                <Controller
+                  <Controller
                     name={"category"}
                     control={control}
                     render={({ field, fieldState }) => (
-                  <CategoryDropdown field={field} fieldState={fieldState} />)} />
+                      <CategoryDropdown field={field} fieldState={fieldState} />
+                    )}
+                  />
                 </Box>
                 <Box sx={{ marginBottom: "1rem" }}>
                   <Controller

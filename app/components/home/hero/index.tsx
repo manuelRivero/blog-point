@@ -4,9 +4,21 @@ import MainSearch from "../../mainSearch";
 import CategoryRow from "../categoryRow";
 import AddIcon from "@mui/icons-material/Add";
 import Link from "next/link";
+import { setLoginModal, setLoginRedirection, useCore } from "@/app/context/core";
+import { useRouter } from "next/navigation";
 
 
 export default function Hero() {
+  const [{ user }, coreDispatch] = useCore();
+  const router = useRouter();
+  const handleCreateBlog = () => {
+    if(!user){
+      setLoginRedirection(coreDispatch,"/crear-blog")
+      setLoginModal(coreDispatch, true);
+    }else {
+      router.push("/crear-blog");
+    }
+  }
   return (
     <Box
       sx={(theme) => ({
@@ -26,8 +38,7 @@ export default function Hero() {
         </Typography>
         <Stack direction="row" justifyContent="center" mb={3}>
           <Button
-            component={Link}
-            href="/crear-blog"
+          onClick={handleCreateBlog}
             variant="contained"
             color="secondary"
             startIcon={<AddIcon />}

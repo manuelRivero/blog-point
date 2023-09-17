@@ -18,6 +18,7 @@ import Avatar from "../shared/UserAvatar";
 import moment from "moment";
 import Link from "next/link";
 import { concatDots } from "@/app/helpers/text";
+import CustomTag from "../shared/tag";
 
 interface Props {
   data: Data;
@@ -32,6 +33,7 @@ interface Data {
   date?: string;
   link?: string;
   rate?: number;
+  category: string;
 }
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 export default function BlogCard({
@@ -71,7 +73,14 @@ export default function BlogCard({
           alignItems={"center"}
           mb={1}
         >
-          <Rating name="simple-controlled" value={5} onChange={() => {}} />
+          {data.category && (
+            <CustomTag
+              color={'secundary'}
+              linkCallback={null}
+              crossCallback={null}
+              title={data.category}
+            />
+          )}
         </Stack>
         <Box sx={{ marginBottom: 2 }}>
           <Avatar user={avatarData} />
