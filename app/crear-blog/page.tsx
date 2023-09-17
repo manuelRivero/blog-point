@@ -132,7 +132,7 @@ export default function CreateBlog() {
     form.append("description", values.description);
     form.append("image", values.image);
     form.append("content", values.content);
-    form.append("category", values.category);
+    form.append("category", values.category.id);
     try {
       const { data } = await createBlog(form);
       setInfoModal(coreDispatch, {
@@ -143,7 +143,7 @@ export default function CreateBlog() {
           title: "¡Genial!",
           cb: () => {
             setInfoModal(coreDispatch, null);
-            router.push(`/`);
+            router.push(`/detalle-del-blog/${data.blog.slug}`);
           },
         },
         onAnimationEnd: null,

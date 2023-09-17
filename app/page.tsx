@@ -16,17 +16,10 @@ export default function Home() {
         link: "",
         date: "14-12-2023",
       },
-    },
-    {
-      preview: false,
-      data: {
-        title: "Lorem ipsum",
-        image: "",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
-        rate: 2,
-        link: "",
-        date: "14-12-2023",
+      user: {
+        name: "Manuel",
+        lastName: "Rivero",
+        image: null,
       },
     },
     {
@@ -40,17 +33,10 @@ export default function Home() {
         link: "",
         date: "14-12-2023",
       },
-    },
-    {
-      preview: false,
-      data: {
-        title: "Lorem ipsum",
-        image: "",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
-        rate: 2,
-        link: "",
-        date: "14-12-2023",
+      user: {
+        name: "Manuel",
+        lastName: "Rivero",
+        image: null,
       },
     },
     {
@@ -63,6 +49,45 @@ export default function Home() {
         rate: 2,
         link: "",
         date: "14-12-2023",
+      },
+      user: {
+        name: "Manuel",
+        lastName: "Rivero",
+        image: null,
+      },
+    },
+    {
+      preview: false,
+      data: {
+        title: "Lorem ipsum",
+        image: "",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        rate: 2,
+        link: "",
+        date: "14-12-2023",
+      },
+      user: {
+        name: "Manuel",
+        lastName: "Rivero",
+        image: null,
+      },
+    },
+    {
+      preview: false,
+      data: {
+        title: "Lorem ipsum",
+        image: "",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu facilisis libero. Ut eget massa feugiat, lobortis eros in, egestas purus. Sed nec tellus non lacus finibus semper. Donec maximus",
+        rate: 2,
+        link: "",
+        date: "14-12-2023",
+      },
+      user: {
+        name: "Manuel",
+        lastName: "Rivero",
+        image: null,
       },
     },
   ];
@@ -70,14 +95,23 @@ export default function Home() {
     <main>
       <Hero />
       <Container sx={{ paddingBottom: 8 }}>
-        
         <Grid container spacing={4} sx={{ marginTop: "-6rem" }}>
           {blogs.map((e: any, index: number) => {
             console.log("e", e);
             return (
               <Grid key={index} item xs={12} sm={6} lg={4}>
                 <Stack direction="row" sx={{ justifyContent: "center" }}>
-                  <BlogCard data={e.data} preview={false} showDescriptionTooltip={false} showTitleTooltip={false}/>
+                  <BlogCard
+                    userAvatar={{
+                      name: e.user.name,
+                      lastName: e.user.name,
+                      image: e.user.avatar,
+                    }}
+                    data={e.data}
+                    preview={false}
+                    showDescriptionTooltip={false}
+                    showTitleTooltip={false}
+                  />
                 </Stack>
               </Grid>
             );
