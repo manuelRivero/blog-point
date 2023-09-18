@@ -4,8 +4,13 @@ import React from "react";
 import CustomTag from "../../shared/tag";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Category } from "@/app/data/categories";
 
-export default function CategoryRow() {
+interface Props {
+  categories: Category[]
+}
+
+export default function CategoryRow({categories}:Props) {
   const router = useRouter();
   var param = encodeURIComponent("categoría");
 
@@ -23,48 +28,18 @@ export default function CategoryRow() {
           justifyContent: "center",
         }}
       >
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
-        <CustomTag
-          color="secondary"
-          title="categoría"
-          crossCallback={null}
-          linkCallback={() => router.push(`/?category=${param}`)}
-        />
+        {categories.map((category:Category)=>{
+          return (
+            <CustomTag
+            key={category._id}
+            color="secondary"
+            title={category.name}
+            crossCallback={null}
+            linkCallback={() => router.push(`/?category=${category._id}`)}
+          />
+          )
+        })}
+       
       </Stack>
       <Stack spacing={1}>
         <Box onClick={() => {}}>

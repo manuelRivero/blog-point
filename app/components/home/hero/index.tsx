@@ -1,3 +1,4 @@
+"use client"
 import { Box, Stack, Typography, Button } from "@mui/material";
 import React from "react";
 import MainSearch from "../../mainSearch";
@@ -6,9 +7,13 @@ import AddIcon from "@mui/icons-material/Add";
 import Link from "next/link";
 import { setLoginModal, setLoginRedirection, useCore } from "@/app/context/core";
 import { useRouter } from "next/navigation";
+import { Category } from "@/app/data/categories";
 
+interface Props {
+  categories: Category[]
+}
 
-export default function Hero() {
+export default function Hero({categories}:Props) {
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
   const handleCreateBlog = () => {
@@ -59,7 +64,7 @@ export default function Hero() {
           <MainSearch />
         </Stack>
         <Box>
-          <CategoryRow />
+          <CategoryRow categories={categories} />
         </Box>
       </Stack>
     </Box>

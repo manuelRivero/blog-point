@@ -1,9 +1,21 @@
-"use client";
 import { Box, Button, Container, Grid, Stack } from "@mui/material";
 import BlogCard from "./components/blogCard";
 import Hero from "./components/home/hero";
+import { getCategories } from "./client/category";
 
-export default function Home() {
+async function getData() {
+  try {
+    const { data } = await getCategories({ page: 0 });
+    console.log("home data", data);
+
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
+
+export default async function Home() {
+  const data = await getData();
   const blogs = [
     {
       preview: false,
@@ -93,11 +105,10 @@ export default function Home() {
   ];
   return (
     <main>
-      <Hero />
+      <Hero categories={data ? data.categories : []} />
       <Container sx={{ paddingBottom: 8 }}>
         <Grid container spacing={4} sx={{ marginTop: "-6rem" }}>
           {blogs.map((e: any, index: number) => {
-            console.log("e", e);
             return (
               <Grid key={index} item xs={12} sm={6} lg={4}>
                 <Stack direction="row" sx={{ justifyContent: "center" }}>
