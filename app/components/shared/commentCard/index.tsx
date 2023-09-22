@@ -50,6 +50,7 @@ interface Response {
     }
   ];
   content: string;
+  createdAt: string;
 }
 
 interface Values {
@@ -94,6 +95,7 @@ export default function CommentCard({ data }: Props) {
         });
         setResponses([
           {
+            createdAt: moment.now().toString(),
             _id: response.data.data[0].comments.responses._id,
             user: [
               {
