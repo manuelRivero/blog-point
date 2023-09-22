@@ -148,7 +148,7 @@ export default function CreateBlog() {
         },
         onAnimationEnd: null,
       });
-    } catch (error) {
+    } catch (error:any) {
       if (error.response.status === 401) {
         return;
       }

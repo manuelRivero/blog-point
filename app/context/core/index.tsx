@@ -90,7 +90,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
         }
         return response;
       },
-      async (error) => {
+      async (error:any) => {
         // const deviceId = await getUniqueId();
         console.log("axiosIntance.interceptors.error", error);
 
