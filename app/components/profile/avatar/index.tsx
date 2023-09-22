@@ -20,7 +20,7 @@ import { useCore } from "@/app/context/core";
 interface Props {
   onChange?: (e: Blob) => void;
   isSameUser?:boolean;
-  avatar:string | null
+  avatar?:string | null
 }
 export default function ProfileAvatar({ onChange, isSameUser, avatar = null }: Props) {
   const [{ showLoginModal, user }, coreDispatch] = useCore();
