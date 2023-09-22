@@ -19,6 +19,9 @@ import CustomTag from "../../shared/tag";
 import ShareIcon from "@mui/icons-material/Share";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { usePathname } from "next/navigation";
+import { Category } from "@/app/data/categories";
+import { blogLike } from "@/app/client/blogs";
+import { setLoginModal, setLoginRedirection, useCore } from "@/app/context/core";
 
 const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 interface Props {
@@ -31,11 +34,36 @@ interface Props {
     likes: [];
     slug: string;
     image: string;
-    createdAt: string
+    createdAt: string;
+    category:Category;
+    targetLike: boolean
   };
 }
 export default function BlogHeaderCard({ data }: Props) {
+  const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
+  const [isLiked, setIsLiked] = useState<boolean>(data.targetLike)
+  const [likeCount, setLikeCount] = useState<number>(data.likes.length)
+
+  const handleLike = async () => {
+    try {
+      if(!user){
+        setLoginRedirection(coreDispatch,`/detalle-del-blog/${data.slug}`)
+        setLoginModal(coreDispatch, true);
+      } else {
+        const response = await blogLike(data.slug)
+        if(isLiked){
+          setLikeCount(likeCount - 1)
+        } else{
+          setLikeCount(likeCount + 1)
+        }
+        setIsLiked(!isLiked)      
+
+      }
+    } catch (error) {
+      console.log("error like", error)
+    }
+  }
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -70,7 +98,7 @@ export default function BlogHeaderCard({ data }: Props) {
               color="secondary"
               crossCallback={null}
               linkCallback={null}
-              title="Categoría"
+              title={data.category.name}
             />
           </Box>
 
@@ -91,9 +119,9 @@ export default function BlogHeaderCard({ data }: Props) {
                   alignItems: "center",
                 })}
               >
-                <ThumbUpIcon />
+                <ThumbUpIcon onClick={()=>handleLike()} sx={{cursor:"pointer"}} color={ isLiked ? "primary" : "disabled"} />
                 <Typography variant="body1" color="primary">
-                  50
+                  {likeCount}
                 </Typography>
               </Stack>
               <Box sx={{ position: "relative" }}>
