@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import { User } from "@/app/data/user";
 
 const getUser = () => {
   const user =
@@ -17,27 +18,7 @@ const getUser = () => {
   }
   return parseUser;
 };
-type User = {
-  data?: {
-    name: string;
-    lastName: string;
-    avatar: string;
-    bio: string;
-    fallow?: number;
-    blogs?: number;
-    fallowers?: number;
-    slug: string;
-    social?: {
-      facebook: string;
-      instagram: string;
-      twitter: string;
-    };
-  };
-  tokens?: {
-    refresh_token?: string;
-    access_token: string;
-  };
-};
+
 export type State = {
   showLoginModal: boolean;
   loginRedirection: string;

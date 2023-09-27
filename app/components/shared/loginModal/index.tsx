@@ -44,8 +44,9 @@ export default function LoginModal() {
       } = await login(values);
       await setUserTokens(coreDispatch, token);
       const data = await me();
-      const { name, lastName, email, avatar, slug, social,  } = data.data.data;
+      const { name, lastName, email, avatar, slug, social, _id  } = data.data.data;
       await setUserData(coreDispatch, {
+        _id,
         name,
         lastName,
         email,
