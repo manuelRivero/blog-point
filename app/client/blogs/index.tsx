@@ -1,6 +1,15 @@
 import { AxiosResponse } from "axios";
 import { axiosIntance } from "..";
 
+export const getBlogs = (page:number, search:string | undefined) : Promise<AxiosResponse> => {
+  return axiosIntance.get("/blogs", {
+    params:{
+      page,
+      search
+    }
+  })
+}
+
 export const createBlog = (form: FormData): Promise<AxiosResponse> => {
   return axiosIntance.post("/blogs/create", form);
 };

@@ -35,6 +35,7 @@ interface Data {
   link?: string;
   rate?: number;
   category: string;
+  slug: string
 }
 export default function BlogCard({
   data,
@@ -166,7 +167,7 @@ export default function BlogCard({
             variant="contained"
             size="small"
             component={Link}
-            href="/detalle-del-blog/1"
+            href={"/detalle-del-blog/" + data.slug}
           >
             Leer
           </Button>
