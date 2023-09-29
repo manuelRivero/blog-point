@@ -41,6 +41,20 @@ import {
 } from "../context/core";
 import CategoryDropdown from "../components/createBlog/categoryDropdown";
 
+import introJs from "intro.js";
+
+const tutorialData = {
+  category:
+    "Selecciona la categoría de tu blog, puedes crear nuevas categorías, si no encuentras una que describa el contenido de tu blog.",
+  title: "Este es el titulo para tu blog.",
+  description: "Añade una breve descripción sobre el contenido de tu blog.",
+  image: "Puedes seleccionar una imagen para tu blog",
+  preview:
+    "Así lucira tu blog en los resultados de busqueda, asegurate que la información de tu blog se visualice de forma correcta",
+  content:
+    "En este editor de texto enriquecido es donde puedes crear el contenido de tu blog, puedes agregar imágenes y videos para hacer tu blog más atractivo",
+};
+
 const schema = yup.object({
   title: yup.string().required("Campo requerido"),
   description: yup.string().required("Campo requerido"),
@@ -148,7 +162,7 @@ export default function CreateBlog() {
         },
         onAnimationEnd: null,
       });
-    } catch (error:any) {
+    } catch (error: any) {
       if (error.response.status === 401) {
         return;
       }
@@ -193,6 +207,16 @@ export default function CreateBlog() {
     }
   }, []);
 
+  useEffect(() => {
+    const intro = introJs();
+    intro.setOption("nextLabel", " Siguiente ");
+    intro.setOption("dontShowAgain", true)
+    intro.setOption("dontShowAgainLabel", "No mostrar de nuevo este tutorial")
+    intro.setOption("prevLabel", " Aterior ");
+    intro.setOption("doneLabel", " Entendido ");
+    intro.start();
+  }, []);
+
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -213,108 +237,119 @@ export default function CreateBlog() {
                 >
                   Información de tu blog
                 </Typography>
-                <Box sx={{ marginBottom: "1rem" }}>
-                  <Controller
-                    name={"category"}
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <CategoryDropdown field={field} fieldState={fieldState} />
+                <div data-intro={tutorialData.category}>
+                  <Box sx={{ marginBottom: "1rem" }}>
+                    <Controller
+                      name={"category"}
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <CategoryDropdown
+                          field={field}
+                          fieldState={fieldState}
+                        />
+                      )}
+                    />
+                  </Box>
+                </div>
+                <div data-intro={tutorialData.title}>
+                  <Box sx={{ marginBottom: "1rem" }}>
+                    <Controller
+                      name={"title"}
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <CustomInput
+                          maxLength={80}
+                          lengthAlertHandler={{
+                            handler: (e) => titleLenghtHandler(e),
+                            length: 60,
+                          }}
+                          type="text"
+                          error={fieldState.error}
+                          value={field.value}
+                          onChange={(
+                            e: React.ChangeEvent<
+                              HTMLInputElement | HTMLTextAreaElement
+                            >
+                          ) => {
+                            field.onChange(e.target.value);
+                            setCardData({ ...cardData, title: e.target.value });
+                          }}
+                          label="Título del blog"
+                          outline={true}
+                          placeholder="Escribe el titulo del blog"
+                        />
+                      )}
+                    />
+                  </Box>
+                </div>
+                <div data-intro={tutorialData.description}>
+                  <Box sx={{ marginBottom: "1rem" }}>
+                    <Controller
+                      name={"description"}
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <CustomInput
+                          maxLength={160}
+                          lengthAlertHandler={{
+                            handler: (e) => descriptionLenghtHandler(e),
+                            length: 120,
+                          }}
+                          type="text"
+                          error={fieldState.error}
+                          value={field.value}
+                          onChange={(
+                            e: React.ChangeEvent<
+                              HTMLInputElement | HTMLTextAreaElement
+                            >
+                          ) => {
+                            field.onChange(e.target.value);
+                            setCardData({
+                              ...cardData,
+                              description: e.target.value,
+                            });
+                          }}
+                          label="Descripción blog"
+                          outline={true}
+                          multiline={true}
+                          rows={5}
+                          placeholder="Escribe la descripción del blog"
+                        />
+                      )}
+                    />
+                  </Box>
+                </div>
+                <div data-intro={tutorialData.image}>
+                  <Box sx={{ marginBottom: "1rem" }}>
+                    <Controller
+                      name={"image"}
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <CustomInputFile
+                          reset={resetFile}
+                          handleCancel={() => {
+                            handleImageCancel();
+                            field.onChange("");
+                          }}
+                          error={fieldState.error}
+                          handlePreview={(e) => {
+                            handlePreview(e);
+                            field.onChange(e);
+                          }}
+                          label="Imagen del blog"
+                        />
+                      )}
+                    />
+                    {cropData && (
+                      <Button
+                        sx={{ marginLeft: ".8rem", marginTop: 2 }}
+                        variant="outlined"
+                        onClick={() => setShowCrop(true)}
+                      >
+                        Modificar posición de la imagen
+                      </Button>
                     )}
-                  />
-                </Box>
-                <Box sx={{ marginBottom: "1rem" }}>
-                  <Controller
-                    name={"title"}
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <CustomInput
-                        maxLength={80}
-                        lengthAlertHandler={{
-                          handler: (e) => titleLenghtHandler(e),
-                          length: 60,
-                        }}
-                        type="text"
-                        error={fieldState.error}
-                        value={field.value}
-                        onChange={(
-                          e: React.ChangeEvent<
-                            HTMLInputElement | HTMLTextAreaElement
-                          >
-                        ) => {
-                          field.onChange(e.target.value);
-                          setCardData({ ...cardData, title: e.target.value });
-                        }}
-                        label="Título del blog"
-                        outline={true}
-                        placeholder="Escribe el titulo del blog"
-                      />
-                    )}
-                  />
-                </Box>
-                <Box sx={{ marginBottom: "1rem" }}>
-                  <Controller
-                    name={"description"}
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <CustomInput
-                        maxLength={160}
-                        lengthAlertHandler={{
-                          handler: (e) => descriptionLenghtHandler(e),
-                          length: 120,
-                        }}
-                        type="text"
-                        error={fieldState.error}
-                        value={field.value}
-                        onChange={(
-                          e: React.ChangeEvent<
-                            HTMLInputElement | HTMLTextAreaElement
-                          >
-                        ) => {
-                          field.onChange(e.target.value);
-                          setCardData({
-                            ...cardData,
-                            description: e.target.value,
-                          });
-                        }}
-                        label="Descripción blog"
-                        outline={true}
-                        multiline={true}
-                        rows={5}
-                        placeholder="Escribe la descripción del blog"
-                      />
-                    )}
-                  />
-                </Box>
-                <Box sx={{ marginBottom: "1rem" }}>
-                  <Controller
-                    name={"image"}
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <CustomInputFile
-                        reset={resetFile}
-                        handleCancel={() => {
-                          handleImageCancel();
-                          field.onChange("");
-                        }}
-                        error={fieldState.error}
-                        handlePreview={(e) => {
-                          handlePreview(e);
-                          field.onChange(e);
-                        }}
-                        label="Imagen del blog"
-                      />
-                    )}
-                  />
-                  {cropData && (
-                    <Button
-                      sx={{ marginLeft: ".8rem", marginTop: 2 }}
-                      variant="outlined"
-                      onClick={() => setShowCrop(true)}
-                    >
-                      Modificar posición de la imagen
-                    </Button>
-                  )}
-                </Box>
+                  </Box>
+                </div>
               </Grid>
               <Grid item xs={12} sm={6} lg={6}>
                 <Typography variant="h2" component={"h2"}>
@@ -350,21 +385,23 @@ export default function CreateBlog() {
                     forma completa en el detalle del blog.
                   </Typography>
                 )}
-                <Box sx={{ marginTop: "1rem" }}>
-                  {user?.data && (
-                    <BlogCard
-                      data={cardData}
-                      preview={true}
-                      showDescriptionTooltip={showDescriptionAlert}
-                      showTitleTooltip={showTitleAlert}
-                      userAvatar={{
-                        name: user.data.name,
-                        lastName: user.data.name,
-                        image: user.data.avatar,
-                      }}
-                    />
-                  )}
-                </Box>
+                <div data-intro={tutorialData.preview}>
+                  <Box sx={{ marginTop: "1rem" }}>
+                    {user?.data && (
+                      <BlogCard
+                        data={cardData}
+                        preview={true}
+                        showDescriptionTooltip={showDescriptionAlert}
+                        showTitleTooltip={showTitleAlert}
+                        userAvatar={{
+                          name: user.data.name,
+                          lastName: user.data.name,
+                          image: user.data.avatar,
+                        }}
+                      />
+                    )}
+                  </Box>
+                </div>
               </Grid>
               <Grid item xs={12}>
                 <Typography
@@ -374,63 +411,73 @@ export default function CreateBlog() {
                 >
                   Contenido de tu blog
                 </Typography>
-                <Box>
-                  <Controller
-                    name="content"
-                    control={control}
-                    render={({ field, fieldState }) => {
-                      return (
-                        <>
-                          <Editor
-                            apiKey="g8clezyenv99c3qrpf04jm099smc6ldsodi90hapovrk29k4"
-                            initialValue=""
-                            init={{
-                              images_upload_handler: async (blobInfo: any) => {
-                                return new Promise(async (success, failure) => {
-                                  const form = new FormData();
-                                  form.append(
-                                    "image",
-                                    blobInfo.blob(),
-                                    blobInfo.filename()
+                <div data-intro={tutorialData.content}>
+                  <Box>
+                    <Controller
+                      name="content"
+                      control={control}
+                      render={({ field, fieldState }) => {
+                        return (
+                          <>
+                            <Editor
+                              apiKey="g8clezyenv99c3qrpf04jm099smc6ldsodi90hapovrk29k4"
+                              initialValue=""
+                              init={{
+                                images_upload_handler: async (
+                                  blobInfo: any
+                                ) => {
+                                  return new Promise(
+                                    async (success, failure) => {
+                                      const form = new FormData();
+                                      form.append(
+                                        "image",
+                                        blobInfo.blob(),
+                                        blobInfo.filename()
+                                      );
+                                      try {
+                                        const { data } = await uploadImage(
+                                          form
+                                        );
+                                        console.log("data", data.url);
+                                        success(data.url);
+                                      } catch (error) {
+                                        failure("Error al subir la imagen");
+                                      }
+                                    }
                                   );
-                                  try {
-                                    const { data } = await uploadImage(form);
-                                    console.log("data", data.url);
-                                    success(data.url);
-                                  } catch (error) {
-                                    failure("Error al subir la imagen");
-                                  }
-                                });
-                              },
-                              language: "es",
-                              content_langs: [{ title: "Spanish", code: "es" }],
-                              branding: false,
-                              height: 400,
-                              menubar: true,
-                              plugins:
-                                "print preview paste searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern",
-                              toolbar:
-                                "formatselect | bold italic underline strikethrough | forecolor backcolor blockquote | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat",
-                              image_advtab: true,
-                            }}
-                            onEditorChange={(e) => {
-                              console.log("text editor on change", e);
-                              field.onChange(e);
-                            }}
-                          />
-                          {fieldState.error && (
-                            <Typography
-                              sx={{ marginLeft: ".8rem", fontSize: 12 }}
-                              color={"error"}
-                            >
-                              {fieldState.error.message}
-                            </Typography>
-                          )}
-                        </>
-                      );
-                    }}
-                  />
-                </Box>
+                                },
+                                language: "es",
+                                content_langs: [
+                                  { title: "Spanish", code: "es" },
+                                ],
+                                branding: false,
+                                height: 400,
+                                menubar: true,
+                                plugins:
+                                  "print preview paste searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern",
+                                toolbar:
+                                  "formatselect | bold italic underline strikethrough | forecolor backcolor blockquote | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat",
+                                image_advtab: true,
+                              }}
+                              onEditorChange={(e) => {
+                                console.log("text editor on change", e);
+                                field.onChange(e);
+                              }}
+                            />
+                            {fieldState.error && (
+                              <Typography
+                                sx={{ marginLeft: ".8rem", fontSize: 12 }}
+                                color={"error"}
+                              >
+                                {fieldState.error.message}
+                              </Typography>
+                            )}
+                          </>
+                        );
+                      }}
+                    />
+                  </Box>
+                </div>
               </Grid>
               <Grid item xs={12}>
                 {Object.keys(errors).length > 0 && (

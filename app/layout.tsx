@@ -10,6 +10,8 @@ import InfoModal from "./components/shared/infoModal";
 import RegisterModal from "./components/shared/registerModal";
 
 import './styles/global.css';
+import 'intro.js/introjs.css';
+
 
 
 export const metadata: Metadata = {

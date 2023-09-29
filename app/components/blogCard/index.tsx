@@ -35,7 +35,7 @@ interface Data {
   link?: string;
   rate?: number;
   category: string;
-  slug: string
+  slug?: string
 }
 export default function BlogCard({
   data,
