@@ -29,6 +29,7 @@ interface Props {
   data: Blog;
 }
 export default function BlogHorizontalCard({ data }: Props) {
+  console.log("horizontal blog card data", data)
   const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
 

@@ -9,6 +9,8 @@ import LoginModal from "./components/shared/loginModal";
 import InfoModal from "./components/shared/infoModal";
 import RegisterModal from "./components/shared/registerModal";
 
+import './styles/global.css';
+
 
 export const metadata: Metadata = {
   title: "Historial medico",

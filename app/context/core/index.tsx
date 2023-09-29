@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { User } from "@/app/data/user";
+import { usePathname } from "next/navigation";
 
 const getUser = () => {
   const user =
@@ -60,9 +61,11 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const [state, dispatch] = React.useReducer(CoreReducer, initialState);
   const value: [State, React.Dispatch<any>] = [state, dispatch];
   const router = useRouter();
+  const pathName = usePathname();
+  console.log("pathName", pathName);
 
-  useMemo(() => {
-    axiosIntance.interceptors.response.use(
+  const responseInterceptor = useMemo(() => {
+    return axiosIntance.interceptors.response.use(
       (response) => {
         console.log("axiosIntance.interceptors.response", response);
         if (response.status === 401) {
@@ -71,7 +74,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
         }
         return response;
       },
-      async (error:any) => {
+      async (error: any) => {
         // const deviceId = await getUniqueId();
         console.log("axiosIntance.interceptors.error", error);
 
@@ -98,8 +101,8 @@ export const CoreProvider: React.FC<Props> = (props) => {
     );
   }, []);
 
-  useMemo(() => {
-    axiosIntance.interceptors.request.use(
+  const requestInterceptor = useMemo(() => {
+    return axiosIntance.interceptors.request.use(
       (config) => {
         console.log("request on use memo", config.url);
         // Do something before request is sent
@@ -120,6 +123,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
                 ),
               };
               logout(dispatch);
+              setLoginRedirection(dispatch, pathName);
               setInfoModal(dispatch, {
                 status: "error",
                 title: "Tu sesión ha expirado",
@@ -151,7 +155,13 @@ export const CoreProvider: React.FC<Props> = (props) => {
         return Promise.reject(error);
       }
     );
-  }, []);
+  }, [state.user]);
+
+  useEffect(() => {
+    return () => {
+      axiosIntance.interceptors.request.eject(requestInterceptor);
+    };
+  }, [state.user]);
 
   return <CoreContext.Provider value={value} {...props} />;
 };

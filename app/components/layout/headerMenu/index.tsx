@@ -58,7 +58,7 @@ export default function HeaderMenu() {
                 Crear blog
               </Typography>
             </MenuItem>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/"}>
+            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/mis-blogs"}>
               <Typography variant="body1" component={"p"}>
                 Mis blogs
               </Typography>

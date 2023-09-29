@@ -2,6 +2,7 @@
 import {
   setInfoModal,
   setLoginModal,
+  setLoginRedirection,
   setUserData,
   setUserTokens,
   useCore,
@@ -62,6 +63,7 @@ export default function LoginModal() {
         hasSubmit: null,
         onAnimationEnd: () => {
           router.push(loginRedirection);
+          setLoginRedirection(coreDispatch, "/")
           setInfoModal(coreDispatch, null);
           reset();
         },

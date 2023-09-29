@@ -9,8 +9,8 @@ export const getBlog = (slug: string): Promise<AxiosResponse> => {
   return axiosIntance.get("/blogs/" + slug);
 };
 
-export const getUserBlog = (id: string): Promise<AxiosResponse> => {
-  return axiosIntance.get("/blogs/user-blogs/" + id);
+export const getUserBlog = (id: string, page:number): Promise<AxiosResponse> => {
+  return axiosIntance.get(`/blogs/user-blogs/${id}?page=${page}` );
 };
 
 export const blogLike = (slug: string): Promise<AxiosResponse> => {
