@@ -12,6 +12,7 @@ async function getData({page = 0}) {
       blogsData
     };
   } catch (error) {
+    console.log("home error", error)
     return null;
   }
 }
