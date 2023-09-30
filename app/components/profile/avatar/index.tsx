@@ -19,12 +19,16 @@ import { useCore } from "@/app/context/core";
 
 interface Props {
   onChange?: (e: Blob) => void;
-  isSameUser?:boolean;
-  avatar?:string | null
+  isSameUser?: boolean;
+  avatar?: string | null;
 }
-export default function ProfileAvatar({ onChange, isSameUser, avatar = null }: Props) {
+export default function ProfileAvatar({
+  onChange,
+  isSameUser,
+  avatar = null,
+}: Props) {
   const [{ showLoginModal, user }, coreDispatch] = useCore();
-
+  console.log("same user", isSameUser);
   const [file, setFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
@@ -71,28 +75,29 @@ export default function ProfileAvatar({ onChange, isSameUser, avatar = null }: P
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             badgeContent={
-              isSameUser ? 
-              <Box
-                sx={(theme) => ({
-                  background: "#fff",
-                  color: theme.palette.primary.main,
-                  borderRadius: 9999,
-                  padding: "2px",
-                  cursor: "pointer",
-                  boxShadow: "0 0 5px 0 rgba(0,0,0, .5)",
-                })}
-              >
-                <input
-                  type="file"
-                  id="file-input"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                  accept="image/*"
-                />
-                <label htmlFor="file-input">
-                  <EditIcon />
-                </label>
-              </Box> : null
+              isSameUser ? (
+                <Box
+                  sx={(theme) => ({
+                    background: "#fff",
+                    color: theme.palette.primary.main,
+                    borderRadius: 9999,
+                    padding: "2px",
+                    cursor: "pointer",
+                    boxShadow: "0 0 5px 0 rgba(0,0,0, .5)",
+                  })}
+                >
+                  <input
+                    type="file"
+                    id="file-input"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                    accept="image/*"
+                  />
+                  <label htmlFor="file-input">
+                    <EditIcon sx={{ cursor: "pointer" }} />
+                  </label>
+                </Box>
+              ) : null
             }
           >
             {cropImageSrc && (
@@ -102,11 +107,13 @@ export default function ProfileAvatar({ onChange, isSameUser, avatar = null }: P
                 alt="foto de perfil"
               />
             )}
-            {!cropImageSrc && <Avatar
-              src={avatar ? avatar : image.src}
-              sx={{ width: 100, height: 100 }}
-              alt="foto de perfil"
-            />}
+            {!cropImageSrc && (
+              <Avatar
+                src={avatar ? avatar : image.src}
+                sx={{ width: 100, height: 100 }}
+                alt="foto de perfil"
+              />
+            )}
           </Badge>
         </Stack>
       </Box>

@@ -180,7 +180,7 @@ export default function RegisterModal() {
             >
               {`Agrega tu foto de perfil (Opcional)`}
             </Typography>
-            <ProfileAvatar onChange={handleImage} />
+            <ProfileAvatar onChange={handleImage} isSameUser={true} avatar={null}/>
           </Stack>
         )}
         {step === 1 && (

@@ -52,7 +52,7 @@ export default function CategoryRow({categories}:Props) {
             }}
             align="center"
             variant="body1"
-            href={"/categorias"}
+            href={"/"}
             component={Link}
           >
             Explorar más categorías
