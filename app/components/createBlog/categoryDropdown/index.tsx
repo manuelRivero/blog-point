@@ -74,6 +74,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
       const { data } = await createCategory({ ...values });
       const newCategoriesList = categories ? categories : [];
       setCategories([data.category, ...newCategoriesList]);
+      setOpenCategoryModal(false)
       setInfoModal(coreDispatch, {
         status: "success",
         title: "Se ha creado la categoría",
