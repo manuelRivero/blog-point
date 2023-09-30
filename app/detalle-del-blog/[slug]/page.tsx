@@ -1,31 +1,30 @@
+
 import React from "react";
 import { getBlog } from "@/app/client/blogs";
 import MainWrapper from "@/app/components/blogDetail/mainWrapper";
 import { cookies } from "next/headers";
 import { axiosIntance } from "@/app/client";
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
-export const getServerSideProps: GetServerSideProps = async ({params}:GetServerSidePropsContext) => { 
+
+const getData = async (slug: string) => {
   const cookie = cookies().get("token");
 
   try {
-    const { data } = await axiosIntance.get("/blogs/" + params?.slug, {
+    const { data } = await axiosIntance.get("/blogs/" + slug, {
       headers: {
         Cookie: cookie ? `token=${cookie?.value}` : "",
       },
     });
-    return {
-      props: { data },
-    };
+    return data;
   } catch (error) {
-    return {
-      notFound: true,
-    } as const
+    return null;
   }
 };
 
- function BlogDetail({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  return <MainWrapper data={data} />;
+export default async function BlogDetail({ params }: any) {
+  const { slug } = params;
+  const data = await getData(slug);
+  return (
+    <MainWrapper data={data} />
+  );
 }
-
-export default BlogDetail

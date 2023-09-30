@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { axiosIntance } from "..";
 
-export const getBlogs = (page:string | string[] | undefined, search:string | undefined) : Promise<AxiosResponse> => {
+export const getBlogs = (page:number | string[] | undefined, search:string | undefined) : Promise<AxiosResponse> => {
   return axiosIntance.get("/blogs", {
     params:{
       page,
