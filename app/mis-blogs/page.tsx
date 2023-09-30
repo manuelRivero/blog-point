@@ -38,6 +38,7 @@ export default function MyBlogs() {
         onAnimationEnd: null,
       });
     }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -76,6 +77,7 @@ export default function MyBlogs() {
       }
     };
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>

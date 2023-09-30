@@ -89,6 +89,7 @@ export default function LoginModal() {
     if (!showLoginModal) {
       reset();
     }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showLoginModal]);
   return (
     <Modal

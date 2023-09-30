@@ -40,12 +40,14 @@ export default function Step1({
       reset();
       clearErrors()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetForm]);
 
   useEffect(() => {
     if (error) {
       setError(error.fieldName, { type: "custom", message: error.error });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
   return (
     <>

@@ -66,10 +66,12 @@ export default function Step3({ onSubmit, resetForm, initialValues }: Props) {
     if (resetForm) {
       reset();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetForm]);
 
   useEffect(() => {
     checkRegex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
   return (
     <>

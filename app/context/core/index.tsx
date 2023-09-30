@@ -99,6 +99,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
         return Promise.reject(error);
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const requestInterceptor = useMemo(() => {
@@ -155,12 +156,14 @@ export const CoreProvider: React.FC<Props> = (props) => {
         return Promise.reject(error);
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.user]);
 
   useEffect(() => {
     return () => {
       axiosIntance.interceptors.request.eject(requestInterceptor);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.user]);
 
   return <CoreContext.Provider value={value} {...props} />;

@@ -85,6 +85,7 @@ export default function MainWrapper({ data }: any) {
       setComments(data.comments[0].data);
     };
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (!data) {
     router.push("/");

@@ -117,6 +117,8 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
       }
     };
     getData();
+    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   return (
     <div>

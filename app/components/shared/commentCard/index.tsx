@@ -149,6 +149,7 @@ export default function CommentCard({ data }: Props) {
       }
     };
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Box>

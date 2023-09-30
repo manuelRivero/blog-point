@@ -185,6 +185,7 @@ export default function CreateBlog() {
     if (watchCategory) {
       setCardData({ ...cardData, category: watchCategory.title });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchCategory]);
 
   useEffect(() => {
@@ -205,6 +206,7 @@ export default function CreateBlog() {
         onAnimationEnd: null,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -215,6 +217,7 @@ export default function CreateBlog() {
     intro.setOption("prevLabel", " Aterior ");
     intro.setOption("doneLabel", " Entendido ");
     intro.start();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

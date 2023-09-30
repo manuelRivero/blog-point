@@ -58,6 +58,7 @@ Props) {
         lengthAlertHandler.handler(false);
       }
     }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

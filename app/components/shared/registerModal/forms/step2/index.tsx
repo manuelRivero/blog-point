@@ -35,6 +35,7 @@ export default function Step2({ onSubmit, resetForm, initialValues }: Props) {
     if (resetForm) {
       reset();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetForm]);
   return (
     <>

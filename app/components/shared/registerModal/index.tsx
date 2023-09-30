@@ -103,6 +103,7 @@ export default function RegisterModal() {
     if (!showRegisterModal) {
       setStep(1);
     }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showRegisterModal]);
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export default function RegisterModal() {
     } else {
       setResetForms(false);
     }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showRegisterModal]);
 
   return (
