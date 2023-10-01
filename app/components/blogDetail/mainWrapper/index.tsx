@@ -4,12 +4,14 @@ import BlogHeaderCard from "@/app/components/blogDetail/blogHeaderCard";
 import CustomCard from "@/app/components/shared/card";
 import CommentCard from "@/app/components/shared/commentCard";
 import CommentInput from "@/app/components/shared/commentInput";
-import { Box, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Container, Grid, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { getBlogComments } from "@/app/client/blogs";
 import { useCore } from "@/app/context/core";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 
 interface Comment {
   content: string;
@@ -94,6 +96,9 @@ export default function MainWrapper({ data }: any) {
 
   return (
     <Container sx={{ marginTop: 4, paddingBottom: 4 }}>
+       <IconButton onClick={() => router.back()} sx={{marginBottom:2}}>
+        <ArrowBackIcon />
+      </IconButton>
       <BlogHeaderCard data={data.blog} />
       <Box sx={{ marginTop: 2 }}>
         <CustomCard>

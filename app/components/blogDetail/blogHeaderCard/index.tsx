@@ -27,7 +27,7 @@ const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 interface Props {
   data: {
     _id: string;
-    user: { _id: string };
+    user: { _id: string; avatar: string | null; name:string; lastName:string; slug: string };
     title: string;
     description: string;
     content: string;
@@ -40,6 +40,7 @@ interface Props {
   };
 }
 export default function BlogHeaderCard({ data }: Props) {
+  console.log("BlogHeaderCard", data)
   const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
   const [isLiked, setIsLiked] = useState<boolean>(data.targetLike)
@@ -80,7 +81,7 @@ export default function BlogHeaderCard({ data }: Props) {
       >
         <Grid item xs={12} sm={8}>
           <Box sx={{ marginBottom: 1 }}>
-            <UserAvatar user={avatarData} />
+            <UserAvatar user={{image: data.user.avatar, name:data.user.name, lastName:data.user.lastName }} />
           </Box>
 
           <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
