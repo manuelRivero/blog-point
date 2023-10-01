@@ -214,7 +214,7 @@ export default function CreateBlog() {
     intro.setOption("nextLabel", " Siguiente ");
     intro.setOption("dontShowAgain", true)
     intro.setOption("dontShowAgainLabel", "No mostrar de nuevo este tutorial")
-    intro.setOption("prevLabel", " Aterior ");
+    intro.setOption("prevLabel", " Anterior ");
     intro.setOption("doneLabel", " Entendido ");
     intro.start();
         // eslint-disable-next-line react-hooks/exhaustive-deps
