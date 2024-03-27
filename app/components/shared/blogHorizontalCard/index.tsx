@@ -17,12 +17,15 @@ import UserAvatar from "../../shared/UserAvatar";
 import moment from "moment";
 import CustomTag from "../../shared/tag";
 import ShareIcon from "@mui/icons-material/Share";
+import EditIcon from '@mui/icons-material/Edit';
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { usePathname } from "next/navigation";
 import { Category } from "@/app/data/categories";
 import { blogLike } from "@/app/client/blogs";
 import { setLoginModal, setLoginRedirection, useCore } from "@/app/context/core";
 import { Blog } from "@/app/data/blog";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 interface Props {
@@ -32,8 +35,9 @@ export default function BlogHorizontalCard({ data }: Props) {
   console.log("horizontal blog card data", data)
   const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
-
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenAction, setIsOpenAction] = useState<boolean>(false); 
 
   return (
     <CustomCard>
@@ -119,6 +123,46 @@ export default function BlogHorizontalCard({ data }: Props) {
                         >
                           <Typography variant="body1" component={"p"}>
                             Compartir en Twitter
+                          </Typography>
+                        </MenuItem>
+                      </MenuList>
+                    </Paper>
+                  </ClickAwayListener>
+                )}
+                <IconButton onClick={() => setIsOpenAction(true)}>
+                  <EditIcon />
+                </IconButton>
+                {isOpenAction && (
+                  <ClickAwayListener onClickAway={() => setIsOpenAction(false)}>
+                    <Paper
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        width: 320,
+                        height: "fit-content",
+                        transform: "translateY(100%)",
+                        zIndex: 100,
+                      }}
+                    >
+                      <MenuList>
+                        <MenuItem
+                          onClick={() => setIsOpenAction(false)}
+                          component={Link}
+                          href={"/editar-blog/" + data.slug}
+                        >
+                          <Typography variant="body1" component={"p"}>
+                            Editar
+                          </Typography>
+                        </MenuItem>
+                        <MenuItem
+                          component={"a"}
+                          onClick={() => setIsOpenAction(false)}
+                          href={"/"}
+                          target="_blank"
+                        >
+                          <Typography variant="body1" component={"p"}>
+                            Eliminar
                           </Typography>
                         </MenuItem>
                       </MenuList>

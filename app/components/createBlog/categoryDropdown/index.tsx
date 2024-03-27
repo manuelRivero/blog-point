@@ -121,6 +121,14 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
     
         // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  React.useEffect(()=>{
+    if (field.value !== "") {
+      console.log(field.value)
+      setSelectedValue({_id:field.value.id, name:field.value.title});
+    }
+  },[field.value]);
+
   return (
     <div>
       <Box

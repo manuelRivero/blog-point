@@ -13,6 +13,9 @@ export const getBlogs = (page:number | string[] | undefined, search:string | und
 export const createBlog = (form: FormData): Promise<AxiosResponse> => {
   return axiosIntance.post("/blogs/create", form);
 };
+export const editBlog = (form: FormData, id:string): Promise<AxiosResponse> => {
+  return axiosIntance.post("/blogs/edit/"+id, form);
+};
 
 export const getBlog = (slug: string): Promise<AxiosResponse> => {
   return axiosIntance.get("/blogs/" + slug);
