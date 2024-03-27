@@ -1,5 +1,5 @@
 "use client";
-import { Button, Container, IconButton, Typography } from "@mui/material";
+import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/navigation";
@@ -91,7 +91,9 @@ export default function MyBlogs() {
         <Typography>Cargando blogs</Typography>
       ) : (
         blogs?.map((blog: Blog) => {
-          return <BlogHorizontalCard key={blog._id} data={blog} />;
+          return  <Box sx={{marginBottom:1.5}}>
+                    <BlogHorizontalCard key={blog._id} data={blog} />;
+                  </Box>
         })
       )}
       {blogsPaginationData && <ReactPaginate

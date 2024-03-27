@@ -154,14 +154,17 @@ export default function EditBlog({ data }) {
     const form = new FormData();
     form.append("title", values.title);
     form.append("description", values.description);
-    form.append("image", values.image);
+    if (values.image.name) {
+      form.append("image", values.image); 
+    }
     form.append("content", values.content);
     form.append("category", values.category.id);
+
     try {
       const { data:response } = await editBlog(form, data.blog._id);
       setInfoModal(coreDispatch, {
         status: "success",
-        title: "Tu blog se ha publicado",
+        title: "Tu blog se ha editado",
         hasCancel: null,
         hasSubmit: {
           title: "¡Genial!",
