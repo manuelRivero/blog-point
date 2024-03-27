@@ -55,6 +55,8 @@ export const getCommentsResponses = (
   });
 };
 
+
+
 export const createComment = (form: {
   slug: string;
   content: string;
@@ -69,3 +71,11 @@ export const createResponse = (form: {
 }): Promise<AxiosResponse> => {
   return axiosIntance.post("/blogs/create-response", form);
 };
+
+
+export const getRelatedBlogs = (categoryId: string): Promise<AxiosResponse> => {
+  console.log('get data related blog',categoryId)
+  return axiosIntance.get("/blogs/category", { params: { categoryId },
+  });
+}
+

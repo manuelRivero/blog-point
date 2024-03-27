@@ -11,6 +11,7 @@ import { useParams } from "next/navigation";
 import { getBlogComments } from "@/app/client/blogs";
 import { useCore } from "@/app/context/core";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { getRelatedBlogs } from "@/app/client/blogs";
 
 
 interface Comment {
@@ -48,11 +49,14 @@ interface NewComment {
   ];
 }
 export default function MainWrapper({ data }: any) {
+  console.log(data, 'data1111111111111')
   const [{ user }] = useCore();
   const router = useRouter();
   const { slug } = useParams();
   const [page, setPage] = useState<number>(0);
   const [comments, setComments] = useState<Comment[] | null>(null);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
+
 
   const addComment = (data: NewComment) => {
     const newCommentsList = comments ? [...comments] : [];
@@ -75,20 +79,28 @@ export default function MainWrapper({ data }: any) {
       ]);
     }
   };
+
+  const getData = async () => {
+    console.log("slug", slug.toString());
+    const { data } = await getBlogComments(slug.toString(), page);
+    console.log(
+      "comment data",
+      data.comments[0].data,
+      data.comments[0].metadata
+    );
+    setComments(data.comments[0].data);
+  };
+  
   useEffect(() => {
-    const getData = async () => {
-      console.log("slug", slug.toString());
-      const { data } = await getBlogComments(slug.toString(), page);
-      console.log(
-        "comment data",
-        data.comments[0].data,
-        data.comments[0].metadata
-      );
-      setComments(data.comments[0].data);
-    };
-    getData();
+    Promise.all([getData(), getRelatedBlogs(data.blog.category._id)]).then((values:any) => {
+      setCategoryData(values[1].data.blogs[0].data)
+      console.log('data category 11111111',values[1].data.blogs[0].data)
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log('data category',categoryData);
+
   if (!data) {
     router.push("/");
     return null;
@@ -133,7 +145,9 @@ export default function MainWrapper({ data }: any) {
             Blogs relacionados
           </Typography>
           <CustomCard>
-            <BlogCardHorizontal />
+            {categoryData.map((e:any, i:number)=>{
+              return <BlogCardHorizontal data={e} />
+            })}
           </CustomCard>
         </Grid>
       </Grid>

@@ -7,19 +7,25 @@ import moment from "moment";
 import Image from "./../../../assets/images/post-placeholder.jpg";
 import { concatDots } from "@/app/helpers/text";
 
-export default function BlogCardHorizontal() {
+interface Props {
+  data:any
+}
+export default function BlogCardHorizontal({data}:Props) {
+  console.log('data component aaaa',data)
+  console.log('data component bbbb',data.user[0])
+
   return (
     <Box>
       <Box sx={{ marginBottom: 1 }}>
         <UserAvatar
-          user={{ name: "Manuel", lastName: "Rivero", image: null }}
+          user={{ name: data.user[0].name, lastName: data.user[0].lastName, image: data.user[0].avatar }}
         />
       </Box>
 
       <Box sx={{ maxWidth: 300 }}>
         <Typography variant="h5" component={"h1"}>
           {concatDots(
-            `Este es un titulo del Blog ni muy largo ni muy corto`,
+            data.title,
             60
           )}
         </Typography>
@@ -30,9 +36,7 @@ export default function BlogCardHorizontal() {
           sx={{ marginBottom: ".5rem" }}
         >
           {concatDots(
-            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. In interdum
-          orci vitae ipsum venenatis, in porta lacus sagittis. Phasellus
-          efficitur interdum lorem, sit amet tincidunt enim elementum vitae`,
+            data.description,
             160
           )}
         </Typography>
@@ -41,7 +45,7 @@ export default function BlogCardHorizontal() {
             color="secondary"
             crossCallback={null}
             linkCallback={null}
-            title="Categoría"
+            title={data.category[0].name}
           />
         </Box>
       </Box>

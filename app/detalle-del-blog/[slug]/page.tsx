@@ -23,6 +23,7 @@ const getData = async (slug: string) => {
 
 export default async function BlogDetail({ params }: any) {
   const { slug } = params;
+  console.log(slug, 'sluggg')
   const data = await getData(slug);
   return (
     <MainWrapper data={data} />
