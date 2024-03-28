@@ -12,13 +12,18 @@ import ReactPaginate from "react-paginate";
 export default function MyBlogs() {
   const router = useRouter();
   const [{ user }, coreDispatch] = useCore();
-  const [blogs, setBlogs] = useState<Blog[] | null>(null);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [blogsPaginationData, setBlogsPaginationData] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
 
   const handlePageChange = (event: any) => {
     setPage(event.selected) 
+  }
+  const handleDelete = (id:string)=>{
+
+    const filteredBlogs = [...blogs]?.filter((e)=> e._id !== id);
+     setBlogs(filteredBlogs)
   }
   useEffect(() => {
     if (!user) {
@@ -79,6 +84,8 @@ export default function MyBlogs() {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -92,7 +99,7 @@ export default function MyBlogs() {
       ) : (
         blogs?.map((blog: Blog) => {
           return  <Box sx={{marginBottom:1.5}}>
-                    <BlogHorizontalCard key={blog._id} data={blog} />;
+                    <BlogHorizontalCard key={blog._id} data={blog} onDelete={()=>handleDelete(blog._id)} />;
                   </Box>
         })
       )}

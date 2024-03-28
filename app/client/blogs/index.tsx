@@ -79,3 +79,7 @@ export const getRelatedBlogs = (categoryId: string): Promise<AxiosResponse> => {
   });
 }
 
+export const deleteBlog = (id: string): Promise<AxiosResponse> => {
+  console.log('get data delete blog',id)
+  return axiosIntance.delete("/blogs/delete/" + id);
+}

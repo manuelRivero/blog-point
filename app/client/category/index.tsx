@@ -8,6 +8,7 @@ interface CategoryForm {
 
 interface GetCategoriesParams {
   page: number;
+  pageSize?:number
 }
 
 interface GetCategoriesResponse {
@@ -26,6 +27,7 @@ export const getCategories = (
 ): Promise<GetCategoriesResponse> => {
   return axiosIntance.get("/category", {
     params: {
+      pageSize: data.pageSize,
       page: data.page,
     },
   });

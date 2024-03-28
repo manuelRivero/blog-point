@@ -7,7 +7,7 @@ import { getBlogs } from "./client/blogs";
 async function getData({ page = 0 }) {
   try {
     const [{ data: categoriesData }, { data: blogsData }] = await Promise.all([
-      getCategories({ page: 0 }),
+      getCategories({ page: 0, pageSize:5 }),
       getBlogs(page, undefined),
     ]);
     console.log(categoriesData, blogsData);

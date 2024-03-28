@@ -26,20 +26,31 @@ import { setLoginModal, setLoginRedirection, useCore } from "@/app/context/core"
 import { Blog } from "@/app/data/blog";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteBlogModal from "../deleteBlogModal";
 
 
 interface Props {
   data: Blog;
+  onDelete: ()=>void
+
 }
-export default function BlogHorizontalCard({ data }: Props) {
-  console.log("horizontal blog card data", data)
+export default function BlogHorizontalCard({ data, onDelete }: Props) {
+  
   const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenAction, setIsOpenAction] = useState<boolean>(false); 
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
+  // crear funcion para eliminar
+  // crear el endpoint
+  // pasar el id del blog al endpoint
+  // pasarle la funciòn al confirmModal component y que la ejecute al darle click en aceptar
+ 
   return (
+    <>
     <CustomCard>
       <Grid
         container
@@ -129,8 +140,8 @@ export default function BlogHorizontalCard({ data }: Props) {
                     </Paper>
                   </ClickAwayListener>
                 )}
-                <IconButton onClick={() => setIsOpenAction(true)}>
-                  <EditIcon />
+                <IconButton onClick={() => setIsOpenAction(true)}> 
+                  < MoreVertIcon/>
                 </IconButton>
                 {isOpenAction && (
                   <ClickAwayListener onClickAway={() => setIsOpenAction(false)}>
@@ -156,10 +167,7 @@ export default function BlogHorizontalCard({ data }: Props) {
                           </Typography>
                         </MenuItem>
                         <MenuItem
-                          component={"a"}
-                          onClick={() => setIsOpenAction(false)}
-                          href={"/"}
-                          target="_blank"
+                          onClick={() => {setIsOpenAction(false); setShowConfirmModal(true)}}
                         >
                           <Typography variant="body1" component={"p"}>
                             Eliminar
@@ -208,5 +216,7 @@ export default function BlogHorizontalCard({ data }: Props) {
         </Grid>
       </Grid>
     </CustomCard>
+    <DeleteBlogModal show={showConfirmModal} onClose={()=>setShowConfirmModal(false)} targetBlog={data._id} onDelete={onDelete} />
+    </>
   );
 }
