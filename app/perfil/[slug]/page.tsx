@@ -3,17 +3,24 @@ import { getProfile } from "@/app/client/user";
 import MainWrapper from "@/app/components/profile/mainWrapper";
 import { cookies } from "next/headers";
 import { axiosIntance } from "@/app/client";
+import { otherUserBlogs } from "@/app/client/blogs";
 
 async function getData(slug: string) {
   const cookie = cookies().get("token");
   try {
-    const { data } = await axiosIntance.get("/user/profile/" + slug, {
+    const [{data:profileData}, {data:blogData}] = await Promise.all([axiosIntance.get("/user/profile/" + slug, {
       headers: {
         Cookie: cookie ? `token=${cookie?.value}` : "",
       },
-    });
-    return data;
+    }),axiosIntance.get("/blogs/other-user-blogs/" + slug, {
+      headers: {
+        Cookie: cookie ? `token=${cookie?.value}` : "",
+      },
+    }) ])
+
+    return {profileData, blogData};
   } catch (error) {
+    console.log('get data 123')
     return null
   }
 }
@@ -21,6 +28,6 @@ async function getData(slug: string) {
 export default async function Profile({ params, searchParams }: any) {
   const { slug } = params;
   const data = await getData(slug);
-  console.log("render server", data);
-  return <MainWrapper data={data} />;
+ 
+  return <MainWrapper data={data?.profileData} blogs={data?.blogData} />;
 }

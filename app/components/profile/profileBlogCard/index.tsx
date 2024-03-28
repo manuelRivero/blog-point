@@ -3,17 +3,18 @@ import React from "react";
 import Image from "./../../../assets/images/post-placeholder.jpg";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
-export default function ProfileBlogCard() {
+interface Props { blogs: any }
+
+export default function ProfileBlogCard({ blogs }: Props) {
+  console.log('profile blog',blogs)
+  console.log('profile blog',blogs.blogs[0].data)
   return (
     <Box sx={{ padding: 2 }}>
       <Stack direction="row" spacing={2}>
         <Box>
           <Typography variant="h2">Titulo del blog</Typography>
           <Typography variant="body1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Voluptatibus reprehenderit repellat aut beatae aperiam quibusdam
-            necessitatibus dolores at? Accusantium eaque itaque quia omnis fugit
-            eos. At accusamus assumenda repellendus deleniti.
+           {blogs.blogs[0].data.content}
           </Typography>
           <Stack sx={{ marginTop: 1 }}>
             <Stack spacing={"5px"} direction={"row"} sx={(theme)=>({ color: theme.palette.primary.main})}>

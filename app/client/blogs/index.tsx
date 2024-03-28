@@ -28,6 +28,9 @@ export const getUserBlog = (id: string, page:number): Promise<AxiosResponse> => 
 export const blogLike = (slug: string): Promise<AxiosResponse> => {
   return axiosIntance.get("/blogs/like/" + slug);
 };
+export const otherUserBlogs = (slug: string):Promise<AxiosResponse> => {
+  return axiosIntance.get("/other-user-blogs/" + slug);
+};
 
 export const getBlogComments = (
   slug: string,

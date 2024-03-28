@@ -15,12 +15,15 @@ import ProfileBlogCard from "../../profile/profileBlogCard";
 import ProfileStats from "../../profile/profileStats";
 import { logout, setInfoModal, setLoginModal, useCore } from "@/app/context/core";
 import { updateProfile } from "@/app/client/user";
+import { Blog } from "@/app/data/blog";
 
-export default function MainWrapper({ data }: any) {
+interface Props { data: any, blogs: any }
+
+export default function MainWrapper({ data, blogs }: Props) {
   const [, coreDispatch] = useCore();
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
-
+  console.log('data mainwrapper', blogs)
   const router = useRouter();
 
   const handleProfileEdition = (status: boolean) => {
@@ -107,13 +110,15 @@ export default function MainWrapper({ data }: any) {
           },
         })}
       >
-        {!data.data.isSameUser && (
-          <Box>
+
+        {!data.data.isSameUser && blogs.blogs[0].data.map((e: Blog) => {
+          return <Box>
             <CustomCard>
-              <ProfileBlogCard />
+              <ProfileBlogCard blogs={blogs} />
             </CustomCard>
-          </Box>
-        )}
+          </Box  >
+        })}
+
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>
           <Box>
             {!isEditingSocial && (
