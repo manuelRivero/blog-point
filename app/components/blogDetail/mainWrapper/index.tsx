@@ -49,7 +49,7 @@ interface NewComment {
   ];
 }
 export default function MainWrapper({ data }: any) {
-  console.log(data, 'data1111111111111')
+  console.log(data, 'mainwrapper blog detail ')
   const [{ user }] = useCore();
   const router = useRouter();
   const { slug } = useParams();

@@ -13,17 +13,28 @@ import ProfileInfo from "../../profile/profileInfo";
 import ProfileSocial from "../../profile/profileSocial";
 import ProfileBlogCard from "../../profile/profileBlogCard";
 import ProfileStats from "../../profile/profileStats";
-import { logout, setInfoModal, setLoginModal, useCore } from "@/app/context/core";
+import {
+  logout,
+  setInfoModal,
+  setLoginModal,
+  useCore,
+} from "@/app/context/core";
 import { updateProfile } from "@/app/client/user";
 import { Blog } from "@/app/data/blog";
 
-interface Props { data: any, blogs: any }
+interface Props {
+  data: any;
+  blogs: any;
+}
 
 export default function MainWrapper({ data, blogs }: Props) {
   const [, coreDispatch] = useCore();
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
-  console.log('data mainwrapper', blogs)
+
+  console.log("data mainwrapper user", data);
+  console.log("data mainwrapper blog", blogs);
+
   const router = useRouter();
 
   const handleProfileEdition = (status: boolean) => {
@@ -81,12 +92,12 @@ export default function MainWrapper({ data, blogs }: Props) {
         title: "Iniciar sesión",
         cb: () => {
           setInfoModal(coreDispatch, null);
-          setLoginModal(coreDispatch, true)
+          setLoginModal(coreDispatch, true);
         },
       },
       onAnimationEnd: null,
     });
-    return null
+    return null;
   }
 
   return (
@@ -110,13 +121,14 @@ export default function MainWrapper({ data, blogs }: Props) {
           },
         })}
       >
-
-        {!data.data.isSameUser && blogs.blogs[0].data.map((e: Blog) => {
-          return <Box>
-            <CustomCard>
-              <ProfileBlogCard blogs={blogs} />
-            </CustomCard>
-          </Box  >
+        {blogs.blogs[0].data.map((e: Blog) => {
+          return (
+            <Box>
+              <CustomCard>
+                <ProfileBlogCard blogs={blogs} />
+              </CustomCard>
+            </Box>
+          );
         })}
 
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>

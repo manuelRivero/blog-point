@@ -15,21 +15,26 @@ import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import HeaderMenu from "../headerMenu";
 import NotificationDropdown from "../notificationDropdown";
-import { useCore, setLoginModal, setRegisterModal, setLoginRedirection } from "@/app/context/core";
+import {
+  useCore,
+  setLoginModal,
+  setRegisterModal,
+  setLoginRedirection,
+} from "@/app/context/core";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
-
   const handleCreateBlog = () => {
-    if(!user){
-      setLoginRedirection(coreDispatch,"/crear-blog")
+    if (!user) {
+      setLoginRedirection(coreDispatch, "/crear-blog");
       setLoginModal(coreDispatch, true);
-    }else {
+    } else {
       router.push("/crear-blog");
     }
-  }
+  };
 
   return (
     <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
@@ -43,9 +48,14 @@ export default function Header() {
           }}
         >
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Typography variant="h6" color={"#fff"} component="h1">
-              Blog App
-            </Typography>
+            <Box component={Link} href={"/"}>
+              <Typography variant="h6" color={"#fff"} component="h1">
+                Blog App
+              </Typography>
+              {/* <Button sx={{color:'white'}}>
+                Blog App
+              </Button> */}
+            </Box>
           </Stack>
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             {user && (

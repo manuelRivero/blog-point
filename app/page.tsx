@@ -5,6 +5,7 @@ import { getCategories } from "./client/category";
 import { getBlogs } from "./client/blogs";
 
 async function getData({ page = 0 }) {
+  //console.log('page get data',page)
   try {
     const [{ data: categoriesData }, { data: blogsData }] = await Promise.all([
       getCategories({ page: 0, pageSize:5 }),
@@ -24,6 +25,7 @@ async function getData({ page = 0 }) {
 export default async function Home({ params }: any) {
   const { page } = params;
   const data = await getData({ page });
+  //console.log('data home',data)
   return (
     <main>
       <Hero categories={data ? data.categoriesData.categories : []} />
@@ -38,8 +40,9 @@ export default async function Home({ params }: any) {
                     <BlogCard
                       userAvatar={{
                         name: e.user[0].name,
-                        lastName: e.user[0].name,
+                        lastName: e.user[0].lastName,
                         image: e.user[0].avatar,
+                        slug: e.user[0].slug
                       }}
                       data={{ ...e, category: e.category[0].name }}
                       preview={false}

@@ -25,7 +25,7 @@ interface Props {
   preview: boolean;
   showTitleTooltip: boolean;
   showDescriptionTooltip: boolean;
-  userAvatar: { name: string; lastName: string; image: string | null };
+  userAvatar: { name: string; lastName: string; image: string | null; slug: string };
 }
 interface Data {
   title: string;

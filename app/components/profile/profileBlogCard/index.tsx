@@ -7,14 +7,14 @@ interface Props { blogs: any }
 
 export default function ProfileBlogCard({ blogs }: Props) {
   console.log('profile blog',blogs)
-  console.log('profile blog',blogs.blogs[0].data)
+  console.log('profile blog titulo',blogs.blogs[0].data[0].title)
   return (
     <Box sx={{ padding: 2 }}>
       <Stack direction="row" spacing={2}>
         <Box>
           <Typography variant="h2">Titulo del blog</Typography>
           <Typography variant="body1">
-           {blogs.blogs[0].data.content}
+           {blogs.blogs[0].data[0].title}
           </Typography>
           <Stack sx={{ marginTop: 1 }}>
             <Stack spacing={"5px"} direction={"row"} sx={(theme)=>({ color: theme.palette.primary.main})}>
@@ -34,7 +34,7 @@ export default function ProfileBlogCard({ blogs }: Props) {
           })}
         >
           <img
-            src={Image.src}
+            src={blogs.blogs[0].data[0].image}
             alt="blog-image"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />

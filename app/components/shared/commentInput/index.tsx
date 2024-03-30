@@ -99,6 +99,7 @@ export default function CommentInput({ addComment }: Props) {
             name: user.data.name,
             lastName: user.data.lastName,
             image: user.data.avatar,
+            slug: user.data.slug
           }}
         />
       )}

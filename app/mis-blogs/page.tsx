@@ -51,6 +51,7 @@ export default function MyBlogs() {
       if (user && user.data) {
         try {
           const { data } = await getUserBlog(user?.data?._id, page);
+          console.log('data blog mis blog',data)
           setBlogs(data.blogs[0].data.map((e:any) =>({
             _id: e._id,
             user: { 

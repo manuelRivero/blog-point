@@ -400,6 +400,7 @@ export default function CreateBlog() {
                           name: user.data.name,
                           lastName: user.data.name,
                           image: user.data.avatar,
+                          slug: user.data.slug
                         }}
                       />
                     )}

@@ -8,6 +8,7 @@ import {
   Divider,
   IconButton,
   Box,
+  Avatar,
 } from "@mui/material";
 import { ClickAwayListener } from '@mui/base';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
@@ -22,6 +23,8 @@ export default function HeaderMenu() {
   const router = useRouter()
   const [{user}, coreDispatch] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  console.log('user header', user?.data?.name)
   return (
     <Box
       sx={{
@@ -36,7 +39,8 @@ export default function HeaderMenu() {
         aria-label="menu"
         sx={{ mr: 2 }}
       >
-        <PermIdentityIcon fontSize={'medium'} />
+        <Avatar alt={user?.data?.name} src={user?.data?.avatar} />
+        {/* <PermIdentityIcon fontSize={'medium'} /> */}
       </IconButton>
 
       {isOpen && (

@@ -123,8 +123,9 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
   }, [page]);
 
   React.useEffect(()=>{
-    if (field.value !== "") {
-      console.log(field.value)
+    //console.log('field', field)
+    if (!field.value === undefined) {
+      //console.log('field value categoryDropdown',field.value)
       setSelectedValue({_id:field.value.id, name:field.value.title});
     }
   },[field.value]);
