@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import React from "react";
 
 //icons
@@ -31,7 +31,7 @@ export default function CustomTag({
     <Box
       onClick={handleLinkCallback}
       sx={(theme) => ({
-        cursor:"pointer",
+        cursor: "pointer",
         borderRadius: "1rem",
         width: "fit-content",
         backgroundColor: theme.palette[color].main,
@@ -42,7 +42,9 @@ export default function CustomTag({
         padding: " 4px 1rem",
       })}
     >
-      <Typography variant="body1" color="#fff">{title}</Typography>
+      <Tooltip title={title}>
+        <Typography variant="body1" color="#fff" fontSize={14}>{concatDots(title, 16)}</Typography>
+      </Tooltip>
       {crossCallback && (
         <Box
           sx={{ display: "flex", alignItems: "center" }}

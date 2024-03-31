@@ -27,7 +27,7 @@ const avatarData = { name: "Manuel", lastName: "Rivero", image: null };
 interface Props {
   data: {
     _id: string;
-    user: { _id: string; avatar: string | null; name:string; lastName:string; slug: string };
+    user: { _id: string; avatar: string | null; name: string; lastName: string; slug: string };
     title: string;
     description: string;
     content: string;
@@ -35,7 +35,7 @@ interface Props {
     slug: string;
     image: string;
     createdAt: string;
-    category:Category;
+    category: Category;
     targetLike: boolean
   };
 }
@@ -48,17 +48,17 @@ export default function BlogHeaderCard({ data }: Props) {
 
   const handleLike = async () => {
     try {
-      if(!user){
-        setLoginRedirection(coreDispatch,`/detalle-del-blog/${data.slug}`)
+      if (!user) {
+        setLoginRedirection(coreDispatch, `/detalle-del-blog/${data.slug}`)
         setLoginModal(coreDispatch, true);
       } else {
         const response = await blogLike(data.slug)
-        if(isLiked){
+        if (isLiked) {
           setLikeCount(likeCount - 1)
-        } else{
+        } else {
           setLikeCount(likeCount + 1)
         }
-        setIsLiked(!isLiked)      
+        setIsLiked(!isLiked)
 
       }
     } catch (error) {
@@ -79,21 +79,11 @@ export default function BlogHeaderCard({ data }: Props) {
           },
         })}
       >
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={12}>
           <Box sx={{ marginBottom: 1 }}>
-            <UserAvatar user={{image: data.user.avatar, name:data.user.name, lastName:data.user.lastName }} />
+            <UserAvatar user={{ image: data.user.avatar, name: data.user.name, lastName: data.user.lastName }} />
           </Box>
 
-          <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
-            {data.title}
-          </Typography>
-          <Typography
-            variant="body1"
-            component={"p"}
-            sx={{ marginBottom: "1rem" }}
-          >
-           {data.description}
-          </Typography>
           <Box sx={{ marginBottom: 1 }}>
             <CustomTag
               color="secondary"
@@ -102,10 +92,20 @@ export default function BlogHeaderCard({ data }: Props) {
               title={data.category.name}
             />
           </Box>
+          <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
+            {data.title}
+          </Typography>
+          <Typography
+            variant="body1"
+            component={"p"}
+            sx={{ marginBottom: "1rem" }}
+          >
+            {data.description}
+          </Typography>
 
           <Stack
             direction="row"
-            sx={{ justifyContent: "space-between", alignItems: "center" }}
+            sx={{ justifyContent: "space-between", alignItems: "center", width:"100%" }}
           >
             <Stack
               sx={{ justifyContent: "flex-start" }}
@@ -120,7 +120,7 @@ export default function BlogHeaderCard({ data }: Props) {
                   alignItems: "center",
                 })}
               >
-                <ThumbUpIcon onClick={()=>handleLike()} sx={{cursor:"pointer"}} color={ isLiked ? "primary" : "disabled"} />
+                <ThumbUpIcon onClick={() => handleLike()} sx={{ cursor: "pointer" }} color={isLiked ? "primary" : "disabled"} />
                 <Typography variant="body1" color="primary">
                   {likeCount}
                 </Typography>
@@ -177,35 +177,8 @@ export default function BlogHeaderCard({ data }: Props) {
             </Typography>
           </Stack>
         </Grid>
-        <Grid
-          item
-          sm={4}
-          sx={(theme) => ({
-            display: "flex",
-            justifyContent: "flex-end",
-            [theme.breakpoints.down("md")]: {
-              justifyContent: "center",
-            },
-          })}
-        >
-          <Box
-            sx={(theme) => ({
-              width: 250,
-              height: 250,
-              // [theme.breakpoints.down("md")]: {
-              //   maxWidth: 100,
-              //   maxHeight: 100,
-              // },
-            })}
-          >
-            <img
-              src={data.image}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              alt="Imagen del post"
-            />
-          </Box>
-        </Grid>
+
       </Grid>
-    </CustomCard>
+    </CustomCard >
   );
 }
