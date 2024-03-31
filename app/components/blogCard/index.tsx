@@ -26,7 +26,7 @@ interface Props {
   preview: boolean;
   showTitleTooltip: boolean;
   showDescriptionTooltip: boolean;
-  userAvatar: { name: string; lastName: string; image: string | null };
+  userAvatar: { name: string; lastName: string; image: string | null, slug: string };
 }
 interface Data {
   title: string;
@@ -62,6 +62,7 @@ export default function BlogCard({
         <CardHeader
           sx={{ paddingTop: 0, paddingLeft: 0 }}
           avatar={
+            
             <Avatar user={userAvatar} />
           }
         />

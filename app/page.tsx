@@ -46,6 +46,7 @@ export default async function Home({ params }: any) {
                           name: e.user[0].name,
                           lastName: e.user[0].name,
                           image: e.user[0].avatar,
+                          slug: e.user[0].slug
                         }}
                         data={{ ...e, category: e.category[0].name }}
                         preview={false}
@@ -75,6 +76,7 @@ export default async function Home({ params }: any) {
                           name: e.user[0].name,
                           lastName: e.user[0].name,
                           image: e.user[0].avatar,
+                          slug: e.user[0].slug
                         }}
                         data={{ ...e, category: e.category[0].name }}
                         preview={false}
