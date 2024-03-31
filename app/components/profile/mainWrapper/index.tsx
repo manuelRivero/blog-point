@@ -112,7 +112,7 @@ export default function MainWrapper({ data, blogs }: Props) {
       >
 
         {!data.data.isSameUser && blogs.blogs[0].data.map((e: Blog) => {
-          return <Box>
+          return <Box key={blog._id}>
             <CustomCard>
               <ProfileBlogCard blogs={blogs} />
             </CustomCard>
