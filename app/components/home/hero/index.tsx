@@ -28,29 +28,19 @@ export default function Hero({categories}:Props) {
     <Box
       sx={(theme) => ({
         background: theme.palette.primary.main,
-        height: 470,
       })}
     >
-      <Stack sx={{ paddingTop: "2rem", height: "100%" }}>
+      <Stack sx={{ paddingTop: "2rem", height: "100%", paddingBottom:"2rem" }}>
         <Typography
           variant={"h1"}
           component={"h1"}
           align={"center"}
           color={"#fff"}
-          sx={{ marginBottom: 1 }}
+          sx={{ marginBottom: 4 }}
         >
-          Crea contenido a tu medida
+          Contenido personalizado
         </Typography>
-        <Stack direction="row" justifyContent="center" mb={3}>
-          <Button
-          onClick={handleCreateBlog}
-            variant="contained"
-            color="secondary"
-            startIcon={<AddIcon />}
-          >
-            Crear Blog
-          </Button>
-        </Stack>
+        
         <Typography
           variant={"h3"}
           component={"h3"}
@@ -63,9 +53,6 @@ export default function Hero({categories}:Props) {
         <Stack justifyContent={"center"} direction={"row"} mb={2}>
           <MainSearch />
         </Stack>
-        <Box>
-          <CategoryRow categories={categories} />
-        </Box>
       </Stack>
     </Box>
   );

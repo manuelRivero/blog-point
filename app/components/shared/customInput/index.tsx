@@ -12,6 +12,7 @@ import {
 import { alpha } from "@mui/material/styles";
 import { FieldError } from "react-hook-form";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { sliceText } from "@/app/helpers/text";
 
 interface Props {
@@ -146,7 +147,7 @@ Props) {
                 right: "10px",
               })}
             >
-              <RemoveRedEyeIcon />
+              {passwordVisible ?<VisibilityOffIcon/> :<RemoveRedEyeIcon />}
             </Box>
           ) : null
         }

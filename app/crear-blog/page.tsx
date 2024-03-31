@@ -261,7 +261,7 @@ export default function CreateBlog() {
                       control={control}
                       render={({ field, fieldState }) => (
                         <CustomInput
-                          maxLength={80}
+                          maxLength={60}
                           lengthAlertHandler={{
                             handler: (e) => titleLenghtHandler(e),
                             length: 60,
@@ -292,7 +292,7 @@ export default function CreateBlog() {
                       control={control}
                       render={({ field, fieldState }) => (
                         <CustomInput
-                          maxLength={160}
+                          maxLength={120}
                           lengthAlertHandler={{
                             handler: (e) => descriptionLenghtHandler(e),
                             length: 120,

@@ -16,6 +16,9 @@ export default function CategoryRow({categories}:Props) {
 
   return (
     <>
+    <Typography variant="h3" sx={{marginBottom:2}}>
+      Descubre más categorias
+    </Typography>
       <Stack
         marginBottom={4}
         direction="row"
@@ -25,7 +28,6 @@ export default function CategoryRow({categories}:Props) {
           marginBottom: "2rem",
           gap: "1rem",
           maxWidth: "500px",
-          justifyContent: "center",
         }}
       >
         {categories.map((category:Category)=>{
@@ -45,10 +47,9 @@ export default function CategoryRow({categories}:Props) {
         <Box onClick={() => {}}>
           <Typography
             sx={{
+              textDecoration:"none",
               margin: "auto",
               display: "block",
-              color: "#fff",
-              textDecoration: "none",
             }}
             align="center"
             variant="body1"

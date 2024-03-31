@@ -146,7 +146,7 @@ export default function MainWrapper({ data }: any) {
           </Typography>
           <CustomCard>
             {categoryData.map((e:any, i:number)=>{
-              return <BlogCardHorizontal data={e} />
+              return <BlogCardHorizontal data={e} key={"related-blog" + "-" + i} />
             })}
           </CustomCard>
         </Grid>

@@ -21,6 +21,7 @@ import {
 } from "@/app/context/core";
 import { updateProfile } from "@/app/client/user";
 import { Blog } from "@/app/data/blog";
+import BlogCard from "../../blogCard";
 
 interface Props {
   data: any;
@@ -121,17 +122,28 @@ export default function MainWrapper({ data, blogs }: Props) {
           },
         })}
       >
-        {blogs.blogs[0].data.map((e: Blog) => {
-          return (
-            <Box>
-              <CustomCard>
-                <ProfileBlogCard blogs={blogs} />
-              </CustomCard>
-            </Box>
-          );
-        })}
-
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>
+          {!data.data.isSameUser && blogs.blogs[0].data.map((e: any) => {
+            console.log("profile blog", e)
+            return (
+              <BlogCard
+                key={e._id}
+                userAvatar={{
+                  name: e.user[0].name,
+                  lastName: e.user[0].name,
+                  image: e.user[0].avatar,
+                  slug: e.user[0].slug
+                }}
+                data={{ ...e, category: e.category[0].name }}
+                preview={false}
+                showDescriptionTooltip={false}
+                showTitleTooltip={false}
+              />)
+          })}
+
+        </Box>
+
+        <Box sx={{ maxWidth: 500, width: "100%", position: "relative", marginLeft: { xs: "0 !important",lg: "32px !important" } }}>
           <Box>
             {!isEditingSocial && (
               <CustomCard>

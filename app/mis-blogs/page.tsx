@@ -99,7 +99,7 @@ export default function MyBlogs() {
         <Typography>Cargando blogs</Typography>
       ) : (
         blogs?.map((blog: Blog) => {
-          return  <Box sx={{marginBottom:1.5}}>
+          return  <Box sx={{marginBottom:1.5}} key={blog._id}>
                     <BlogHorizontalCard key={blog._id} data={blog} onDelete={()=>handleDelete(blog._id)} />;
                   </Box>
         })
