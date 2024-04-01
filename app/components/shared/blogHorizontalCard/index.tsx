@@ -52,7 +52,12 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
   return (
     // <Box component={Link} href={"/detalle-del-blog/" + data} sx={{
     //   textDecoration: "none", width: "100%"}} >
-    <>
+    <Box component={Link} href={"/detalle-del-blog/" + data.slug} sx={(theme) => ({
+      textDecoration: "none",
+      [theme.breakpoints.down("md")]: {
+        maxWidth: "400px",
+      },
+    })}>
       <CustomCard >
         <Grid
           container
@@ -62,51 +67,11 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
               flexDirection: "column-reverse",
             },
           })}
-        >
-          <Grid
-            item
-            sm={4}
-            sx={(theme) => ({
-              display: "flex",
-              justifyContent: "flex-end",
-              [theme.breakpoints.down("md")]: {
-                justifyContent: "center",
-              },
-            })}
-          >
-            <Box
-              sx={(theme) => ({
-                width: 200,
-                height: 200,
-                borderRadius: 4,
-                overflow: "hidden"
-                // [theme.breakpoints.down("md")]: {
-                //   maxWidth: 100,
-                //   maxHeight: 100,
-                // },
-              })}
-            >
-              <img
-                src={data.image}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                alt="Imagen del post"
-              />
-            </Box>
-          </Grid> <Grid item xs={12} sm={8}>
+        ><Grid item md={10}  xs={12}>
             <Box sx={{ marginBottom: 1 }}>
               <UserAvatar user={{ name: data.user.name, lastName: data.user.lastName, image: data.user.avatar, slug: data.user.slug }} />
             </Box>
 
-            <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
-              {data.title}
-            </Typography>
-            <Typography
-              variant="body1"
-              component={"p"}
-              sx={{ marginBottom: "1rem" }}
-            >
-              {data.description}
-            </Typography>
             <Box sx={{ marginBottom: 1 }}>
               <CustomTag
                 color="secondary"
@@ -115,6 +80,19 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
                 title={data.category.name}
               />
             </Box>
+            <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>
+              {data.title}
+            </Typography>
+
+
+            <Typography
+              variant="body1"
+              component={"p"}
+              sx={{ marginBottom: "1rem" }}
+            >
+              {data.description}
+            </Typography>
+           
 
             <Stack
               direction="row"
@@ -215,10 +193,43 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
               </Typography>
             </Stack>
           </Grid>
+          <Grid
+            item
+            lg={2}
+            xs={12}
+            md={2}
+            sx={(theme) => ({
+              display: "flex",
+              justifyContent: "flex-end",
+              [theme.breakpoints.down("md")]: {
+                justifyContent: "center",
+              },
+            })}
+          >
+            <Box
+              sx={(theme) => ({
+                width:{xs:"100%", lg:150 },
+                height:{xs:"100%", lg:150 },
+                borderRadius: 4,
+                overflow: "hidden"
+                // [theme.breakpoints.down("md")]: {
+                //   maxWidth: 100,
+                //   maxHeight: 100,
+                // },
+              })}
+            >
+              <img
+                src={data.image}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                alt="Imagen del post"
+              />
+            </Box>
+          </Grid> 
+          
 
         </Grid>
       </CustomCard>
       <DeleteBlogModal show={showConfirmModal} onClose={() => setShowConfirmModal(false)} targetBlog={data._id} onDelete={onDelete} />
-    </>
+    </Box>
   );
 }
