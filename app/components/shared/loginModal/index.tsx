@@ -19,6 +19,7 @@ import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
 import { login, me } from "@/app/client/auth";
+import { axiosIntance } from "@/app/client";
 
 const schema = yup.object({
   email: yup.string().email().required("Campo requerido"),
@@ -41,9 +42,10 @@ export default function LoginModal() {
     setLoadingSubmit(true);
     try {
       const {
-        data: { token },
+        data: { token, refreshToken },
       } = await login(values);
-      await setUserTokens(coreDispatch, token);
+      await setUserTokens(coreDispatch, {token, refreshToken});
+      axiosIntance.defaults.headers.common['Authorization'] = "Bearer" + " " + token;
       const data = await me();
       const { name, lastName, email, avatar, slug, social, _id  } = data.data.data;
       await setUserData(coreDispatch, {

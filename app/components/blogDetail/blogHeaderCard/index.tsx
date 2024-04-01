@@ -81,7 +81,7 @@ export default function BlogHeaderCard({ data }: Props) {
       >
         <Grid item xs={12} sm={12}>
           <Box sx={{ marginBottom: 1 }}>
-            <UserAvatar user={{ image: data.user.avatar, name: data.user.name, lastName: data.user.lastName }} />
+            <UserAvatar user={{ image: data.user.avatar, name: data.user.name, lastName: data.user.lastName, slug: data.user.slug }} />
           </Box>
 
           <Box sx={{ marginBottom: 1 }}>

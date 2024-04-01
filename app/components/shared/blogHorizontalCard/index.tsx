@@ -48,10 +48,12 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
   // crear el endpoint
   // pasar el id del blog al endpoint
   // pasarle la funciòn al confirmModal component y que la ejecute al darle click en aceptar
-
+  console.log('data mis blog', data)
   return (
+    // <Box component={Link} href={"/detalle-del-blog/" + data} sx={{
+    //   textDecoration: "none", width: "100%"}} >
     <>
-      <CustomCard>
+      <CustomCard >
         <Grid
           container
           spacing={4}
@@ -92,7 +94,7 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
             </Box>
           </Grid> <Grid item xs={12} sm={8}>
             <Box sx={{ marginBottom: 1 }}>
-              <UserAvatar user={{ name: data.user.name, lastName: data.user.lastName, image: data.user.avatar }} />
+              <UserAvatar user={{ name: data.user.name, lastName: data.user.lastName, image: data.user.avatar, slug: data.user.slug }} />
             </Box>
 
             <Typography variant="h4" component={"h1"} sx={{ marginBottom: 1 }}>

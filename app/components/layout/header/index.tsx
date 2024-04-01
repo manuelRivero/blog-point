@@ -47,16 +47,16 @@ export default function Header() {
             alignItems: "center",
           }}
         >
+          <Link href={"/"} style={{ textDecoration: "none" }}>
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Box component={Link} href={"/"}>
+            <Box>
               <Typography variant="h6" color={"#fff"} component="h1">
                 Blog App
               </Typography>
-              {/* <Button sx={{color:'white'}}>
-                Blog App
-              </Button> */}
             </Box>
           </Stack>
+          </Link>
+          
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             {user && (
               <>

@@ -14,10 +14,18 @@ const getUser = () => {
   const user =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
   let parseUser = null;
+  let stateUser = null;
   if (user) {
     parseUser = JSON.parse(user);
+    stateUser = {
+      data: parseUser.data,
+      tokens: {
+        access_token: parseUser.token,
+        refresh_token: parseUser.refreshToken,
+      },
+    };
   }
-  return parseUser;
+  return stateUser;
 };
 
 export type State = {
@@ -64,89 +72,122 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const pathName = usePathname();
   console.log("pathName", pathName);
 
-  const responseInterceptor = useMemo(() => {
-    return axiosIntance.interceptors.response.use(
-      (response) => {
-        console.log("axiosIntance.interceptors.response", response);
-        if (response.status === 401) {
-          logout(dispatch);
-          router.push("/");
-        }
-        return response;
-      },
-      async (error: any) => {
-        // const deviceId = await getUniqueId();
-        console.log("axiosIntance.interceptors.error", error);
+  // const responseInterceptor = useMemo(() => {
+  //   return axiosIntance.interceptors.response.use(
+  //     (response) => {
+  //       console.log("axiosIntance.interceptors.response", response);
+  //       if (response.status && response.status === 401) {
+  //         logout(dispatch);
+  //         router.push("/");
+  //       }
+  //       return response;
+  //     },
+  //     async (error: any) => {
+  //       // const deviceId = await getUniqueId();
+  //       console.log("axiosIntance.interceptors.error", error);
 
-        if (error.response.status === 401) {
-          setInfoModal(dispatch, {
-            status: "error",
-            title: "Tu sesión ha expirado",
-            hasCancel: null,
-            hasSubmit: {
-              title: "Iniciar sesión",
-              cb: () => {
-                setInfoModal(dispatch, null);
-                logout(dispatch);
-                setLoginModal(dispatch, true);
-                router.push("/");
-              },
-            },
-            onAnimationEnd: null,
-          });
-        }
-        console.log("error.response.data", error.response);
-        return Promise.reject(error);
-      }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //       if (error.response.status && error.response.status === 401) {
+  //         setInfoModal(dispatch, {
+  //           status: "error",
+  //           title: "Tu sesión ha expirado",
+  //           hasCancel: null,
+  //           hasSubmit: {
+  //             title: "Iniciar sesión",
+  //             cb: () => {
+  //               setInfoModal(dispatch, null);
+  //               logout(dispatch);
+  //               setLoginModal(dispatch, true);
+  //               router.push("/");
+  //             },
+  //           },
+  //           onAnimationEnd: null,
+  //         });
+  //       }
+  //       console.log("error.response.data", error.response);
+  //       return Promise.reject(error);
+  //     }
+  //   );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const requestInterceptor = useMemo(() => {
     return axiosIntance.interceptors.request.use(
-      (config) => {
-        console.log("request on use memo", config.url);
+      async (config) => {
+        console.log("request on use memo", config.headers.Authorization);
         // Do something before request is sent
-        const user = localStorage.getItem("user");
         let parseUser = null;
         const CancelToken = axios.CancelToken;
-        console.log("user", user);
-        if (user) {
-          parseUser = JSON.parse(user);
+        console.log("user state", state.user);
+        if (state.user) {
+          parseUser = state.user;
           if (parseUser) {
-            let decodedToken: any = jwt_decode(parseUser.token);
+            let decodedToken: any = jwt_decode(parseUser.tokens?.access_token);
             let currentDate = new Date();
+            console.log(
+              "decode exp",
+              decodedToken.exp * 1000 < currentDate.getTime()
+            );
             if (decodedToken.exp * 1000 < currentDate.getTime()) {
+              console.log("entro al if, cancela peticiòn");
               config = {
                 ...config,
                 cancelToken: new CancelToken((cancel) =>
                   cancel("Cancel repeated request")
                 ),
               };
-              logout(dispatch);
-              setLoginRedirection(dispatch, pathName);
-              setInfoModal(dispatch, {
-                status: "error",
-                title: "Tu sesión ha expirado",
-                hasCancel: null,
-                hasSubmit: {
-                  title: "Iniciar sesión",
-                  cb: () => {
-                    setInfoModal(dispatch, null);
-                    logout(dispatch);
-                    setLoginModal(dispatch, true);
-                    router.push("/");
+              console.log("entro al refresh", parseUser);
+              try {
+                const response = await axios.post(
+                  "http://localhost:4000/api/auth/refresh-token",
+                  {
+                    user: { id: parseUser.data._id },
+                    refreshToken: parseUser.tokens?.refresh_token,
+                  }
+                );
+                console.log("response", response);
+                setUserTokens(dispatch, {
+                  token: response.data.token,
+                  refreshToken: response.data.refreshToken,
+                });
+                config.headers.Authorization =
+                  "Bearer" + " " + response.data.token;
+                config.cancelToken = undefined;
+
+                return config;
+              } catch (error) {
+                console.log(error, "error response");
+
+                delete config.headers.Authorization;
+                config.withCredentials = false;
+
+                logout(dispatch);
+                setLoginRedirection(dispatch, pathName);
+                setInfoModal(dispatch, {
+                  status: "error",
+                  title: "Tu sesión ha expirado",
+                  hasCancel: null,
+                  hasSubmit: {
+                    title: "Iniciar sesión",
+                    cb: () => {
+                      setInfoModal(dispatch, null);
+                      logout(dispatch);
+                      setLoginModal(dispatch, true);
+                      router.push("/");
+                    },
                   },
-                },
-                onAnimationEnd: null,
-              });
+                  onAnimationEnd: null,
+                });
+              }
             } else {
-              config.headers.Authorization = "Bearer" + " " + parseUser.token;
+              const localStoregeUser = getUser();
+              config.headers.Authorization =
+                "Bearer" + " " + localStoregeUser?.tokens?.access_token;
             }
-          } else {
-            delete config.headers.Authorization;
-            config.withCredentials = false;
           }
+          // else {
+          //   delete config.headers.Authorization;
+          //   config.withCredentials = false;
+          // }
         }
         return config;
       },
@@ -226,19 +267,29 @@ export async function setUserProfileData(
   });
 }
 
-export async function setUserTokens(dispatch: React.Dispatch<any>, token: any) {
+export async function setUserTokens(dispatch: React.Dispatch<any>, data: any) {
   const user = localStorage.getItem("user");
-  Cookies.set("token", token);
+  Cookies.set("token", data.token);
   let parseUser;
   if (user) {
     parseUser = JSON.parse(user);
-    localStorage.setItem("user", JSON.stringify({ ...parseUser, token }));
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        ...parseUser,
+        token: data.token,
+        refreshToken: data.refreshToken,
+      })
+    );
   } else {
-    localStorage.setItem("user", JSON.stringify({ token }));
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ token: data.token, refreshToken: data.refreshToken })
+    );
   }
   dispatch({
     type: "SET_USER_TOKENS",
-    payload: token,
+    payload: data,
   });
 }
 
