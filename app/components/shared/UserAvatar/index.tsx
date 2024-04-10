@@ -14,7 +14,7 @@ interface Data {
 }
 export default function UserAvatar({ user }: Props) {
   return (
-    <Link href={"perfil/" + user.slug} style={{ textDecoration: "none" }}>
+    <Link href={"/perfil/" + user.slug} style={{ textDecoration: "none" }}>
       <Box>
         <Stack direction={"row"} alignItems={"center"} spacing={1}>
           <Avatar sx={{ width: 24, height: 24 }} src={user.image ? user.image : placeholder.src} />

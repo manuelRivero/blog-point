@@ -15,24 +15,79 @@ import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import HeaderMenu from "../headerMenu";
 import NotificationDropdown from "../notificationDropdown";
-import { useCore, setLoginModal, setRegisterModal, setLoginRedirection } from "@/app/context/core";
+import {
+  useCore,
+  setLoginModal,
+  setRegisterModal,
+  setLoginRedirection,
+  setDeviceToken,
+} from "@/app/context/core";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+//prueba
+import { getAuth, signInAnonymously } from "firebase/auth";
+import messaging  from "../../../firebase";
+import { getToken, onMessage } from "firebase/messaging";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { postDeviceId } from "@/app/client/auth";
+import {getMessaging, isSupported} from "firebase/messaging";
+
+//prueba
 
 export default function Header() {
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
-
   const handleCreateBlog = () => {
-    if(!user){
-      setLoginRedirection(coreDispatch,"/crear-blog")
+    if (!user) {
+      setLoginRedirection(coreDispatch, "/crear-blog");
       setLoginModal(coreDispatch, true);
-    }else {
+    } else {
       router.push("/crear-blog");
     }
-  }
+  };
+
+  useEffect(() => {
+    if (user) {
+      //prueba
+      
+      const activarMensajes = async () => {
+        const tokenMessaje = await getToken(messaging, {
+          vapidKey:
+            "BKFAZkkrTjlng6q3pxqSYAwd0IpE7mc263-eWGAQtqfrkPx737IlAbDbI3NgW1qSdXfJU9rax-WexFGUFCJUkYM",
+        }).catch((error) => console.log("error al generar el token message"));
+
+        setDeviceToken(coreDispatch, tokenMessaje);
+
+        if (tokenMessaje) {
+          await postDeviceId(tokenMessaje);
+          console.log("token message", tokenMessaje);
+        }
+        if (!tokenMessaje) console.log("no hay token");
+      };
+      activarMensajes();
+      onMessage(messaging, (message) => {
+        if (message.data?.idUserBlog === user.data?._id) {
+          console.log("tu mensaje firebase", message);
+          console.log("usuario firebase", user)
+          toast(message.notification?.title);
+  
+          // const auth = authUser;
+          const auth = getAuth();
+          console.log("usuario autenticado firebase", auth);
+        }
+       
+      });
+ 
+      //prueba
+    }
+  }, [user]);
 
   return (
     <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
+      <ToastContainer />
       <Toolbar variant="dense" sx={{ width: "100%" }}>
         <Stack
           direction="row"
@@ -42,11 +97,16 @@ export default function Header() {
             alignItems: "center",
           }}
         >
-          <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Typography variant="h6" color={"#fff"} component="h1">
-              Blog App
-            </Typography>
-          </Stack>
+          <Link href={"/"} style={{ textDecoration: "none" }}>
+            <Stack direction="row" sx={{ alignItems: "center" }}>
+              <Box>
+                <Typography variant="h6" color={"#fff"} component="h1">
+                  Blog App
+                </Typography>
+              </Box>
+            </Stack>
+          </Link>
+
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             {user && (
               <>

@@ -43,7 +43,7 @@ export default function CustomTag({
       })}
     >
       <Tooltip title={title}>
-        <Typography variant="body1" color="#fff" fontSize={14}>{concatDots(title, 16)}</Typography>
+        <Typography variant="body1" sx={{whiteSpace:"nowrap", overflow:"hidden", maxWidth:"120px", textOverflow: "ellipsis"}} color="#fff" fontSize={14}>{concatDots(title, 16)}</Typography>
       </Tooltip>
       {crossCallback && (
         <Box

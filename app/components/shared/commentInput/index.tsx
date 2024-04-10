@@ -54,6 +54,7 @@ export default function CommentInput({ addComment }: Props) {
   const [{ user }, coreDispatch] = useCore();
   const { slug } = useParams();
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+
   //form
   const { control, handleSubmit, reset, setValue } = useForm({
     resolver: yupResolver(schema),
@@ -64,6 +65,7 @@ export default function CommentInput({ addComment }: Props) {
       const { data } = await createComment({
         slug: slug.toString(),
         content: values.comment,
+
       });
       addComment(data.comment[0]);
       setValue("comment", "");
@@ -99,6 +101,7 @@ export default function CommentInput({ addComment }: Props) {
             name: user.data.name,
             lastName: user.data.lastName,
             image: user.data.avatar,
+            slug: user.data.slug
           }}
         />
       )}

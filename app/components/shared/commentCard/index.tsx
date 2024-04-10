@@ -68,9 +68,13 @@ export default function CommentCard({ data }: Props) {
       name: data.user[0].name,
       lastName: data.user[0].lastName,
       image: data.user[0].avatar,
+      slug: data.user[0].slug,
     }),
     [data]
   );
+
+  console.log('userCommentCard',userData)
+
   //form
   const { control, handleSubmit, reset, setValue } = useForm<Values>({
     resolver: yupResolver(schema),
@@ -200,6 +204,7 @@ export default function CommentCard({ data }: Props) {
                       name: e.user[0].name,
                       lastName: e.user[0].lastName,
                       image: e.user[0].avatar,
+                      slug: e.user[0].slug
                     }}
                   />
                   <Typography fontSize={"14px"} align="right">

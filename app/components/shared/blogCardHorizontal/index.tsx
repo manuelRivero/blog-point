@@ -11,14 +11,14 @@ interface Props {
   data:any
 }
 export default function BlogCardHorizontal({data}:Props) {
-  console.log('data component aaaa',data)
-  console.log('data component bbbb',data.user[0])
+  console.log('data blog component ',data)
+  console.log('data user component ',data.user[0])
 
   return (
     <Box>
       <Box sx={{ marginBottom: 1 }}>
         <UserAvatar
-          user={{ name: data.user[0].name, lastName: data.user[0].lastName, image: data.user[0].avatar }}
+          user={{ name: data.user[0].name, lastName: data.user[0].lastName, image: data.user[0].avatar, slug:data.user[0].slug }}
         />
       </Box>
 
