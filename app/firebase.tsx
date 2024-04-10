@@ -1,10 +1,10 @@
+
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import {getMessaging} from "firebase/messaging";
+import {getMessaging, isSupported} from "firebase/messaging";
 import { getAuth } from "firebase/auth";
 
-//console.log("variables de entorno firebase",process.env.NEXT_PUBLIC_API_KEY)
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyDCf7kjvBRU7iPJuJPlNKI5jmO5EwzFHvc",
@@ -27,6 +27,18 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const messaging = getMessaging(app);
+//const analytics = getAnalytics(app);
+
+let messaging: any = null;
+(async ()=>{
+
+  const isSupport = await isSupported()
+  if (isSupport){
+      messaging = getMessaging(app);
+  }
+
+})()
+export default messaging 
+
+//export const messaging = async () => (await isSupported()) && getMessaging(app)
 //export const authUser = getAuth(app);

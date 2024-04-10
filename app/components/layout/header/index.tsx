@@ -27,12 +27,13 @@ import Link from "next/link";
 
 //prueba
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { messaging } from "../../../firebase";
+import messaging  from "../../../firebase";
 import { getToken, onMessage } from "firebase/messaging";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { postDeviceId } from "@/app/client/auth";
+import {getMessaging, isSupported} from "firebase/messaging";
 
 //prueba
 
@@ -51,6 +52,7 @@ export default function Header() {
   useEffect(() => {
     if (user) {
       //prueba
+      
       const activarMensajes = async () => {
         const tokenMessaje = await getToken(messaging, {
           vapidKey:
@@ -78,7 +80,7 @@ export default function Header() {
         }
        
       });
-
+ 
       //prueba
     }
   }, [user]);

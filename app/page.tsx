@@ -15,7 +15,7 @@ async function getData({ page = 0 }) {
       getCategories({ page: 0, pageSize: 5 }),
       getBlogs(page, undefined),
     ]);
-    console.log(categoriesData, blogsData);
+    // console.log(categoriesData, blogsData);
     return {
       categoriesData,
       blogsData,
@@ -45,7 +45,7 @@ export default async function Home({ params }: any) {
               <Stack direction="column" spacing={4}>
                 {data &&
                   data.blogsData.blogs[0].data.map((e: any, index: number) => {
-                    console.log("blog", e);
+                    // console.log("blog", e);
                     return (
                       <BlogCard
                         key={index}
@@ -74,7 +74,7 @@ export default async function Home({ params }: any) {
               <Stack direction="column" spacing={4}>
                 {data &&
                   data.blogsData.blogs[0].data.map((e: any, index: number) => {
-                    console.log("blog", e);
+                    // console.log("blog", e);
                     return (
                       <BlogCard
                         key={index}
