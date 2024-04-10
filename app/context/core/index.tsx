@@ -34,6 +34,7 @@ export type State = {
   showRegisterModal: boolean;
   user: User | null;
   infoModal: InfoModal | null;
+  deviceToken: string | null;
 };
 interface InfoModal {
   status: "success" | "info" | "error";
@@ -58,6 +59,7 @@ const initialState: State = {
   showLoginModal: false,
   showRegisterModal: false,
   user: getUser(),
+  deviceToken: null
 };
 
 const CoreContext = React.createContext<[State, React.Dispatch<any>]>([
@@ -72,43 +74,43 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const pathName = usePathname();
   console.log("pathName", pathName);
 
-  // const responseInterceptor = useMemo(() => {
-  //   return axiosIntance.interceptors.response.use(
-  //     (response) => {
-  //       console.log("axiosIntance.interceptors.response", response);
-  //       if (response.status && response.status === 401) {
-  //         logout(dispatch);
-  //         router.push("/");
-  //       }
-  //       return response;
-  //     },
-  //     async (error: any) => {
-  //       // const deviceId = await getUniqueId();
-  //       console.log("axiosIntance.interceptors.error", error);
+  const responseInterceptor = useMemo(() => {
+    return axiosIntance.interceptors.response.use(
+      (response) => {
+        console.log("axiosIntance.interceptors.response", response);
+        if (response.status && response.status === 401) {
+          logout(dispatch);
+          router.push("/");
+        }
+        return response;
+      },
+      async (error: any) => {
+        // const deviceId = await getUniqueId();
+        console.log("axiosIntance.interceptors.error", error);
 
-  //       if (error.response.status && error.response.status === 401) {
-  //         setInfoModal(dispatch, {
-  //           status: "error",
-  //           title: "Tu sesión ha expirado",
-  //           hasCancel: null,
-  //           hasSubmit: {
-  //             title: "Iniciar sesión",
-  //             cb: () => {
-  //               setInfoModal(dispatch, null);
-  //               logout(dispatch);
-  //               setLoginModal(dispatch, true);
-  //               router.push("/");
-  //             },
-  //           },
-  //           onAnimationEnd: null,
-  //         });
-  //       }
-  //       console.log("error.response.data", error.response);
-  //       return Promise.reject(error);
-  //     }
-  //   );
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+        if (error.response.status && error.response.status === 401) {
+          setInfoModal(dispatch, {
+            status: "error",
+            title: "Tu sesión ha expirado",
+            hasCancel: null,
+            hasSubmit: {
+              title: "Iniciar sesión",
+              cb: () => {
+                setInfoModal(dispatch, null);
+                logout(dispatch);
+                setLoginModal(dispatch, true);
+                router.push("/");
+              },
+            },
+            onAnimationEnd: null,
+          });
+        }
+        console.log("error.response.data", error.response);
+        return Promise.reject(error);
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const requestInterceptor = useMemo(() => {
     return axiosIntance.interceptors.request.use(
@@ -302,6 +304,17 @@ export async function setLoginModal(
     payload: status,
   });
 }
+
+export async function setDeviceToken(
+  dispatch: React.Dispatch<any>,
+  deviceToken: any
+) {
+  dispatch({
+    type: "SET_DEVICE_TOKEN",
+    payload: deviceToken,
+  });
+}
+
 export async function setLoginRedirection(
   dispatch: React.Dispatch<any>,
   path: string

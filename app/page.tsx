@@ -1,3 +1,6 @@
+//"use client";
+import { useEffect } from "react";
+
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import BlogCard from "./components/blogCard";
 import Hero from "./components/home/hero";
@@ -27,16 +30,18 @@ export default async function Home({ params }: any) {
   const { page } = params;
   const data = await getData({ page });
   //console.log('data home',data)
+
   return (
     <main>
       <Hero categories={data ? data.categoriesData.categories : []} />
       <Container sx={{ paddingBottom: 8, marginTop: 4 }}>
         <Grid container spacing={4}>
-          <Grid item xs={6} sm={8} lg={8}>
+          <Grid item xs={12} sm={8} lg={8}>
             <Box sx={{ marginBottom: 4 }}>
               <Typography variant="h3" sx={{ marginBottom: 2 }}>
                 Tendencias en Historial Medico
               </Typography>
+
               <Stack direction="column" spacing={4}>
                 {data &&
                   data.blogsData.blogs[0].data.map((e: any, index: number) => {
@@ -48,7 +53,7 @@ export default async function Home({ params }: any) {
                           name: e.user[0].name,
                           lastName: e.user[0].name,
                           image: e.user[0].avatar,
-                          slug: e.user[0].slug
+                          slug: e.user[0].slug,
                         }}
                         data={{ ...e, category: e.category[0].name }}
                         preview={false}
@@ -61,7 +66,6 @@ export default async function Home({ params }: any) {
               <Stack justifyContent={"center"} direction={"row"} mt={4} mb={4}>
                 <Button variant="contained">Cargar más</Button>
               </Stack>
-
             </Box>
             <Box>
               <Typography variant="h3" sx={{ marginBottom: 2 }}>
@@ -78,7 +82,7 @@ export default async function Home({ params }: any) {
                           name: e.user[0].name,
                           lastName: e.user[0].name,
                           image: e.user[0].avatar,
-                          slug: e.user[0].slug
+                          slug: e.user[0].slug,
                         }}
                         data={{ ...e, category: e.category[0].name }}
                         preview={false}
@@ -95,11 +99,12 @@ export default async function Home({ params }: any) {
           </Grid>
           <Grid item xs={12} md={4}>
             <Box>
-              <CategoryRow categories={data ? data.categoriesData.categories : []} />
+              <CategoryRow
+                categories={data ? data.categoriesData.categories : []}
+              />
             </Box>
           </Grid>
         </Grid>
-
       </Container>
     </main>
   );

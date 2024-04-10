@@ -16,3 +16,6 @@ export const register = (form: FormData): Promise<AxiosResponse> => {
 export const me = (): Promise<AxiosResponse> => {
   return axiosIntance.get("/auth/me");
 };
+export const postDeviceId = (deviceId: string) : Promise<AxiosResponse> => {
+  return axiosIntance.post("/auth/device-id",{deviceId});
+};

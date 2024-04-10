@@ -23,6 +23,12 @@ export default function registerReducer(
         user: { data: state.user?.data, tokens: { access_token: action.payload.token, refresh_token: action.payload.refreshToken  } },
       };
     }
+    case"SET_DEVICE_TOKEN":{
+      return{
+        ...state,
+        deviceToken: action.payload
+      }
+    }
     case "SET_USER_DATA": {
       console.log("user data reducer")
       return {

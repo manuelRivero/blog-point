@@ -50,7 +50,7 @@ interface NewComment {
 }
 export default function MainWrapper({ data }: any) {
   console.log(data, 'mainwrapper blog detail ')
-  const [{ user }] = useCore();
+  const [{ user, deviceToken }] = useCore();
   const router = useRouter();
   const { slug } = useParams();
   const [page, setPage] = useState<number>(0);

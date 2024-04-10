@@ -42,6 +42,7 @@ import {
 import CategoryDropdown from "../components/createBlog/categoryDropdown";
 
 import introJs from "intro.js";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const tutorialData = {
   category:
@@ -74,7 +75,7 @@ interface CardData {
 export default function CreateBlog() {
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
-
+  const isMobile = useMediaQuery('(max-width:1200px)');
   //form
   const {
     control,
@@ -375,17 +376,17 @@ export default function CreateBlog() {
                     Pista: Tu título abarca más caracteres de los que se
                     visualizaran en la carta de tu blog pero se visualizara de
                     forma completa en el detalle del blog.
+
                   </Typography>
                 )}
-                {showDescriptionAlert && (
+                {isMobile && (
                   <Typography
                     variant="body1"
                     component={"p"}
                     sx={{ color: "#c2c2c2" }}
                   >
-                    Pista: Tu descripción abarca más caracteres de los que se
-                    visualizaran en la carta de tu blog pero se visualizara de
-                    forma completa en el detalle del blog.
+                    Pista: Tu descripción se mostrará en dispositivos con una pantalla más grande
+                    
                   </Typography>
                 )}
                 <div data-intro={tutorialData.preview}>

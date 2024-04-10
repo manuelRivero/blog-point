@@ -20,9 +20,21 @@ import {
   setLoginModal,
   setRegisterModal,
   setLoginRedirection,
+  setDeviceToken,
 } from "@/app/context/core";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
+//prueba
+import { getAuth, signInAnonymously } from "firebase/auth";
+import { messaging } from "../../../firebase";
+import { getToken, onMessage } from "firebase/messaging";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { postDeviceId } from "@/app/client/auth";
+
+//prueba
 
 export default function Header() {
   const [{ user }, coreDispatch] = useCore();
@@ -36,8 +48,44 @@ export default function Header() {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      //prueba
+      const activarMensajes = async () => {
+        const tokenMessaje = await getToken(messaging, {
+          vapidKey:
+            "BKFAZkkrTjlng6q3pxqSYAwd0IpE7mc263-eWGAQtqfrkPx737IlAbDbI3NgW1qSdXfJU9rax-WexFGUFCJUkYM",
+        }).catch((error) => console.log("error al generar el token message"));
+
+        setDeviceToken(coreDispatch, tokenMessaje);
+        
+        if (tokenMessaje){
+          await postDeviceId(tokenMessaje)
+          console.log("token message", tokenMessaje);
+        } 
+        if (!tokenMessaje) console.log("no hay token");
+      };
+
+     
+        // const auth = getAuth();
+        // console.log("usuario autenticado firebase", auth);
+        activarMensajes();
+        onMessage(messaging, (message) => {
+          console.log("tu mensaje", message);
+          toast(message.notification?.title);
+
+          // const auth = authUser;
+          const auth = getAuth();
+          console.log("usuario autenticado firebase", auth);
+        });
+      
+      //prueba
+    }
+  }, [user]);
+
   return (
     <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
+      <ToastContainer />
       <Toolbar variant="dense" sx={{ width: "100%" }}>
         <Stack
           direction="row"
@@ -48,15 +96,15 @@ export default function Header() {
           }}
         >
           <Link href={"/"} style={{ textDecoration: "none" }}>
-          <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Box>
-              <Typography variant="h6" color={"#fff"} component="h1">
-                Blog App
-              </Typography>
-            </Box>
-          </Stack>
+            <Stack direction="row" sx={{ alignItems: "center" }}>
+              <Box>
+                <Typography variant="h6" color={"#fff"} component="h1">
+                  Blog App
+                </Typography>
+              </Box>
+            </Stack>
           </Link>
-          
+
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             {user && (
               <>
