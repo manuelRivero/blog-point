@@ -58,27 +58,27 @@ export default function Header() {
         }).catch((error) => console.log("error al generar el token message"));
 
         setDeviceToken(coreDispatch, tokenMessaje);
-        
-        if (tokenMessaje){
-          await postDeviceId(tokenMessaje)
+
+        if (tokenMessaje) {
+          await postDeviceId(tokenMessaje);
           console.log("token message", tokenMessaje);
-        } 
+        }
         if (!tokenMessaje) console.log("no hay token");
       };
-
-     
-        // const auth = getAuth();
-        // console.log("usuario autenticado firebase", auth);
-        activarMensajes();
-        onMessage(messaging, (message) => {
-          console.log("tu mensaje", message);
+      activarMensajes();
+      onMessage(messaging, (message) => {
+        if (message.data?.idUserBlog === user.data?._id) {
+          console.log("tu mensaje firebase", message);
+          console.log("usuario firebase", user)
           toast(message.notification?.title);
-
+  
           // const auth = authUser;
           const auth = getAuth();
           console.log("usuario autenticado firebase", auth);
-        });
-      
+        }
+       
+      });
+
       //prueba
     }
   }, [user]);
