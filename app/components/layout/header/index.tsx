@@ -43,7 +43,7 @@ export default function Header() {
   const router = useRouter();
   const [askedForNotifications, setAskedForNotifications] = useState<boolean | null>(null);
   const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
-  const [notificationStatus, setNotificationStatus] = useState<string>(Notification.permission)
+  const [notificationStatus, setNotificationStatus] = useState<string>(typeof window !== "undefined" ? Notification.permission : "default")
 
 
 
