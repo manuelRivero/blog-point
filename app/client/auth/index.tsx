@@ -9,6 +9,9 @@ interface LoginForm {
 export const login = (data: LoginForm): Promise<AxiosResponse> => {
   return axiosIntance.post("/auth/login", data);
 };
+export const logout = (id: string): Promise<AxiosResponse> => {
+  return axiosIntance.post("/auth/logout" + id);
+};
 export const register = (form: FormData): Promise<AxiosResponse> => {
   return axiosIntance.post("/auth/register", form);
 };
@@ -16,6 +19,6 @@ export const register = (form: FormData): Promise<AxiosResponse> => {
 export const me = (): Promise<AxiosResponse> => {
   return axiosIntance.get("/auth/me");
 };
-export const postDeviceId = (deviceId: string) : Promise<AxiosResponse> => {
-  return axiosIntance.post("/auth/device-id",{deviceId});
+export const postDeviceId = (deviceId: string): Promise<AxiosResponse> => {
+  return axiosIntance.post("/auth/device-id", { deviceId });
 };

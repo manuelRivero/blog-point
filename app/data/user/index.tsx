@@ -24,6 +24,7 @@ export interface User {
     };
   };
   tokens?: {
+    device_token?: string;
     refresh_token?: string;
     access_token: string;
   };

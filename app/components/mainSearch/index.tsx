@@ -9,6 +9,7 @@ import {
   MenuItem,
   MenuList,
   Paper,
+  Typography,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,18 +17,23 @@ import debounce from "lodash.debounce";
 
 import React, { useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { getBlogs } from "@/app/client/blogs";
+import { Blog } from "@/app/data/blog";
 
 export default function MainSearch() {
   const inputRef = useRef<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const searchHandler = () => {
+  const [suggestions, setSuggestions] = useState<Blog[]>([]);
+  const searchHandler = async () => {
     if (inputRef.current.length >= 3) {
       setIsOpen(true);
-      console.log("ref value", inputRef.current);
+      console.log("change", inputRef.current);
+      const { data } = await getBlogs(0, inputRef.current);
+      setSuggestions(data.blogs[0].data);
+      console.log("main search data", data);
     } else {
       setIsOpen(false);
-
     }
   };
   const debouncedChangeHandler = useMemo(
@@ -123,6 +129,7 @@ export default function MainSearch() {
         <ClickAwayListener onClickAway={() => setIsOpen(false)}>
           <Paper
             sx={{
+              zIndex: 100,
               borderRadius: 4,
               padding: 2,
               position: "absolute",
@@ -133,15 +140,31 @@ export default function MainSearch() {
             }}
           >
             <MenuList>
-              <MenuItem href={"/detalle-del-blog/1"} component={Link}>
-                {getHighlightedText("Mis primeras practicas", value)}
-              </MenuItem>
-              <MenuItem href={"/detalle-del-blog/1"} component={Link}>
-              {getHighlightedText("Practicas en el hospital", value)}
-              </MenuItem>
-              <MenuItem href={"/detalle-del-blog/1"} component={Link}>
-                Post con un titulo similar a la busqueda
-              </MenuItem>
+              {suggestions.map((e: Blog) => {
+                return (
+                  <MenuItem
+                    key={e._id}
+                    href={"/detalle-del-blog/" + e.slug}
+                    component={Link}
+                    sx={{
+                      borderRadius: 2,
+                      border: "#c2c2c2",
+                      borderWidth: "1px",
+                      borderStyle: "solid",
+                      marginBottom:1
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="h6">
+                        {getHighlightedText(e.title, value)}
+                      </Typography>
+                      <Typography variant="body1">
+                        {getHighlightedText(e.description, value)}
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                );
+              })}
             </MenuList>
           </Paper>
         </ClickAwayListener>

@@ -2,7 +2,7 @@
 
 import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 // icons
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -14,7 +14,7 @@ import ProfileSocial from "../../profile/profileSocial";
 import ProfileBlogCard from "../../profile/profileBlogCard";
 import ProfileStats from "../../profile/profileStats";
 import {
-  logout,
+  logout as coreLogout,
   setInfoModal,
   setLoginModal,
   useCore,
@@ -22,6 +22,7 @@ import {
 import { updateProfile } from "@/app/client/user";
 import { Blog } from "@/app/data/blog";
 import BlogCard from "../../blogCard";
+import { logout } from "@/app/client/auth";
 
 interface Props {
   data: any;
@@ -29,12 +30,10 @@ interface Props {
 }
 
 export default function MainWrapper({ data, blogs }: Props) {
-  const [, coreDispatch] = useCore();
+  const [{user}, coreDispatch] = useCore();
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
 
-  console.log("data mainwrapper user", data);
-  console.log("data mainwrapper blog", blogs);
 
   const router = useRouter();
 
@@ -82,9 +81,11 @@ export default function MainWrapper({ data, blogs }: Props) {
     }
   };
 
-  if (!data) {
+  const handleEmpty = async () => {
     router.replace("/");
-    logout(coreDispatch);
+
+    await logout(user?.data?._id!)
+    coreLogout(coreDispatch);
     setInfoModal(coreDispatch, {
       status: "error",
       title: "Tu sesión ha expirado",
@@ -98,6 +99,10 @@ export default function MainWrapper({ data, blogs }: Props) {
       },
       onAnimationEnd: null,
     });
+  }
+
+  if (!data) {
+    handleEmpty()
     return null;
   }
 

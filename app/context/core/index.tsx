@@ -9,10 +9,20 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { User } from "@/app/data/user";
 import { usePathname } from "next/navigation";
+import { Notification } from "@/app/data/notifications";
+import { logout as logoutEndpoint } from "@/app/client/auth";
+import { deleteApp } from "@firebase/app";
+import { deleteToken, getMessaging } from "@firebase/messaging";
+import firebaseApp from "@/app/firebase";
+
 
 const getUser = () => {
   const user =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const notificationEnabled =
+    typeof window !== "undefined"
+      ? localStorage.getItem("historial-medico-has-notifications-enable")
+      : null;
   let parseUser = null;
   let stateUser = null;
   if (user) {
@@ -20,8 +30,8 @@ const getUser = () => {
     stateUser = {
       data: parseUser.data,
       tokens: {
-        access_token: parseUser.token,
-        refresh_token: parseUser.refreshToken,
+        access_token: parseUser.tokens.token,
+        refresh_token: parseUser.tokens.refreshToken,
       },
     };
   }
@@ -35,6 +45,7 @@ export type State = {
   user: User | null;
   infoModal: InfoModal | null;
   deviceToken: string | null;
+  notifications: Notification[];
 };
 interface InfoModal {
   status: "success" | "info" | "error";
@@ -54,12 +65,13 @@ type Props = {
   children: JSX.Element;
 };
 const initialState: State = {
+  notifications: [],
   loginRedirection: "/",
   infoModal: null,
   showLoginModal: false,
   showRegisterModal: false,
   user: getUser(),
-  deviceToken: null
+  deviceToken: null,
 };
 
 const CoreContext = React.createContext<[State, React.Dispatch<any>]>([
@@ -72,14 +84,15 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const value: [State, React.Dispatch<any>] = [state, dispatch];
   const router = useRouter();
   const pathName = usePathname();
-  console.log("pathName", pathName);
 
   const responseInterceptor = useMemo(() => {
     return axiosIntance.interceptors.response.use(
-      (response) => {
+      async (response) => {
         console.log("axiosIntance.interceptors.response", response);
         if (response.status && response.status === 401) {
+          await logoutEndpoint(state.user?.data._id);
           logout(dispatch);
+
           router.push("/");
         }
         return response;
@@ -95,8 +108,10 @@ export const CoreProvider: React.FC<Props> = (props) => {
             hasCancel: null,
             hasSubmit: {
               title: "Iniciar sesión",
-              cb: () => {
+              cb: async () => {
                 setInfoModal(dispatch, null);
+                await logoutEndpoint(state.user?.data._id);
+
                 logout(dispatch);
                 setLoginModal(dispatch, true);
                 router.push("/");
@@ -161,6 +176,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
 
                 delete config.headers.Authorization;
                 config.withCredentials = false;
+                await logoutEndpoint(state.user?.data._id);
 
                 logout(dispatch);
                 setLoginRedirection(dispatch, pathName);
@@ -170,9 +186,8 @@ export const CoreProvider: React.FC<Props> = (props) => {
                   hasCancel: null,
                   hasSubmit: {
                     title: "Iniciar sesión",
-                    cb: () => {
+                    cb: async () => {
                       setInfoModal(dispatch, null);
-                      logout(dispatch);
                       setLoginModal(dispatch, true);
                       router.push("/");
                     },
@@ -227,6 +242,11 @@ export async function logout(dispatch: React.Dispatch<any>) {
     type: "LOGOUT",
   });
 }
+export async function setNotificationsEnabled(dispatch: React.Dispatch<any>) {
+  dispatch({
+    type: "SET_NOTIFICATION_ENABLED",
+  });
+}
 export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
   console.log("set user data");
   const user = localStorage.getItem("user");
@@ -256,10 +276,13 @@ export async function setUserProfileData(
       "user",
       JSON.stringify({
         ...parseUser,
-        slug: profileData.slug,
-        name: profileData.name,
-        lastName: profileData.lastName,
-        bio: profileData.bio,
+        data: {
+          ...parseUser.data,
+          slug: profileData.slug,
+          name: profileData.name,
+          lastName: profileData.lastName,
+          bio: profileData.bio,
+        },
       })
     );
   }
@@ -279,14 +302,18 @@ export async function setUserTokens(dispatch: React.Dispatch<any>, data: any) {
       "user",
       JSON.stringify({
         ...parseUser,
-        token: data.token,
-        refreshToken: data.refreshToken,
+        tokens: {
+          token: data.token,
+          refreshToken: data.refreshToken,
+        },
       })
     );
   } else {
     localStorage.setItem(
       "user",
-      JSON.stringify({ token: data.token, refreshToken: data.refreshToken })
+      JSON.stringify({
+        tokens: { token: data.token, refreshToken: data.refreshToken },
+      })
     );
   }
   dispatch({
@@ -309,6 +336,25 @@ export async function setDeviceToken(
   dispatch: React.Dispatch<any>,
   deviceToken: any
 ) {
+  const user = localStorage.getItem("user");
+  console.log("dispatch token device", deviceToken);
+  if (user) {
+    const parseUser = JSON.parse(user);
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        ...parseUser,
+        tokens: {
+          ...parseUser.tokens,
+          device_token: deviceToken,
+        },
+      })
+    );
+    localStorage.setItem(
+      "historial-medico-has-notifications-enable",
+      JSON.stringify(true)
+    );
+  }
   dispatch({
     type: "SET_DEVICE_TOKEN",
     payload: deviceToken,
@@ -338,6 +384,16 @@ export async function setRegisterModal(
 export async function setInfoModal(dispatch: React.Dispatch<any>, data: any) {
   dispatch({
     type: "SET_INFO_MODAL",
+    payload: data,
+  });
+}
+
+export async function setNotification(
+  dispatch: React.Dispatch<any>,
+  data: any
+) {
+  dispatch({
+    type: "SET_NOTIFICATION",
     payload: data,
   });
 }

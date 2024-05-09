@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-import React from "react";
+import React, { useState } from "react";
 import HeaderMenu from "../headerMenu";
 import NotificationDropdown from "../notificationDropdown";
 import {
@@ -21,25 +21,32 @@ import {
   setRegisterModal,
   setLoginRedirection,
   setDeviceToken,
+  setNotification,
+  setNotificationsEnabled,
 } from "@/app/context/core";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-//prueba
-import { getAuth, signInAnonymously } from "firebase/auth";
-import messaging  from "../../../firebase";
-import { getToken, onMessage } from "firebase/messaging";
+import firebaseApp from "../../../firebase";
+import { getToken, getMessaging, onMessage } from "firebase/messaging";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { postDeviceId } from "@/app/client/auth";
-import {getMessaging, isSupported} from "firebase/messaging";
+import {deleteApp} from '@firebase/app';
+import {deleteToken} from '@firebase/messaging';
 
-//prueba
 
 export default function Header() {
   const [{ user }, coreDispatch] = useCore();
+  console.log("user", user)
   const router = useRouter();
+  const [askedForNotifications, setAskedForNotifications] = useState<boolean | null>(null);
+  const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
+  const [notificationStatus, setNotificationStatus] = useState<string>(Notification.permission)
+
+
+
   const handleCreateBlog = () => {
     if (!user) {
       setLoginRedirection(coreDispatch, "/crear-blog");
@@ -49,41 +56,75 @@ export default function Header() {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      //prueba
-      
-      const activarMensajes = async () => {
-        const tokenMessaje = await getToken(messaging, {
-          vapidKey:
-            "BKFAZkkrTjlng6q3pxqSYAwd0IpE7mc263-eWGAQtqfrkPx737IlAbDbI3NgW1qSdXfJU9rax-WexFGUFCJUkYM",
-        }).catch((error) => console.log("error al generar el token message"));
-
-        setDeviceToken(coreDispatch, tokenMessaje);
-
-        if (tokenMessaje) {
-          await postDeviceId(tokenMessaje);
-          console.log("token message", tokenMessaje);
-        }
-        if (!tokenMessaje) console.log("no hay token");
-      };
-      activarMensajes();
-      onMessage(messaging, (message) => {
-        if (message.data?.idUserBlog === user.data?._id) {
-          console.log("tu mensaje firebase", message);
-          console.log("usuario firebase", user)
-          toast(message.notification?.title);
-  
-          // const auth = authUser;
-          const auth = getAuth();
-          console.log("usuario autenticado firebase", auth);
-        }
-       
-      });
- 
-      //prueba
+  async function requestPermission() {
+    const permission = await Notification.requestPermission();
+    console.log("permissions", permission)
+    if (permission === "granted") {
+      setHasPermissions(true)
+    } else if (permission === "denied") {
+      setHasPermissions(false)
+      console.log("Denied for the notification");
     }
-  }, [user]);
+    else if (permission === "default") {
+      setHasPermissions(null)
+      console.log("Default for the notification");
+    }
+  }
+
+  async function handleNotifications() {
+    const handleMessage = (event:any) => {
+      console.log("event for the service worker", event);
+      const {data} = event
+      setNotification(coreDispatch, {
+        type: data.type,
+        blogName: data.titleBlog,
+        title: data.title,
+        body: data.body,
+        blogSlug:data.slugBlog
+      })
+      toast(
+        <Box>
+          <Typography variant="h6">{data.title} </Typography>
+          <Typography variant="body1">{data.body} </Typography>
+        </Box>
+      );
+    }
+    const messaging = getMessaging(firebaseApp);
+    // Generate Device Token for notification
+
+
+
+    const token = await getToken(messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
+    });
+    if (token) {
+      setDeviceToken(coreDispatch, token);
+      setAskedForNotifications(true)
+      await postDeviceId(token);
+      console.log("token message", token);
+      onMessage(messaging, (payload) => {
+        handleMessage(payload)
+      });
+    } else {
+      console.log(
+        "No registration token available. Request permission to generate one."
+      );
+    }
+
+  }
+
+  useEffect(() => {
+    if (user && !user.tokens?.device_token && (notificationStatus === "default" ? askedForNotifications : true) ) {
+      console.log("user", user)
+      requestPermission();
+    }
+  }, [user, askedForNotifications, notificationStatus]);
+
+  useEffect(() => {
+    if ( hasPermissions && user && !user.tokens?.device_token) {
+      handleNotifications();
+    }
+  }, [ user, hasPermissions]);
 
   return (
     <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
@@ -113,8 +154,8 @@ export default function Header() {
                 <Box>
                   <HeaderMenu />
                 </Box>
-                <Box>
-                  <NotificationDropdown />
+                <Box position="relative">
+                  <NotificationDropdown hasPermissions={hasPermissions} askedForNotifications={askedForNotifications} setAskedForNotifications={()=>setAskedForNotifications(true)} />
                 </Box>
               </>
             )}

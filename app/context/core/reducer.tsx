@@ -26,7 +26,11 @@ export default function registerReducer(
     case"SET_DEVICE_TOKEN":{
       return{
         ...state,
-        deviceToken: action.payload
+        user:{
+          ...state.user,
+          tokens: {...state?.user?.tokens, device_token: action.payload}
+        }
+        
       }
     }
     case "SET_USER_DATA": {
@@ -62,6 +66,21 @@ export default function registerReducer(
         ...state,
         infoModal: action.payload,
       };
+    }
+    case "SET_NOTIFICATION": {
+      return {
+        ...state,
+        notifications: [...state.notifications, action.payload]
+      };
+    }
+    case "SET_NOTIFICATION_ENABLED": {
+      return {
+        ...state,
+        user:{
+          ...state.user,
+          hasNotificationsEnable: true
+        }
+      }
     }
     default:
       return state;

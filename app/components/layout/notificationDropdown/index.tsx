@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import {
   Box,
+  Button,
   ClickAwayListener,
   Divider,
   IconButton,
@@ -10,40 +11,30 @@ import {
   MenuList,
   Paper,
   Stack,
+  Switch,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import NotificationBox from "../../shared/notificationBox";
+import { useCore } from "@/app/context/core";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { Notification } from "@/app/data/notifications";
 
-
-interface Notification {
-    user: { name: string; lastName: string; image: string | null };
-    action: "like-post" | "like-comment" | "like-response";
-    blogName: string;
-    link: string;
+interface Props {
+  askedForNotifications: boolean | null;
+  setAskedForNotifications: () => void;
+  hasPermissions: boolean | null;
 }
-const notifications:Notification[] = [
-  {
-    user: { name: "María Y José", lastName: "Contreras Goméz", image: null },
-    action: 'like-post',
-    blogName: "Primer blog de prueba",
-    link: "primer-blog-de-prueba",
-  },
-  {
-    user: { name: "María Y José", lastName: "Contreras Goméz", image: null },
-    action: 'like-comment',
-    blogName: "Primer blog de prueba",
-    link: "primer-blog-de-prueba",
-  },
-  {
-    user: { name: "María Y José", lastName: "Contreras Goméz", image: null },
-    action: 'like-response',
-    blogName: "Primer blog de prueba",
-    link: "primer-blog-de-prueba",
-  },
-];
-export default function NotificationDropdown() {
+
+export default function NotificationDropdown({
+  askedForNotifications,
+  setAskedForNotifications,
+  hasPermissions,
+}: Props) {
+  console.log("notification status", askedForNotifications, hasPermissions);
+  const [{ notifications }] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <Box
       sx={{
@@ -71,24 +62,57 @@ export default function NotificationDropdown() {
               bottom: 0,
               right: 0,
               width: 320,
+              padding: 2,
               height: "fit-content",
               transform: "translateY(100%)",
               zIndex: 100,
             }}
           >
             <MenuList>
-              {notifications.map((e, i) => {
-                return (
-                  <MenuItem
-                    key={i}
-                    component={Link}
-                    onClick={() => setIsOpen(false)}
-                    href={"/detalle-del-blog/1"}
-                  >
-                    <NotificationBox data={e} />
-                  </MenuItem>
-                );
-              })}
+              {!askedForNotifications && !hasPermissions && (
+                <Box>
+                  <Typography variant="body1">
+                    Activa las notificaciones
+                  </Typography>
+                  <Switch
+                    checked={Boolean(askedForNotifications && hasPermissions)}
+                    onChange={() => setAskedForNotifications()}
+                    size="small"
+                  />
+                </Box>
+              )}
+              {askedForNotifications && hasPermissions === false && (
+                <Box>
+                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                    Las notificaciones están deshabilitadas en este navegador
+                  </Typography>
+                  <Button variant="outlined">¿Como activarlas?</Button>
+                </Box>
+              )}
+              {askedForNotifications && hasPermissions === null && (
+                <Box>
+                  <Typography variant="body1">Ya casi estamos</Typography>
+                </Box>
+              )}
+              {askedForNotifications &&
+                hasPermissions &&
+                notifications.map((e:Notification, i) => {
+                  return (
+                    <MenuItem
+                      key={i}
+                      component={Link}
+                      onClick={() => setIsOpen(false)}
+                      href={"/detalle-del-blog/" + e.blogSlug}
+                    >
+                      <NotificationBox data={e} />
+                    </MenuItem>
+                  );
+                })}
+              {askedForNotifications &&
+                hasPermissions &&
+                notifications.length === 0 && (
+                  <Typography variant="body1">No hay notificaciones</Typography>
+                )}
             </MenuList>
           </Paper>
         </ClickAwayListener>

@@ -26,19 +26,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-//const analytics = getAnalytics(app);
+const firebaseApp = initializeApp(firebaseConfig);
 
-let messaging: any = null;
-(async ()=>{
+export default firebaseApp;
 
-  const isSupport = await isSupported()
-  if (isSupport){
-      messaging = getMessaging(app);
-  }
-
-})()
-export default messaging 
-
-//export const messaging = async () => (await isSupported()) && getMessaging(app)
-//export const authUser = getAuth(app);
