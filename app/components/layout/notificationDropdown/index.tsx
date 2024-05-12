@@ -108,8 +108,8 @@ export default function NotificationDropdown({
                     </MenuItem>
                   );
                 })}
-              {askedForNotifications &&
-                hasPermissions &&
+              {(askedForNotifications &&
+                hasPermissions) || hasPermissions &&
                 notifications.length === 0 && (
                   <Typography variant="body1">No hay notificaciones</Typography>
                 )}
