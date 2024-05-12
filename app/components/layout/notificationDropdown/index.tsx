@@ -94,8 +94,8 @@ export default function NotificationDropdown({
                   <Typography variant="body1">Ya casi estamos</Typography>
                 </Box>
               )}
-              {askedForNotifications &&
-                hasPermissions &&
+              {(askedForNotifications &&
+                hasPermissions) || hasPermissions &&
                 notifications.map((e:Notification, i) => {
                   return (
                     <MenuItem

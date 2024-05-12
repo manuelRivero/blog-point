@@ -73,22 +73,24 @@ export default function Header() {
 
   async function handleNotifications() {
     const handleMessage = (event:any) => {
-      console.log("event for the service worker", event);
       const {data} = event
-      setNotification(coreDispatch, {
-        type: data.type,
-        blogName: data.titleBlog,
-        title: data.title,
-        body: data.body,
-        blogSlug:data.slugBlog
-      })
-      toast(
-        <Box>
-          <Typography variant="h6">{data.title} </Typography>
-          <Typography variant="body1">{data.body} </Typography>
-        </Box>
-      );
-    }
+      if(data.idUserBlog === user?.data?._id){
+        setNotification(coreDispatch, {
+          type: data.type,
+          blogName: data.titleBlog,
+          title: data.title,
+          body: data.body,
+          blogSlug:data.slugBlog
+        })
+        toast(
+          <Box>
+            <Typography variant="h6">{data.title} </Typography>
+            <Typography variant="body1">{data.body} </Typography>
+          </Box>
+        );
+      }
+
+      }
     const messaging = getMessaging(firebaseApp);
     // Generate Device Token for notification
 
@@ -99,7 +101,6 @@ export default function Header() {
     });
     if (token) {
       setDeviceToken(coreDispatch, token);
-      setAskedForNotifications(true)
       await postDeviceId(token);
       console.log("token message", token);
       onMessage(messaging, (payload) => {
