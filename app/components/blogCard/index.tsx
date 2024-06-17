@@ -57,8 +57,6 @@ export default function BlogCard({
 
   return (
     <Box
-      component={Link}
-      href={"/detalle-del-blog/" + data.slug}
       sx={{
         textDecoration: "none",
         width: "100%",
@@ -83,6 +81,8 @@ export default function BlogCard({
         />
         <Stack direction={"row"} gap={{ xs: 2, lg: 4 }}>
           <CardContent
+            component={Link}
+            href={"/detalle-del-blog/" + data.slug}
             sx={{
               width: "100%",
               paddingTop: 0,

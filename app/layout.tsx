@@ -1,13 +1,15 @@
+import dynamic from 'next/dynamic' 
 import type { Metadata } from "next";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
-
-import Header from "./components/layout/header";
 import { theme } from "./theme";
 import { CoreProvider } from "./context/core";
 import LoginModal from "./components/shared/loginModal";
 import InfoModal from "./components/shared/infoModal";
 import RegisterModal from "./components/shared/registerModal";
+
+ 
+const Header = dynamic(() => import('./components/layout/header'), { ssr: false })
 
 import './styles/global.css';
 import 'intro.js/introjs.css';
@@ -28,8 +30,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
-             
+      <body>      
         <CoreProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />

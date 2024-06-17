@@ -33,19 +33,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { postDeviceId } from "@/app/client/auth";
-import {deleteApp} from '@firebase/app';
-import {deleteToken} from '@firebase/messaging';
-
+import { deleteApp } from "@firebase/app";
+import { deleteToken } from "@firebase/messaging";
 
 export default function Header() {
   const [{ user }, coreDispatch] = useCore();
-  console.log("user", user)
   const router = useRouter();
-  const [askedForNotifications, setAskedForNotifications] = useState<boolean | null>(null);
+  const [askedForNotifications, setAskedForNotifications] = useState<
+    boolean | null
+  >(null);
   const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
-  const [notificationStatus, setNotificationStatus] = useState<string>(typeof window !== "undefined" ? Notification.permission : "default")
-
-
+  const [notificationStatus, setNotificationStatus] = useState<string>(
+    typeof window !== "undefined" ? Notification.permission : "default"
+  );
 
   const handleCreateBlog = () => {
     if (!user) {
@@ -58,30 +58,29 @@ export default function Header() {
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
-    console.log("permissions", permission)
+    console.log("permissions", permission);
     if (permission === "granted") {
-      setHasPermissions(true)
+      setHasPermissions(true);
     } else if (permission === "denied") {
-      setHasPermissions(false)
+      setHasPermissions(false);
       console.log("Denied for the notification");
-    }
-    else if (permission === "default") {
-      setHasPermissions(null)
+    } else if (permission === "default") {
+      setHasPermissions(null);
       console.log("Default for the notification");
     }
   }
 
   async function handleNotifications() {
-    const handleMessage = (event:any) => {
-      const {data} = event
-      if(data.idUserBlog === user?.data?._id){
+    const handleMessage = (event: any) => {
+      const { data } = event;
+      if (data.idUserBlog === user?.data?._id) {
         setNotification(coreDispatch, {
           type: data.type,
           blogName: data.titleBlog,
           title: data.title,
           body: data.body,
-          blogSlug:data.slugBlog
-        })
+          blogSlug: data.slugBlog,
+        });
         toast(
           <Box>
             <Typography variant="h6">{data.title} </Typography>
@@ -89,12 +88,9 @@ export default function Header() {
           </Box>
         );
       }
-
-      }
+    };
     const messaging = getMessaging(firebaseApp);
     // Generate Device Token for notification
-
-
 
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
@@ -104,31 +100,34 @@ export default function Header() {
       await postDeviceId(token);
       console.log("token message", token);
       onMessage(messaging, (payload) => {
-        handleMessage(payload)
+        handleMessage(payload);
       });
     } else {
       console.log(
         "No registration token available. Request permission to generate one."
       );
     }
-
   }
 
   useEffect(() => {
-    if (user && !user.tokens?.device_token && (notificationStatus === "default" ? askedForNotifications : true) ) {
-      console.log("user", user)
+    if (
+      user &&
+      !user.tokens?.device_token &&
+      (notificationStatus === "default" ? askedForNotifications : true)
+    ) {
+      console.log("user", user);
       requestPermission();
     }
   }, [user, askedForNotifications, notificationStatus]);
 
   useEffect(() => {
-    if ( hasPermissions && user && !user.tokens?.device_token) {
+    if (hasPermissions && user && !user.tokens?.device_token) {
       handleNotifications();
     }
-  }, [ user, hasPermissions]);
+  }, [user, hasPermissions]);
 
   return (
-    <AppBar position="static" sx={{ height: 60, justifyContent: "center" }}>
+    <AppBar position="static" sx={{ height: 60, borderBottom: "solid 1px #fff", justifyContent: "center" }}>
       <ToastContainer />
       <Toolbar variant="dense" sx={{ width: "100%" }}>
         <Stack
@@ -139,15 +138,15 @@ export default function Header() {
             alignItems: "center",
           }}
         >
-          <Link href={"/"} style={{ textDecoration: "none" }}>
-            <Stack direction="row" sx={{ alignItems: "center" }}>
-              <Box>
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <Box>
+              <Link href={"/"} style={{ textDecoration: "none" }}>
                 <Typography variant="h6" color={"#fff"} component="h1">
-                  Blog App
+                  Historial Medico
                 </Typography>
-              </Box>
-            </Stack>
-          </Link>
+              </Link>
+            </Box>
+          </Stack>
 
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             {user && (
@@ -156,7 +155,13 @@ export default function Header() {
                   <HeaderMenu />
                 </Box>
                 <Box position="relative">
-                  <NotificationDropdown hasPermissions={hasPermissions} askedForNotifications={askedForNotifications} setAskedForNotifications={()=>setAskedForNotifications(true)} />
+                  <NotificationDropdown
+                    hasPermissions={hasPermissions}
+                    askedForNotifications={askedForNotifications}
+                    setAskedForNotifications={() =>
+                      setAskedForNotifications(true)
+                    }
+                  />
                 </Box>
               </>
             )}

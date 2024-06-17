@@ -1,4 +1,4 @@
-
+"use client";
 import { Box, Stack, Typography, Avatar } from "@mui/material";
 import placeholder from "./../../../assets/images/avatar-placeholder.png";
 import React from "react";
