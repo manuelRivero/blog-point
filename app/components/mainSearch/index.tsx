@@ -17,7 +17,7 @@ import debounce from "lodash.debounce";
 
 import React, { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { getBlogs } from "@/app/client/blogs";
+import { findBlogs, getBlogs } from "@/app/client/blogs";
 import { Blog } from "@/app/data/blog";
 
 export default function MainSearch() {
@@ -29,7 +29,7 @@ export default function MainSearch() {
     if (inputRef.current.length >= 3) {
       setIsOpen(true);
       console.log("change", inputRef.current);
-      const { data } = await getBlogs(0, inputRef.current);
+      const { data } = await findBlogs(inputRef.current);
       setSuggestions(data.blogs[0].data);
       console.log("main search data", data);
     } else {
@@ -149,9 +149,9 @@ export default function MainSearch() {
                     sx={{
                       borderRadius: 2,
                       border: "#c2c2c2",
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      marginBottom:1
+                      boxShadow: " 0 0 15px -5px rgba(0,0,0, .5)",
+                      marginBottom: 1,
+                      whiteSpace: "break-spaces",
                     }}
                   >
                     <Box>

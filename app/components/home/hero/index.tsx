@@ -30,7 +30,7 @@ export default function Hero({categories}:Props) {
         background: theme.palette.primary.main,
       })}
     >
-      <Stack sx={{ paddingTop: "2rem", height: "100%", paddingBottom:"2rem" }}>
+      <Stack sx={{ padding: "2rem", height: "100%" }}>
         <Typography
           variant={"h1"}
           component={"h1"}

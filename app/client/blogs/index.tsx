@@ -77,12 +77,15 @@ export const createResponse = (form: {
 
 
 export const getRelatedBlogs = (categoryId: string): Promise<AxiosResponse> => {
-  console.log('get data related blog',categoryId)
   return axiosIntance.get("/blogs/category", { params: { categoryId },
   });
 }
 
 export const deleteBlog = (id: string): Promise<AxiosResponse> => {
-  console.log('get data delete blog',id)
   return axiosIntance.delete("/blogs/delete/" + id);
+}
+
+export const findBlogs = (query: string): Promise<AxiosResponse> => {
+  return axiosIntance.get("/blogs/find", { params: { query },
+  });
 }
