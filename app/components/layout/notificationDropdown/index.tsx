@@ -38,8 +38,8 @@ export default function NotificationDropdown({
     "Notification" in window &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
-console.log("isSupported", isSupported());
-    return (
+
+  return (
     <Box
       sx={{
         position: "relative",
@@ -72,64 +72,70 @@ console.log("isSupported", isSupported());
               zIndex: 100,
             }}
           >
-            {isSupported() ? <MenuList>
-              {!askedForNotifications && !hasPermissions && (
-                <Box>
-                  <Typography variant="body1">
-                    Activa las notificaciones
-                  </Typography>
-                  <Switch
-                    checked={Boolean(askedForNotifications && hasPermissions)}
-                    onChange={() => setAskedForNotifications()}
-                    size="small"
-                  />
-                </Box>
-              )}
-              {askedForNotifications && hasPermissions === false && (
-                <Box>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    Las notificaciones están deshabilitadas en este navegador
-                  </Typography>
-                  <Button variant="outlined">¿Como activarlas?</Button>
-                </Box>
-              )}
-              {askedForNotifications && hasPermissions === null && (
-                <Box>
-                  <Typography variant="body1">Ya casi estamos</Typography>
-                </Box>
-              )}
-              {hasPermissions &&
-                notificationsData.map((e:Notification, i) => {
-                  return (
-                    <MenuItem
-                      key={i}
-                      component={Link}
-                      onClick={() => setIsOpen(false)}
-                      href={"/detalle-del-blog/" + e.blogSlug}
-                    >
-                      <NotificationBox data={e} />
-                    </MenuItem>
-                  );
-                })}
-              {(askedForNotifications &&
-                hasPermissions) || hasPermissions &&
-                notificationsData.length === 0 && (
-                  <Typography variant="body1">No hay notificaciones</Typography>
+            {isSupported() ? (
+              <MenuList>
+                {!askedForNotifications && !hasPermissions && (
+                  <Box>
+                    <Typography variant="body1">
+                      Activa las notificaciones
+                    </Typography>
+                    <Switch
+                      checked={Boolean(askedForNotifications && hasPermissions)}
+                      onChange={() => setAskedForNotifications()}
+                      size="small"
+                    />
+                  </Box>
                 )}
-            </MenuList> : <MenuList>
-              {  !isSupported && notificationsData.map((e:Notification, i) => {
-                  return (
-                    <MenuItem
-                      key={i}
-                      component={Link}
-                      onClick={() => setIsOpen(false)}
-                      href={"/detalle-del-blog/" + e.blogSlug}
-                    >
-                      <NotificationBox data={e} />
-                    </MenuItem>
-                  );
-                })}
-              </MenuList>}
+                {askedForNotifications && hasPermissions === false && (
+                  <Box>
+                    <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                      Las notificaciones están deshabilitadas en este navegador
+                    </Typography>
+                    <Button variant="outlined">¿Como activarlas?</Button>
+                  </Box>
+                )}
+                {askedForNotifications && hasPermissions === null && (
+                  <Box>
+                    <Typography variant="body1">Ya casi estamos</Typography>
+                  </Box>
+                )}
+                {hasPermissions &&
+                  notificationsData.map((e: Notification, i) => {
+                    return (
+                      <MenuItem
+                        key={i}
+                        component={Link}
+                        onClick={() => setIsOpen(false)}
+                        href={"/detalle-del-blog/" + e.blogSlug}
+                      >
+                        <NotificationBox data={e} />
+                      </MenuItem>
+                    );
+                  })}
+                {(askedForNotifications && hasPermissions) ||
+                  (hasPermissions && notificationsData.length === 0 && (
+                    <Typography variant="body1">
+                      No hay notificaciones
+                    </Typography>
+                  ))}
+              </MenuList>
+            ) : (
+              <MenuList>
+                {!isSupported() &&
+                  notificationsData.map((e: Notification, i) => {
+                    return (
+                      <MenuItem
+                        key={i}
+                        component={Link}
+                        onClick={() => setIsOpen(false)}
+                        href={"/detalle-del-blog/" + e.blogSlug}
+                      >
+                        <NotificationBox data={e} />
+                      </MenuItem>
+                    );
+                  })}
+              </MenuList>
+            )}
           </Paper>
         </ClickAwayListener>
       )}
