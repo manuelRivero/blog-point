@@ -1,20 +1,14 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import CoreReducer from "./reducer";
-import { axiosIntance } from "@/app/client";
+import { axiosIntance, axiosAuthIntance } from "@/app/client";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import jwt_decode from "jwt-decode";
-import axios from "axios";
 import { User } from "@/app/data/user";
 import { usePathname } from "next/navigation";
 import { Notification } from "@/app/data/notifications";
-import { logout as logoutEndpoint } from "@/app/client/auth";
-import { deleteApp } from "@firebase/app";
-import { deleteToken, getMessaging } from "@firebase/messaging";
-import firebaseApp from "@/app/firebase";
-
+import { getNotifications } from "@/app/client/notifications";
 
 const getUser = () => {
   const user =
@@ -45,7 +39,8 @@ export type State = {
   user: User | null;
   infoModal: InfoModal | null;
   deviceToken: string | null;
-  notifications: Notification[];
+  notificationsData: Notification[];
+  notificationsMetaData: any;
 };
 interface InfoModal {
   status: "success" | "info" | "error";
@@ -65,7 +60,8 @@ type Props = {
   children: JSX.Element;
 };
 const initialState: State = {
-  notifications: [],
+  notificationsMetaData: null,
+  notificationsData: [],
   loginRedirection: "/",
   infoModal: null,
   showLoginModal: false,
@@ -84,144 +80,115 @@ export const CoreProvider: React.FC<Props> = (props) => {
   const value: [State, React.Dispatch<any>] = [state, dispatch];
   const router = useRouter();
   const pathName = usePathname();
+  const responseInterceptor = useRef<any>();
 
-  const responseInterceptor = useMemo(() => {
-    return axiosIntance.interceptors.response.use(
+  useEffect(() => {
+    const handleLogout = async () => {
+      console.log("handleLogout", dispatch);
+
+      setInfoModal(dispatch, {
+        status: "error",
+        title: "Tu sesión ha expirado",
+        hasCancel: null,
+        hasSubmit: {
+          title: "Iniciar sesión",
+          cb: async () => {
+            setInfoModal(dispatch, null);
+            setLoginModal(dispatch, true);
+            router.push("/");
+            logout(dispatch);
+          },
+        },
+        onAnimationEnd: null,
+      });
+    };
+    const handleRefresh = async (user: User) => {
+      let tokens: any = {};
+      try {
+        const response = await axiosAuthIntance.post("/auth/refresh-token", {
+          user: { id: user.data?._id },
+          refreshToken: user.tokens?.refresh_token,
+        });
+        console.log("response", response);
+        tokens = {
+          token: response.data.token,
+          refreshToken: response.data.refreshToken,
+        };
+        setUserTokens(dispatch, {
+          token: response.data.token,
+          refreshToken: response.data.refreshToken,
+        });
+      } catch (error) {
+        handleLogout();
+      }
+      return tokens;
+    };
+    responseInterceptor.current = axiosIntance.interceptors.response.use(
       async (response) => {
-        console.log("axiosIntance.interceptors.response", response);
-        if (response.status && response.status === 401) {
-          await logoutEndpoint(state.user?.data._id);
-          logout(dispatch);
-
-          router.push("/");
-        }
+        console.log("response", response);
         return response;
       },
       async (error: any) => {
-        // const deviceId = await getUniqueId();
-        console.log("axiosIntance.interceptors.error", error);
-
-        if (error.response.status && error.response.status === 401) {
-          setInfoModal(dispatch, {
-            status: "error",
-            title: "Tu sesión ha expirado",
-            hasCancel: null,
-            hasSubmit: {
-              title: "Iniciar sesión",
-              cb: async () => {
-                setInfoModal(dispatch, null);
-                await logoutEndpoint(state.user?.data._id);
-
-                logout(dispatch);
-                setLoginModal(dispatch, true);
-                router.push("/");
-              },
-            },
-            onAnimationEnd: null,
-          });
+        const originalRequest = error.config;
+        if (
+          error.response &&
+          error.response.status === 401 &&
+          !originalRequest._retry
+        ) {
+          originalRequest._retry = true;
+          try {
+            const newToken = await handleRefresh(state.user);
+            axiosIntance.defaults.headers.Authorization = `Bearer ${newToken.token}`;
+            return axiosIntance(originalRequest);
+          } catch (refreshError) {
+            console.error(
+              "Error refreshing token during response:",
+              refreshError
+            );
+            await handleLogout();
+            return Promise.reject(refreshError);
+          }
         }
-        console.log("error.response.data", error.response);
+        if (error.response && error.response.status === 403) {
+          handleLogout();
+        }
+
         return Promise.reject(error);
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state.user, dispatch, router]);
 
-  const requestInterceptor = useMemo(() => {
-    return axiosIntance.interceptors.request.use(
-      async (config) => {
-        console.log("request on use memo", config.headers.Authorization);
-        // Do something before request is sent
-        let parseUser = null;
-        const CancelToken = axios.CancelToken;
-        console.log("user state", state.user);
-        if (state.user) {
-          parseUser = state.user;
-          if (parseUser) {
-            let decodedToken: any = jwt_decode(parseUser.tokens?.access_token);
-            let currentDate = new Date();
-            console.log(
-              "decode exp",
-              decodedToken.exp * 1000 < currentDate.getTime()
-            );
-            if (decodedToken.exp * 1000 < currentDate.getTime()) {
-              console.log("entro al if, cancela peticiòn");
-              config = {
-                ...config,
-                cancelToken: new CancelToken((cancel) =>
-                  cancel("Cancel repeated request")
-                ),
-              };
-              console.log("entro al refresh", parseUser);
-              try {
-                const response = await axios.post(
-                  "http://localhost:4000/api/auth/refresh-token",
-                  {
-                    user: { id: parseUser.data._id },
-                    refreshToken: parseUser.tokens?.refresh_token,
-                  }
-                );
-                console.log("response", response);
-                setUserTokens(dispatch, {
-                  token: response.data.token,
-                  refreshToken: response.data.refreshToken,
-                });
-                config.headers.Authorization =
-                  "Bearer" + " " + response.data.token;
-                config.cancelToken = undefined;
-
-                return config;
-              } catch (error) {
-                console.log(error, "error response");
-
-                delete config.headers.Authorization;
-                config.withCredentials = false;
-                await logoutEndpoint(state.user?.data._id);
-
-                logout(dispatch);
-                setLoginRedirection(dispatch, pathName);
-                setInfoModal(dispatch, {
-                  status: "error",
-                  title: "Tu sesión ha expirado",
-                  hasCancel: null,
-                  hasSubmit: {
-                    title: "Iniciar sesión",
-                    cb: async () => {
-                      setInfoModal(dispatch, null);
-                      setLoginModal(dispatch, true);
-                      router.push("/");
-                    },
-                  },
-                  onAnimationEnd: null,
-                });
-              }
-            } else {
-              const localStoregeUser = getUser();
-              config.headers.Authorization =
-                "Bearer" + " " + localStoregeUser?.tokens?.access_token;
-            }
-          }
-          // else {
-          //   delete config.headers.Authorization;
-          //   config.withCredentials = false;
-          // }
-        }
-        return config;
-      },
-      function (error) {
-        console.log("axiosIntance.interceptors.request error", error);
-        // Do something with request error
-        return Promise.reject(error);
-      }
-    );
+  useEffect(() => {
+    return () => {
+      axiosIntance.interceptors.request.eject(responseInterceptor.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.user]);
 
   useEffect(() => {
-    return () => {
-      axiosIntance.interceptors.request.eject(requestInterceptor);
+    const getData = async () => {
+      const { data } = await getNotifications();
+
+      setNotificationsData(
+        dispatch,
+        data.notifications[0].data.map((e: any) => ({
+          type: e.type,
+          blogName: e.titleBlog,
+          title: e.title,
+          body: e.body,
+          blogSlug: e.slugBlog,
+        }))
+      );
+      setNotificationsMetaData(dispatch, data.notifications[0].metadata[0]);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (
+      state.user &&
+      state.user.tokens &&
+      state.notificationsData.length === 0
+    ) {
+      getData();
+    }
   }, [state.user]);
 
   return <CoreContext.Provider value={value} {...props} />;
@@ -235,6 +202,29 @@ export const useCore = () => {
 
   return context;
 };
+
+export async function setNotificationsData(
+  dispatch: React.Dispatch<any>,
+  data: any
+) {
+  console.log("dispatch");
+
+  dispatch({
+    type: "SET_NOTIFICATIONS_DATA",
+    payload: data,
+  });
+}
+
+export async function setNotificationsMetaData(
+  dispatch: React.Dispatch<any>,
+  data: any
+) {
+  dispatch({
+    type: "SET_NOTIFICATIONS_METADATA",
+    payload: data,
+  });
+}
+
 export async function logout(dispatch: React.Dispatch<any>) {
   localStorage.removeItem("user");
   Cookies.remove("token");
@@ -382,6 +372,7 @@ export async function setRegisterModal(
 }
 
 export async function setInfoModal(dispatch: React.Dispatch<any>, data: any) {
+  console.log("dispatch modal");
   dispatch({
     type: "SET_INFO_MODAL",
     payload: data,

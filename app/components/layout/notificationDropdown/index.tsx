@@ -32,8 +32,9 @@ export default function NotificationDropdown({
   hasPermissions,
 }: Props) {
   console.log("notification status", askedForNotifications, hasPermissions);
-  const [{ notifications }] = useCore();
+  const [{ notificationsData }] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  console.log("notificationsData", notificationsData)
 
   return (
     <Box
@@ -96,7 +97,7 @@ export default function NotificationDropdown({
               )}
               {(askedForNotifications &&
                 hasPermissions) || hasPermissions &&
-                notifications.map((e:Notification, i) => {
+                notificationsData.map((e:Notification, i) => {
                   return (
                     <MenuItem
                       key={i}
@@ -110,7 +111,7 @@ export default function NotificationDropdown({
                 })}
               {(askedForNotifications &&
                 hasPermissions) || hasPermissions &&
-                notifications.length === 0 && (
+                notificationsData.length === 0 && (
                   <Typography variant="body1">No hay notificaciones</Typography>
                 )}
             </MenuList>

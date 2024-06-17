@@ -21,8 +21,8 @@ import {
   setRegisterModal,
   setLoginRedirection,
   setDeviceToken,
+  setNotificationsData,
   setNotification,
-  setNotificationsEnabled,
 } from "@/app/context/core";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

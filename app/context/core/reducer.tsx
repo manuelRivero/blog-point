@@ -70,7 +70,7 @@ export default function registerReducer(
     case "SET_NOTIFICATION": {
       return {
         ...state,
-        notifications: [...state.notifications, action.payload]
+        notificationsData: [...state.notificationsData, action.payload]
       };
     }
     case "SET_NOTIFICATION_ENABLED": {
@@ -80,6 +80,18 @@ export default function registerReducer(
           ...state.user,
           hasNotificationsEnable: true
         }
+      }
+    }
+    case "SET_NOTIFICATIONS_DATA":{
+      return {
+        ...state,
+        notificationsData: [...state.notificationsData, ...action.payload]
+      }
+    }
+    case "SET_NOTIFICATIONS_METADATA":{
+      return {
+        ...state,
+        notificationsMetaData: action.payload
       }
     }
     default:

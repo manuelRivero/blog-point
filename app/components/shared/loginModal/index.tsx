@@ -45,7 +45,7 @@ export default function LoginModal() {
         data: { token, refreshToken },
       } = await login(values);
       await setUserTokens(coreDispatch, {token, refreshToken});
-      axiosIntance.defaults.headers.common['Authorization'] = "Bearer" + " " + token;
+      axiosIntance.defaults.headers.Authorization = "Bearer" + " " + token;
       const data = await me();
       const { name, lastName, email, avatar, slug, social, _id  } = data.data.data;
       await setUserData(coreDispatch, {

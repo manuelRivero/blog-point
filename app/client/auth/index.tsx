@@ -10,7 +10,7 @@ export const login = (data: LoginForm): Promise<AxiosResponse> => {
   return axiosIntance.post("/auth/login", data);
 };
 export const logout = (id: string): Promise<AxiosResponse> => {
-  return axiosIntance.post("/auth/logout" + id);
+  return axiosIntance.post("/auth/logout/" + id);
 };
 export const register = (form: FormData): Promise<AxiosResponse> => {
   return axiosIntance.post("/auth/register", form);

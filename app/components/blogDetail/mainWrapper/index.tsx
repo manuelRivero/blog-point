@@ -4,7 +4,14 @@ import BlogHeaderCard from "@/app/components/blogDetail/blogHeaderCard";
 import CustomCard from "@/app/components/shared/card";
 import CommentCard from "@/app/components/shared/commentCard";
 import CommentInput from "@/app/components/shared/commentInput";
-import { Box, Container, Grid, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -12,7 +19,6 @@ import { getBlogComments } from "@/app/client/blogs";
 import { useCore } from "@/app/context/core";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { getRelatedBlogs } from "@/app/client/blogs";
-
 
 interface Comment {
   content: string;
@@ -49,14 +55,13 @@ interface NewComment {
   ];
 }
 export default function MainWrapper({ data }: any) {
-  console.log(data, 'mainwrapper blog detail ')
+  console.log(data, "mainwrapper blog detail ");
   const [{ user, deviceToken }] = useCore();
   const router = useRouter();
   const { slug } = useParams();
   const [page, setPage] = useState<number>(0);
   const [comments, setComments] = useState<Comment[] | null>(null);
   const [categoryData, setCategoryData] = useState<any[]>([]);
-
 
   const addComment = (data: NewComment) => {
     const newCommentsList = comments ? [...comments] : [];
@@ -80,26 +85,31 @@ export default function MainWrapper({ data }: any) {
     }
   };
 
-  const getData = async () => {
-    console.log("slug", slug.toString());
-    const { data } = await getBlogComments(slug.toString(), page);
-    console.log(
-      "comment data",
-      data.comments[0].data,
-      data.comments[0].metadata
-    );
-    setComments(data.comments[0].data);
-  };
-  
   useEffect(() => {
-    Promise.all([getData(), getRelatedBlogs(data.blog.category._id)]).then((values:any) => {
-      setCategoryData(values[1].data.blogs[0].data)
-      console.log('data category 11111111',values[1].data.blogs[0].data)
-    });
+    const getComments = async () => {
+      try {
+        const { data } = await getBlogComments(slug.toString(), page);
+        setComments(data.comments[0].data);
+      } catch (error) {
+        console.log("comment error", error);
+      }
+    };
+    const getData = async () => {
+      try {
+        const res = await getRelatedBlogs(data.blog.category._id);
+
+        setCategoryData(res.data.blogs[0].data);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    getComments();
+    getData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('data category',categoryData);
+  console.log("data category", categoryData);
 
   if (!data) {
     router.push("/");
@@ -108,7 +118,7 @@ export default function MainWrapper({ data }: any) {
 
   return (
     <Container sx={{ marginTop: 4, paddingBottom: 4 }}>
-       <IconButton onClick={() => router.back()} sx={{marginBottom:2}}>
+      <IconButton onClick={() => router.back()} sx={{ marginBottom: 2 }}>
         <ArrowBackIcon />
       </IconButton>
       <BlogHeaderCard data={data.blog} />
@@ -145,8 +155,10 @@ export default function MainWrapper({ data }: any) {
             Blogs relacionados
           </Typography>
           <CustomCard>
-            {categoryData.map((e:any, i:number)=>{
-              return <BlogCardHorizontal data={e} key={"related-blog" + "-" + i} />
+            {categoryData.map((e: any, i: number) => {
+              return (
+                <BlogCardHorizontal data={e} key={"related-blog" + "-" + i} />
+              );
             })}
           </CustomCard>
         </Grid>
