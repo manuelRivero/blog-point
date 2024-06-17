@@ -21,7 +21,6 @@ import {
   setRegisterModal,
   setLoginRedirection,
   setDeviceToken,
-  setNotificationsData,
   setNotification,
 } from "@/app/context/core";
 import { useRouter } from "next/navigation";
@@ -34,6 +33,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { postDeviceId } from "@/app/client/auth";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import MobileAccountMenu from "../mobileAccountMenu";
 
 export default function Header() {
   const isMobile = useMediaQuery("(max-width:1024px)");
@@ -179,7 +179,7 @@ export default function Header() {
                 </Box>
               </>
             )}
-            {!user && (
+            {!user && !isMobile && (
               <>
                 <Button
                   onClick={() => setLoginModal(coreDispatch, true)}
@@ -205,9 +205,12 @@ export default function Header() {
                     },
                   }}
                 >
-                  Registrate
+                  Crear cuenta
                 </Button>
               </>
+            )}
+            {!user && isMobile && (
+              <MobileAccountMenu />
             )}
             {!isMobile && (
               <Button

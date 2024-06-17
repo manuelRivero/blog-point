@@ -11,20 +11,16 @@ import {
   Avatar,
 } from "@mui/material";
 import { ClickAwayListener } from '@mui/base';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import MenuIcon from '@mui/icons-material/Menu';import {
+    useCore,
+    setLoginModal,
+    setRegisterModal,
+  } from "@/app/context/core";
 
-
-import MenuIcon from "@mui/icons-material/Menu";
-import Link from "next/link";
-import { useCore, logout } from "@/app/context/core";
-import { useRouter } from "next/navigation";
-
-export default function HeaderMenu() {
-  const router = useRouter()
-  const [{user}, coreDispatch] = useCore();
+export default function MobileAccountMenu() {
+  const [_, coreDispatch] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  console.log('user header', user?.data?.name)
   return (
     <Box
       sx={{
@@ -39,8 +35,7 @@ export default function HeaderMenu() {
         aria-label="menu"
         sx={{ mr: 2 }}
       >
-        <Avatar alt={user?.data?.name} src={user?.data?.avatar} />
-        {/* <PermIdentityIcon fontSize={'medium'} /> */}
+        <MenuIcon fontSize={'medium'} />
       </IconButton>
 
       {isOpen && (
@@ -60,25 +55,14 @@ export default function HeaderMenu() {
           })}
         >
           <MenuList>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/crear-blog"}>
+            <MenuItem onClick={() => setLoginModal(coreDispatch, true)}>
               <Typography variant="body1" component={"p"}>
-                Crear blog
+               Iniciar sesión
               </Typography>
             </MenuItem>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/mis-blogs"}>
+            <MenuItem onClick={() => setRegisterModal(coreDispatch, true)}>
               <Typography variant="body1" component={"p"}>
-                Mis blogs
-              </Typography>
-            </MenuItem>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={`/perfil/${user?.data?.slug}`}>
-              <Typography variant="body1" component={"p"}>
-                Perfil
-              </Typography>
-            </MenuItem>
-            <Divider />
-            <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch); router.push("/")}} >
-              <Typography variant="body1" component={"p"}>
-                Cerrar sesión
+               Crear cuenta
               </Typography>
             </MenuItem>
           </MenuList>
