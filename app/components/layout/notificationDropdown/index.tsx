@@ -38,6 +38,7 @@ export default function NotificationDropdown({
     "Notification" in window &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
+    console.log("notificationsData", notificationsData)
   return (
     <Box
       sx={{
@@ -97,8 +98,7 @@ export default function NotificationDropdown({
                   <Typography variant="body1">Ya casi estamos</Typography>
                 </Box>
               )}
-              {(askedForNotifications &&
-                hasPermissions) || hasPermissions &&
+              {hasPermissions &&
                 notificationsData.map((e:Notification, i) => {
                   return (
                     <MenuItem

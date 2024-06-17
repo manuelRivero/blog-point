@@ -85,7 +85,7 @@ export default function registerReducer(
     case "SET_NOTIFICATIONS_DATA":{
       return {
         ...state,
-        notificationsData: [...state.notificationsData, ...action.payload]
+        notificationsData: action.payload
       }
     }
     case "SET_NOTIFICATIONS_METADATA":{
