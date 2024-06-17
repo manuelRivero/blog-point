@@ -14,6 +14,11 @@ const nextConfig = {
       typescript: {
         ignoreBuildErrors: true,
      },
+     output: "standalone",
+     webpack: (config) => {
+         config.resolve.fallback = { fs: false };
+         return config;
+     },
 }
 
 module.exports = withPWA(nextConfig);

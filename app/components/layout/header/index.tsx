@@ -33,10 +33,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { postDeviceId } from "@/app/client/auth";
-import { deleteApp } from "@firebase/app";
-import { deleteToken } from "@firebase/messaging";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function Header() {
+  const isMobile = useMediaQuery("(max-width:1024px)");
+
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
   const [askedForNotifications, setAskedForNotifications] = useState<
@@ -44,11 +45,13 @@ export default function Header() {
   >(null);
   const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
   const isSupported = () =>
-    'Notification' in window &&
-    'serviceWorker' in navigator &&
-    'PushManager' in window
+    "Notification" in window &&
+    "serviceWorker" in navigator &&
+    "PushManager" in window;
   const [notificationStatus, setNotificationStatus] = useState<string>(
-    typeof window !== "undefined" && isSupported() ? Notification.permission : "default"
+    typeof window !== "undefined" && isSupported()
+      ? Notification.permission
+      : "default"
   );
 
   const handleCreateBlog = () => {
@@ -131,7 +134,14 @@ export default function Header() {
   }, [user, hasPermissions]);
 
   return (
-    <AppBar position="static" sx={{ height: 60, borderBottom: "solid 1px #fff", justifyContent: "center" }}>
+    <AppBar
+      position="static"
+      sx={{
+        height: 60,
+        borderBottom: "solid 1px #fff",
+        justifyContent: "center",
+      }}
+    >
       <ToastContainer />
       <Toolbar variant="dense" sx={{ width: "100%" }}>
         <Stack
@@ -199,14 +209,16 @@ export default function Header() {
                 </Button>
               </>
             )}
-            <Button
-              onClick={handleCreateBlog}
-              variant="contained"
-              color="secondary"
-              startIcon={<AddIcon />}
-            >
-              Crear Blog
-            </Button>
+            {!isMobile && (
+              <Button
+                onClick={handleCreateBlog}
+                variant="contained"
+                color="secondary"
+                startIcon={<AddIcon />}
+              >
+                Crear Blog
+              </Button>
+            )}
           </Stack>
         </Stack>
       </Toolbar>
