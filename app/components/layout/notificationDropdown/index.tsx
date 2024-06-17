@@ -38,7 +38,7 @@ export default function NotificationDropdown({
     "Notification" in window &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
-console.log("isSupported", isSupported)
+console.log("isSupported", isSupported());
     return (
     <Box
       sx={{
