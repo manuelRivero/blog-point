@@ -43,8 +43,12 @@ export default function Header() {
     boolean | null
   >(null);
   const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
+  const isSupported = () =>
+    'Notification' in window &&
+    'serviceWorker' in navigator &&
+    'PushManager' in window
   const [notificationStatus, setNotificationStatus] = useState<string>(
-    typeof window !== "undefined" ? Notification.permission : "default"
+    typeof window !== "undefined" && isSupported() ? Notification.permission : "default"
   );
 
   const handleCreateBlog = () => {
