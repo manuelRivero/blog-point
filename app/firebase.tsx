@@ -2,19 +2,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getMessaging, isSupported} from "firebase/messaging";
-import { getAuth } from "firebase/auth";
 
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDCf7kjvBRU7iPJuJPlNKI5jmO5EwzFHvc",
-//   authDomain: "blog-app-8a0bb.firebaseapp.com",
-//   projectId: "blog-app-8a0bb",
-//   storageBucket: "blog-app-8a0bb.appspot.com",
-//   messagingSenderId: "779691728205",
-//   appId: "1:779691728205:web:f2cf8c82f9ae6fb1a22b04",
-//   measurementId: "G-614XH32E77"
-// };
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
