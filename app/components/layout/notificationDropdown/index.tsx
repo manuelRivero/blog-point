@@ -34,8 +34,10 @@ export default function NotificationDropdown({
   console.log("notification status", askedForNotifications, hasPermissions);
   const [{ notificationsData }] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  console.log("notificationsData", notificationsData)
-
+  const isSupported = () =>
+    "Notification" in window &&
+    "serviceWorker" in navigator &&
+    "PushManager" in window;
   return (
     <Box
       sx={{
@@ -69,7 +71,7 @@ export default function NotificationDropdown({
               zIndex: 100,
             }}
           >
-            <MenuList>
+            {isSupported() ? <MenuList>
               {!askedForNotifications && !hasPermissions && (
                 <Box>
                   <Typography variant="body1">
@@ -114,7 +116,7 @@ export default function NotificationDropdown({
                 notificationsData.length === 0 && (
                   <Typography variant="body1">No hay notificaciones</Typography>
                 )}
-            </MenuList>
+            </MenuList> : <Typography>Las notificaciones no son compatibles con este navegador</Typography>}
           </Paper>
         </ClickAwayListener>
       )}
