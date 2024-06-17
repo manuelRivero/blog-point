@@ -38,8 +38,8 @@ export default function NotificationDropdown({
     "Notification" in window &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
-    console.log("notificationsData", notificationsData)
-  return (
+console.log("isSupported", isSupported)
+    return (
     <Box
       sx={{
         position: "relative",
