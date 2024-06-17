@@ -117,7 +117,7 @@ export default function NotificationDropdown({
                   <Typography variant="body1">No hay notificaciones</Typography>
                 )}
             </MenuList> : <MenuList>
-              {   notificationsData.map((e:Notification, i) => {
+              {  !isSupported && notificationsData.map((e:Notification, i) => {
                   return (
                     <MenuItem
                       key={i}
