@@ -116,7 +116,20 @@ export default function NotificationDropdown({
                 notificationsData.length === 0 && (
                   <Typography variant="body1">No hay notificaciones</Typography>
                 )}
-            </MenuList> : <Typography>Las notificaciones no son compatibles con este navegador</Typography>}
+            </MenuList> : <MenuList>
+              {   notificationsData.map((e:Notification, i) => {
+                  return (
+                    <MenuItem
+                      key={i}
+                      component={Link}
+                      onClick={() => setIsOpen(false)}
+                      href={"/detalle-del-blog/" + e.blogSlug}
+                    >
+                      <NotificationBox data={e} />
+                    </MenuItem>
+                  );
+                })}
+              </MenuList>}
           </Paper>
         </ClickAwayListener>
       )}
