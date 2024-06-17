@@ -5,23 +5,25 @@ import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import BlogCard from "./components/blogCard";
 import Hero from "./components/home/hero";
 import { getCategories } from "./client/category";
-import { getBlogs } from "./client/blogs";
+import { getBlogs, getPopular, getRecent } from "./client/blogs";
 import CategoryRow from "./components/home/categoryRow";
 
 async function getData({ page = 0 }) {
   //console.log('page get data',page)
   try {
-    const [{ data: categoriesData }, { data: blogsData }] = await Promise.all([
+    const [{ data: categoriesData }, { data: blogsData }, {data:recentData}] = await Promise.all([
       getCategories({ page: 0, pageSize: 5 }),
-      getBlogs(page, undefined),
+      getPopular(0, 5),
+      getRecent(0,5)
     ]);
     // console.log(categoriesData, blogsData);
     return {
       categoriesData,
       blogsData,
+      recentData
     };
   } catch (error) {
-    console.log("home error");
+    console.log("home error", error);
     return null;
   }
 }
@@ -73,7 +75,7 @@ export default async function Home({ params }: any) {
               </Typography>
               <Stack direction="column" spacing={4}>
                 {data &&
-                  data.blogsData.blogs[0].data.map((e: any, index: number) => {
+                  data.recentData.blogs[0].data.map((e: any, index: number) => {
                     // console.log("blog", e);
                     return (
                       <BlogCard

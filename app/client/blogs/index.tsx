@@ -89,3 +89,12 @@ export const findBlogs = (query: string): Promise<AxiosResponse> => {
   return axiosIntance.get("/blogs/find", { params: { query },
   });
 }
+
+export const getPopular = (page: number = 0, pageSize: number = 10): Promise<AxiosResponse> => {
+  return axiosIntance.get("/blogs/popular", { params: { page, pageSize },
+  });
+}
+export const getRecent = (page: number = 0, pageSize: number = 10): Promise<AxiosResponse> => {
+  return axiosIntance.get("/blogs/recent", { params: { page, pageSize },
+  });
+}

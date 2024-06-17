@@ -88,6 +88,7 @@ export default function BlogCard({
               paddingTop: 0,
               paddingRight: 0,
               paddingBottom: " 0 !important ",
+              textDecoration: "none",
               paddingLeft: { xs: " 0 !important " },
             }}
           >
@@ -141,7 +142,7 @@ export default function BlogCard({
                 }}
               ></Box>
             )}
-            {data.description ? (
+            {data.description && (
               preview ? (
                 showDescriptionTooltip ? (
                   <Tooltip
@@ -172,25 +173,15 @@ export default function BlogCard({
                   {concatDots(data.description, 120)}
                 </Typography>
               )
-            ) : (
-              !isMobile && (
-                <Box
-                  sx={{
-                    height: 40,
-                    width: "100%",
-                    background: "#c2c2c2",
-                    borderRadius: "4px",
-                  }}
-                ></Box>
-              )
             )}
+            {console.log("preview", preview)}
             {preview ? (
               <Typography fontSize={"14px"} align="left">
-                {moment(data.date).format("DD-MM-YYYY")}
+                {moment().format("DD-MM-YYYY")}
               </Typography>
             ) : (
               <Typography fontSize={"14px"} align="left">
-                {moment().format("DD-MM-YYYY")}
+                {moment(data.createdAt).format("DD-MM-YYYY")}
               </Typography>
             )}
           </CardContent>
