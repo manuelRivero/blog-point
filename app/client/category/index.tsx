@@ -32,3 +32,7 @@ export const getCategories = (
     },
   });
 };
+
+export const getAllCategories = (): Promise<GetCategoriesResponse> => {
+  return axiosIntance.get("/category/get-all");
+};

@@ -2,34 +2,66 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import BlogCard from "../../blogCard";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useState } from "react";
-import { getPopular, getRecent } from "@/app/client/blogs";
+import { useEffect, useState } from "react";
+import {
+  getBlogsByCategories,
+  getPopular,
+  getRecent,
+  getRelatedBlogs,
+} from "@/app/client/blogs";
 import Loader from "../loader";
 import Lottie from "lottie-react";
 import animation from "./../../../assets/lottie/ghost.json";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
-  title: string;
+  title?: string;
   data: any[];
   metadata: [{ count: number }];
+  hasTitle?: boolean;
+  emptyStateTitle: string;
+  type: "popular" | "recent" | "category";
 }
 
-export default function ContentWrapper({ title, data, metadata }: Props) {
+export default function ContentWrapper({
+  title = "",
+  type,
+  data,
+  metadata,
+  hasTitle = true,
+  emptyStateTitle = "Has llegado al final del camino",
+}: Props) {
+  const searchParams = useSearchParams();
   const [dataList, setDataList] = useState<any[]>(data);
   const [page, setPage] = useState<number>(0);
 
   const getData = async () => {
-    try {      
-      switch (title) {
-        case "Tendencias en Historial Médico":
-          const { data: trendingData } = await getPopular(page + 1, 3);
+    try {
+      switch (type) {
+        case "popular":
+          const { data: trendingData } = await getPopular(page + 1, 10);
           setDataList([...dataList, ...trendingData.blogs[0].data]);
           setPage((prev) => prev + 1);
           break;
-        case "Lo más nuevo":          
-          const { data: recentData } = await getRecent(page + 1, 3);
+        case "recent":
+          const { data: recentData } = await getRecent(page + 1, 10);
           setDataList([...dataList, ...recentData.blogs[0].data]);
           setPage((prev) => prev + 1);
+          break;
+        case "category":
+          const ids = new URLSearchParams(searchParams.toString()).getAll(
+            "category"
+          );
+          if (ids.length > 0) {
+            const { data: categoryData } = await getBlogsByCategories(
+              ids,
+              page + 1
+            );
+            setDataList([...dataList, ...categoryData.blogs[0].data]);
+            setPage((prev) => prev + 1);
+          }
+          break;
+        default:
           break;
       }
     } catch (error) {
@@ -37,15 +69,29 @@ export default function ContentWrapper({ title, data, metadata }: Props) {
     }
   };
 
-  console.log("ContentWrapper", data);
+  useEffect(() => {
+    const getByCategory = async () => {
+      const ids = new URLSearchParams(searchParams.toString()).getAll(
+        "category"
+      );
+      if (ids.length > 0) {
+        const { data: categoryData } = await getBlogsByCategories(ids, 0);
+        setDataList([...dataList, ...categoryData.blogs[0].data]);
+      }
+    };
+    getByCategory();
+  }, [searchParams]);
+
   return (
     <Container sx={{ paddingBottom: 8, marginTop: 4 }}>
       <Grid container spacing={4}>
         <Grid item xs={12} sm={8} lg={8}>
           <Box sx={{ marginBottom: 4 }}>
-            <Typography variant="h3" sx={{ marginBottom: 2 }}>
-              {title}
-            </Typography>
+            {hasTitle && (
+              <Typography variant="h3" sx={{ marginBottom: 2 }}>
+                {title}
+              </Typography>
+            )}
             <Stack direction="column" spacing={4}>
               <InfiniteScroll
                 dataLength={metadata[0].count} //This is important field to render the next data
@@ -63,9 +109,7 @@ export default function ContentWrapper({ title, data, metadata }: Props) {
                       loop={true}
                       style={{ width: "100px" }}
                     />
-                    <Typography variant={"body1"}>
-                      Has llegado al final del camino
-                    </Typography>
+                    <Typography variant={"body1"}>{metadata[0].count <= dataList.length ? 'Has llegado al final del camino' : emptyStateTitle}</Typography>
                   </Stack>
                 }
               >

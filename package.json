@@ -38,6 +38,7 @@
     "react-dom": "18.2.0",
     "react-easy-crop": "^5.0.0",
     "react-hook-form": "^7.45.2",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-paginate": "^8.2.0",
     "react-toastify": "^10.0.5",
     "typescript": "5.1.6",

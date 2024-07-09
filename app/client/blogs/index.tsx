@@ -81,6 +81,11 @@ export const getRelatedBlogs = (categoryId: string): Promise<AxiosResponse> => {
   });
 }
 
+export const getBlogsByCategories = (categoryIds: string[], page: number = 0): Promise<AxiosResponse> => {
+  return axiosIntance.get("/blogs/by-category", { params: { categoryIds: categoryIds, page },
+  });
+}
+
 export const deleteBlog = (id: string): Promise<AxiosResponse> => {
   return axiosIntance.delete("/blogs/delete/" + id);
 }

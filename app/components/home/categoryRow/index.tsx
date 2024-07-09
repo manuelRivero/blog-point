@@ -37,7 +37,7 @@ export default function CategoryRow({categories}:Props) {
             color="secondary"
             title={category.name}
             crossCallback={null}
-            linkCallback={() => router.push(`/?category=${category._id}`)}
+            linkCallback={() => router.push(`/categorias?category=${category._id}`)}
           />
           )
         })}
@@ -53,7 +53,7 @@ export default function CategoryRow({categories}:Props) {
             }}
             align="center"
             variant="body1"
-            href={"/"}
+            href={"/categorias"}
             component={Link}
           >
             Explorar más categorías

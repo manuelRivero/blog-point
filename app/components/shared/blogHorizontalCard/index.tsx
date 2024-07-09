@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import CustomCard from "../../shared/card";
 import {
@@ -32,12 +31,17 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteBlogModal from "../deleteBlogModal";
+import { headers } from "next/headers";
+
 
 interface Props {
   data: Blog;
   onDelete: () => void;
 }
 export default function BlogHorizontalCard({ data, onDelete }: Props) {
+  const headersList = headers();
+  const activePath = headersList.get("x-invoke-path");
+console.log('activePath', activePath);
   const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
   const router = useRouter();
@@ -49,7 +53,7 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
   // crear el endpoint
   // pasar el id del blog al endpoint
   // pasarle la funciòn al confirmModal component y que la ejecute al darle click en aceptar
-  console.log("data mis blog", data);
+  console.log("data mis blog", pathname);
   return (
     <>
       <Box
@@ -57,6 +61,7 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
         href={"/detalle-del-blog/" + data.slug}
         sx={(theme) => ({
           textDecoration: "none",
+          width:'100%',
           [theme.breakpoints.down("md")]: {
             maxWidth: "400px",
           },

@@ -139,33 +139,37 @@ export default function MainSearch() {
               transform: "translateY(100%) translateY(5px)",
             }}
           >
-            <MenuList>
-              {suggestions.map((e: Blog) => {
-                return (
-                  <MenuItem
-                    key={e._id}
-                    href={"/detalle-del-blog/" + e.slug}
-                    component={Link}
-                    sx={{
-                      borderRadius: 2,
-                      border: "#c2c2c2",
-                      boxShadow: " 0 0 15px -5px rgba(0,0,0, .5)",
-                      marginBottom: 1,
-                      whiteSpace: "break-spaces",
-                    }}
-                  >
-                    <Box>
-                      <Typography variant="h6">
-                        {getHighlightedText(e.title, value)}
-                      </Typography>
-                      <Typography variant="body1">
-                        {getHighlightedText(e.description, value)}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                );
-              })}
-            </MenuList>
+            {suggestions.length > 0 ? (
+              <MenuList>
+                {suggestions.map((e: Blog) => {
+                  return (
+                    <MenuItem
+                      key={e._id}
+                      href={"/detalle-del-blog/" + e.slug}
+                      component={Link}
+                      sx={{
+                        borderRadius: 2,
+                        border: "#c2c2c2",
+                        boxShadow: " 0 0 15px -5px rgba(0,0,0, .5)",
+                        marginBottom: 1,
+                        whiteSpace: "break-spaces",
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="h6">
+                          {getHighlightedText(e.title, value)}
+                        </Typography>
+                        <Typography variant="body1">
+                          {getHighlightedText(e.description, value)}
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  );
+                })}
+              </MenuList>
+            ) : (
+              <Typography variant="body1">No hay resultados</Typography>
+            )}
           </Paper>
         </ClickAwayListener>
       )}

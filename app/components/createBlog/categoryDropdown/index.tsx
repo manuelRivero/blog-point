@@ -179,9 +179,9 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
             </MenuItem>
           );
         })}
-        <MenuItem onClick={handleNewCategory}>
+        <MenuItem onClick={()=> {setOpenCategoryModal(true); handleNewCategory();}}>
           <Stack direction="row" spacing={4}>
-            <Typography onClick={() => setOpenCategoryModal(true)}>
+            <Typography>
               Agregar nueva categoría
             </Typography>
             <AddCircleOutlineIcon color="primary" />
@@ -215,7 +215,7 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
                 control={control}
                 render={({ field, fieldState }) => (
                   <CustomInput
-                    maxLength={15}
+                    maxLength={30}
                     type="text"
                     error={fieldState.error}
                     value={field.value}

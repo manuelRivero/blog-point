@@ -11,20 +11,18 @@ import {
   Avatar,
 } from "@mui/material";
 import { ClickAwayListener } from '@mui/base';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-
-
-import MenuIcon from "@mui/icons-material/Menu";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Link from "next/link";
 import { useCore, logout } from "@/app/context/core";
 import { useRouter } from "next/navigation";
 
 export default function HeaderMenu() {
+  const isMobile = useMediaQuery("(max-width:1024px)");
   const router = useRouter()
   const [{user}, coreDispatch] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  console.log('user header', user?.data?.name)
+
   return (
     <Box
       sx={{
@@ -60,11 +58,11 @@ export default function HeaderMenu() {
           })}
         >
           <MenuList>
-            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/crear-blog"}>
+            {isMobile && <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/crear-blog"}>
               <Typography variant="body1" component={"p"}>
                 Crear blog
               </Typography>
-            </MenuItem>
+            </MenuItem>}
             <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={"/mis-blogs"}>
               <Typography variant="body1" component={"p"}>
                 Mis blogs
