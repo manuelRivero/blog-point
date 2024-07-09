@@ -12,7 +12,7 @@ import {
 import Loader from "../loader";
 import Lottie from "lottie-react";
 import animation from "./../../../assets/lottie/ghost.json";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   title?: string;
@@ -31,6 +31,7 @@ export default function ContentWrapper({
   hasTitle = true,
   emptyStateTitle = "Has llegado al final del camino",
 }: Props) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [dataList, setDataList] = useState<any[]>(data);
   const [page, setPage] = useState<number>(0);
@@ -86,6 +87,9 @@ export default function ContentWrapper({
     <Container sx={{ paddingBottom: 8, marginTop: 4 }}>
       <Grid container spacing={4}>
         <Grid item xs={12} sm={8} lg={8}>
+        <IconButton onClick={() => router.back()}>
+        <ArrowBackIcon />
+      </IconButton>
           <Box sx={{ marginBottom: 4 }}>
             {hasTitle && (
               <Typography variant="h3" sx={{ marginBottom: 2 }}>

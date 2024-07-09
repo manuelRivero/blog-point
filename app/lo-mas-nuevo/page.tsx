@@ -3,7 +3,7 @@ import ContentWrapper from "../components/shared/contentWrapper";
 
 async function getData({ page = 0 }) {
   try {
-    const { data } = await getRecent(0, 3);
+    const { data } = await getRecent(0, 10);
     console.log("TheNewest", data);
     return { data: data.blogs[0].data, metadata: data.blogs[0].metadata };
     } catch (error) {

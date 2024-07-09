@@ -83,6 +83,9 @@ export default function CategorySelection() {
 
   return (
     <Container sx={{ marginTop: 4 }}>
+      <IconButton onClick={() => router.back()}>
+        <ArrowBackIcon />
+      </IconButton>
       <Typography variant="h3" sx={{ marginBottom: 2 }}>
         Explora las categorías en Historial Medico
       </Typography>

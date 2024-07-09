@@ -4,7 +4,7 @@ import ContentWrapper from "../components/shared/contentWrapper";
 
 async function getData({ page = 0 }) {
   try {
-    const { data } = await getPopular(0, 5);
+    const { data } = await getPopular(0, 10);
     return { data: data.blogs[0].data, metadata: data.blogs[0].metadata };
   } catch (error) {
     console.log("Trending error", error);
