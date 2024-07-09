@@ -7,20 +7,25 @@ import Hero from "./components/home/hero";
 import { getCategories } from "./client/category";
 import { getBlogs, getPopular, getRecent } from "./client/blogs";
 import CategoryRow from "./components/home/categoryRow";
+import Link from "next/link";
 
 async function getData({ page = 0 }) {
   //console.log('page get data',page)
   try {
-    const [{ data: categoriesData }, { data: blogsData }, {data:recentData}] = await Promise.all([
+    const [
+      { data: categoriesData },
+      { data: blogsData },
+      { data: recentData },
+    ] = await Promise.all([
       getCategories({ page: 0, pageSize: 5 }),
       getPopular(0, 5),
-      getRecent(0,5)
+      getRecent(0, 5),
     ]);
     // console.log(categoriesData, blogsData);
     return {
       categoriesData,
       blogsData,
-      recentData
+      recentData,
     };
   } catch (error) {
     console.log("home error", error);
@@ -66,7 +71,9 @@ export default async function Home({ params }: any) {
                   })}
               </Stack>
               <Stack justifyContent={"center"} direction={"row"} mt={4} mb={4}>
-                <Button variant="contained">Cargar más</Button>
+                <Link href={"/tendencias"}>
+                  <Button variant="contained">Ver más</Button>
+                </Link>
               </Stack>
             </Box>
             <Box>
@@ -95,7 +102,9 @@ export default async function Home({ params }: any) {
                   })}
               </Stack>
               <Stack justifyContent={"center"} direction={"row"} mt={4} mb={4}>
-                <Button variant="contained">Cargar más</Button>
+                <Link href={"/lo-mas-nuevo"}>
+                  <Button variant="contained">Ver más</Button>
+                </Link>
               </Stack>
             </Box>
           </Grid>
