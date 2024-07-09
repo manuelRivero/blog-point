@@ -11,38 +11,22 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material";
-import Image from "./../../../assets/images/post-placeholder.jpg";
 import UserAvatar from "../../shared/UserAvatar";
 import moment from "moment";
 import CustomTag from "../../shared/tag";
 import ShareIcon from "@mui/icons-material/Share";
-import EditIcon from "@mui/icons-material/Edit";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { usePathname } from "next/navigation";
-import { Category } from "@/app/data/categories";
-import { blogLike } from "@/app/client/blogs";
-import {
-  setLoginModal,
-  setLoginRedirection,
-  useCore,
-} from "@/app/context/core";
 import { Blog } from "@/app/data/blog";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteBlogModal from "../deleteBlogModal";
-import { headers } from "next/headers";
-
 
 interface Props {
   data: Blog;
   onDelete: () => void;
 }
 export default function BlogHorizontalCard({ data, onDelete }: Props) {
-  const headersList = headers();
-  const activePath = headersList.get("x-invoke-path");
-console.log('activePath', activePath);
-  const [{ user }, coreDispatch] = useCore();
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
