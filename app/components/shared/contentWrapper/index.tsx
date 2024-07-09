@@ -1,5 +1,6 @@
 "use client";
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, IconButton, Stack, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BlogCard from "../../blogCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
@@ -7,7 +8,6 @@ import {
   getBlogsByCategories,
   getPopular,
   getRecent,
-  getRelatedBlogs,
 } from "@/app/client/blogs";
 import Loader from "../loader";
 import Lottie from "lottie-react";
