@@ -4,6 +4,7 @@ import { getBlog } from "@/app/client/blogs";
 import MainWrapper from "@/app/components/blogDetail/mainWrapper";
 import { cookies } from "next/headers";
 import { axiosIntance } from "@/app/client";
+import { ImageResponse } from "next/server";
 
 
 const getData = async (slug: string) => {
@@ -30,10 +31,12 @@ export async function generateMetadata({ params }: any) {
         Cookie: cookie ? `token=${cookie?.value}` : "",
       },
     });
-    console.log("Metadata", data)
+    console.log("Metadata", data);
+   const metadataBase = new URL(data.blog.image.split('com')[0]+ 'com');
+   console.log("metadataBase", metadataBase)
     return {
-      metadataBase: new URL('https://blog-point-nine.vercel.app/'),
-      title: "Detalle del blog",
+      metadataBase: metadataBase.origin,
+      title: "Historial Medico | " + data.blog.title,
       description: data.blog.description,
       openGraph: {
         title: data.blog.title,
@@ -58,6 +61,8 @@ export default async function BlogDetail({ params }: any) {
   const { slug } = params;
   const data = await getData(slug);
   return (
+    <>
     <MainWrapper data={data} slug={slug} />
+    </>
   );
 }
