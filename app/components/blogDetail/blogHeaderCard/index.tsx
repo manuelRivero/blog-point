@@ -42,17 +42,21 @@ export async function generateMetadata({ params }: any) {
       },
     });
     return {
-      title: data.title,
-      description: data.description,
-      type: "article",
-      images: [
-        {
-          url: data.image,
-          width: 1200,
-          height: 630,
-          alt: data.title,
-        },
-      ],
+      title: "Detalle del blog",
+      description: data.blog.description,
+      openGraph: {
+        title: data.blog.title,
+        description: data.blog.description,
+        type: "article",
+        images: [
+          {
+            url: data.blog.image,
+            width: 1200,
+            height: 630,
+            alt: data.blog.title,
+          },
+        ],
+      },
     };
   } catch (error) {
     return null;
