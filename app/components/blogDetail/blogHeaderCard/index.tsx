@@ -41,7 +41,9 @@ export async function generateMetadata({ params }: any) {
         Cookie: cookie ? `token=${cookie?.value}` : "",
       },
     });
+    console.log("Metadata", data)
     return {
+      metadataBase: new URL('https://blog-point-nine.vercel.app/'),
       title: "Detalle del blog",
       description: data.blog.description,
       openGraph: {
