@@ -12,7 +12,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { getBlogComments } from "@/app/client/blogs";
@@ -105,11 +105,20 @@ export default function MainWrapper({ data }: any) {
     };
     getComments();
     getData();
-
+   
+   
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log("data category", categoryData);
+  useEffect(()=>{
+    const videoElements = document.querySelectorAll("video");
+    videoElements.forEach((img) => {
+      img.width = 13;
+      img.height = 11;
+    });
+  },[data])
+
+
 
   if (!data) {
     router.push("/");
@@ -118,17 +127,18 @@ export default function MainWrapper({ data }: any) {
 
   return (
     <Container sx={{ marginTop: 4, paddingBottom: 4 }}>
+
       <IconButton onClick={() => router.back()} sx={{ marginBottom: 2 }}>
         <ArrowBackIcon />
       </IconButton>
       <BlogHeaderCard data={data.blog} />
       <Box sx={{ marginTop: 2 }}>
         <CustomCard>
-          <div dangerouslySetInnerHTML={{ __html: data.blog.content }}></div>
+          <div className="responsive-image-container" dangerouslySetInnerHTML={{ __html: data.blog.content, }}></div>
         </CustomCard>
       </Box>
-      <Grid container direction="row" flexWrap={"nowrap"} spacing={2}>
-        <Grid item sm={8}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={8}>
           <Typography
             variant="h3"
             component="h3"
@@ -146,7 +156,7 @@ export default function MainWrapper({ data }: any) {
             </Stack>
           </CustomCard>
         </Grid>
-        <Grid item sm={4}>
+        <Grid item xs={12} lg={4}>
           <Typography
             variant="h3"
             component="h3"

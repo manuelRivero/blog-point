@@ -1,7 +1,18 @@
-.custom-pagination{
-    display:flex;
-    gap:1rem;
-    align-items: center;
-    justify-content: center;
-    list-style: none;
-  }
+.custom-pagination {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+.responsive-image-container img {
+  max-width: 100% !important;
+  height: auto;
+  margin: 1rem 0;
+}
+
+.responsive-image-container iframe {
+  aspect-ratio: 16 / 9;
+  height: auto;
+  width: 100%;
+}
