@@ -44,7 +44,7 @@ export default function RelatedBlogsWrapper({ data }: Props) {
       </Typography>
         {categoryData.map((e: any, i: number) => {
 
-          return <Box sx={{marginBottom: '1rem'}}><BlogCardHorizontal data={e} key={"related-blog" + "-" + i} /></Box>;
+          return <Box sx={{marginBottom: '1rem'}} key={"related-blog" + "-" + i}><BlogCardHorizontal data={e}  /></Box>;
         })}
     </Box>
   );
