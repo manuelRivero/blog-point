@@ -30,6 +30,7 @@ interface Props {
     category: Category;
     targetLike: boolean;
   };
+  url: string
 }
 
 export async function generateMetadata({ params }: any) {
@@ -64,15 +65,12 @@ export async function generateMetadata({ params }: any) {
     return null;
   }
 }
-export default function BlogHeaderCard({ data }: Props) {
+export default function BlogHeaderCard({ data, url }: Props) {
   const headersList = headers();
 
   const host = headersList.get("host"); // to get domain
-  const url = headersList.get("next-url"); // to get url
 
   console.log("host", host);
-  console.log("url", url);
-
   return (
     <CustomCard>
       <Grid container spacing={4}>
@@ -118,7 +116,7 @@ export default function BlogHeaderCard({ data }: Props) {
                 likes={data.likes}
                 targetLike={data.targetLike}
               />
-              <SharedMenuWrapper url={`${host}${url}`} />
+              <SharedMenuWrapper url={`${host}/detalle-del-blog/${url}`} />
             </Stack>
             <Typography fontSize={"14px"}>
               {moment(data.createdAt).format("DD-MM-YYYY")}

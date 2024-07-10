@@ -25,6 +25,6 @@ export default async function BlogDetail({ params }: any) {
   const { slug } = params;
   const data = await getData(slug);
   return (
-    <MainWrapper data={data} />
+    <MainWrapper data={data} slug={slug} />
   );
 }
