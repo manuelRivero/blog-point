@@ -7,7 +7,7 @@ import {
   setUserTokens,
   useCore,
 } from "@/app/context/core";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, IconButton, Modal, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 // form
@@ -20,6 +20,7 @@ import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
 import { login, me } from "@/app/client/auth";
 import { axiosIntance } from "@/app/client";
+import CloseIcon from "@mui/icons-material/Close";
 
 const schema = yup.object({
   email: yup.string().email().required("Campo requerido"),
@@ -115,6 +116,11 @@ export default function LoginModal() {
         }}
       >
         <Box>
+          <Stack direction="row" justifyContent="flex-end" sx={{marginBottom: '1rem'}}>
+            <IconButton onClick={() => setLoginModal(coreDispatch, false)}>
+            <CloseIcon />
+            </IconButton>
+          </Stack>
           <Typography
             variant="h2"
             component={"h2"}
@@ -123,7 +129,7 @@ export default function LoginModal() {
               marginBottom: "2rem",
             }}
           >
-            Blog app
+            Historial Medico
           </Typography>
         </Box>
         <form onSubmit={handleSubmit(submit)}>

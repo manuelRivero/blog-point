@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import {
   setInfoModal,
   setLoginModal,
@@ -6,7 +7,8 @@ import {
   setRegisterModal,
 } from "@/app/context/core";
 import { Box, Modal, Typography, Stack, IconButton } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+
 
 import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
@@ -139,6 +141,11 @@ export default function RegisterModal() {
           borderRadius: "1rem",
         }}
       >
+        <Stack direction="row" justifyContent="flex-end" sx={{marginBottom: '1rem'}}>
+            <IconButton onClick={() => setLoginModal(coreDispatch, false)}>
+            <CloseIcon />
+            </IconButton>
+          </Stack>
         {step > 1 && (
           <IconButton onClick={() => setStep(step - 1)}>
             <ArrowBackIcon />
@@ -153,7 +160,7 @@ export default function RegisterModal() {
               marginBottom: "1rem",
             }}
           >
-            Blog app
+            Historial Medico
           </Typography>
         </Box>
         <Box>
