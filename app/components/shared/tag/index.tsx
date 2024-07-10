@@ -8,14 +8,14 @@ import { concatDots } from "@/app/helpers/text";
 interface Props {
   color: "primary" | "secondary";
   title: string;
-  linkCallback: (() => void) | null;
-  crossCallback: (() => void) | null;
+  linkCallback?: (() => void) | null;
+  crossCallback?: (() => void) | null;
 }
 export default function CustomTag({
   color,
   title,
-  linkCallback,
-  crossCallback,
+  linkCallback = null,
+  crossCallback  = null,
 }: Props) {
   const handleLinkCallback = (e: React.MouseEvent<HTMLElement>) => {
     if (linkCallback) {

@@ -1,12 +1,12 @@
 {
     "theme_color": "#3b82f6",
-    "background_color": "#f8fafc",
+    "background_color": "#fff",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Your App Name",
-    "short_name": "your_app_name",
-    "description": "A PWA boilerplate with Next Js TypeScript",
+    "name": "Historial Medico",
+    "short_name": "HM",
+    "description": "blogs de medicina",
     "icons": [
       {
         "src": "/icon.png",
