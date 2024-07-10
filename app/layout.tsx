@@ -16,6 +16,7 @@ import "./styles/global.css";
 import "intro.js/introjs.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://blog-point-nine.vercel.app/'),
   title: {
     default: "Historial Médico",
     template: "Historial Médico | %s",
