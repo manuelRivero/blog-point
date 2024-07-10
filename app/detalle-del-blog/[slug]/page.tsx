@@ -21,6 +21,39 @@ const getData = async (slug: string) => {
   }
 };
 
+export async function generateMetadata({ params }: any) {
+  const cookie = cookies().get("token");
+
+  try {
+    const { data } = await axiosIntance.get("/blogs/" + params.slug, {
+      headers: {
+        Cookie: cookie ? `token=${cookie?.value}` : "",
+      },
+    });
+    console.log("Metadata", data)
+    return {
+      metadataBase: new URL('https://blog-point-nine.vercel.app/'),
+      title: "Detalle del blog",
+      description: data.blog.description,
+      openGraph: {
+        title: data.blog.title,
+        description: data.blog.description,
+        type: "article",
+        images: [
+          {
+            url: data.blog.image,
+            width: 1200,
+            height: 630,
+            alt: data.blog.title,
+          },
+        ],
+      },
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
 export default async function BlogDetail({ params }: any) {
   const { slug } = params;
   const data = await getData(slug);
