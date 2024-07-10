@@ -87,9 +87,9 @@ export default function ContentWrapper({
     <Container sx={{ paddingBottom: 8, marginTop: 4 }}>
       <Grid container spacing={4}>
         <Grid item xs={12} sm={8} lg={8}>
-        <IconButton onClick={() => router.back()}>
+       {type !== 'category' && <IconButton onClick={() => router.back()}>
         <ArrowBackIcon />
-      </IconButton>
+      </IconButton>}
           <Box sx={{ marginBottom: 4 }}>
             {hasTitle && (
               <Typography variant="h3" sx={{ marginBottom: 2 }}>
@@ -113,7 +113,7 @@ export default function ContentWrapper({
                       loop={true}
                       style={{ width: "100px" }}
                     />
-                    <Typography variant={"body1"}>{metadata[0].count <= dataList.length ? 'Has llegado al final del camino' : emptyStateTitle}</Typography>
+                    <Typography variant={"body1"}>{(metadata[0].count <= dataList.length && dataList.length !== 0) ? 'Has llegado al final del camino' : emptyStateTitle}</Typography>
                   </Stack>
                 }
               >

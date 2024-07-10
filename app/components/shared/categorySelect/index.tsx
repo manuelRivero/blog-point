@@ -67,20 +67,22 @@ export default function CategorySelection() {
   }, [selectedCategories]);
 
   useEffect(() => {
-    const ids = new URLSearchParams(searchParams.toString()).getAll(
-        "category"
-      );
-      console.log('target', ids, categories);
-      const categoriesFromParams = ids.map((id: any) => {
-        const target: any =
-          categories.find((e: any) => e._id === id) ?? null;
-        if (target) {
-            return target.name
-        }
-      });
-      setSelectedCategories(categoriesFromParams);
+    if(categories){
+      const ids = new URLSearchParams(searchParams.toString()).getAll(
+          "category"
+        );
+        console.log('target', ids, categories);
+        const categoriesFromParams = ids.map((id: any) => {
+          const target: any =
+            categories.find((e: any) => e._id === id) ?? null;
+          if (target) {
+              return target.name
+          }
+        });
+        setSelectedCategories(categoriesFromParams);
+    }
     
-  }, []);
+  }, [categories]);
 
   return (
     <Container sx={{ marginTop: 4 }}>

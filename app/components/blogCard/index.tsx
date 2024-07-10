@@ -22,8 +22,6 @@ import { concatDots } from "@/app/helpers/text";
 import CustomTag from "../shared/tag";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-
-
 interface Props {
   data: Data;
   preview: boolean;
@@ -62,7 +60,6 @@ export default function BlogCard({
         width: "100%",
       }}
     >
-
       <Card
         sx={{
           padding: "1rem",
@@ -79,84 +76,94 @@ export default function BlogCard({
           }}
           avatar={<Avatar user={userAvatar} />}
         />
-        <Stack direction={"row"} gap={{ xs: 2, lg: 4 }}>
-          <CardContent
-            component={Link}
-            href={"/detalle-del-blog/" + data.slug}
-            sx={{
-              width: "100%",
-              paddingTop: 0,
-              paddingRight: 0,
-              paddingBottom: " 0 !important ",
-              textDecoration: "none",
-              paddingLeft: { xs: " 0 !important " },
-            }}
-          >
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems={"center"}
-              mb={1}
+        <Link
+          href={"/detalle-del-blog/" + data.slug}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Stack direction={"row"} gap={{ xs: 2, lg: 4 }}>
+            <CardContent
+              sx={{
+                width: "100%",
+                paddingTop: 0,
+                paddingRight: 0,
+                paddingBottom: " 0 !important ",
+                textDecoration: "none",
+                paddingLeft: { xs: " 0 !important " },
+              }}
             >
-              {data.category && (
-                <CustomTag
-                  color="secondary"
-                  linkCallback={null}
-                  crossCallback={null}
-                  title={data.category}
-                />
-              )}
-            </Stack>
-
-            {data.title ? (
-              <Typography
-                variant="h5"
-                color="text.primary"
-                component="h4"
-                sx={{ mb: 1, fontSize: { xs: "14px" } }}
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems={"center"}
+                mb={1}
               >
-                {preview ? (
-                  showTitleTooltip ? (
+                {data.category && (
+                  <CustomTag
+                    color="secondary"
+                    linkCallback={null}
+                    crossCallback={null}
+                    title={data.category}
+                  />
+                )}
+              </Stack>
+
+              {data.title ? (
+                <Typography
+                  variant="h5"
+                  color="text.primary"
+                  component="h4"
+                  sx={{ mb: 1, fontSize: { xs: "14px" } }}
+                >
+                  {preview ? (
+                    showTitleTooltip ? (
+                      <Tooltip
+                        title="Tu título abarca más caracteres de los que se
+              visualizaran en la carta de tu blog pero se visualizara de
+              forma completa en el detalle del blog"
+                      >
+                        <span>{concatDots(data.title, 60)}</span>
+                      </Tooltip>
+                    ) : (
+                      concatDots(data.title, 60)
+                    )
+                  ) : (
+                    concatDots(data.title, 60)
+                  )}
+                </Typography>
+              ) : (
+                <Box
+                  sx={{
+                    height: 20,
+                    marginBottom: 2,
+                    width: "100%",
+                    background: "#c2c2c2",
+                    borderRadius: "4px",
+                  }}
+                ></Box>
+              )}
+              {data.description &&
+                (preview ? (
+                  showDescriptionTooltip ? (
                     <Tooltip
-                      title="Tu título abarca más caracteres de los que se
+                      title="Tu descripción abarca más caracteres de los que se
               visualizaran en la carta de tu blog pero se visualizara de
               forma completa en el detalle del blog"
                     >
-                      <span>{concatDots(data.title, 60)}</span>
+                      <Typography
+                        sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
+                        color="text.primary"
+                      >
+                        {concatDots(data.description, 120)}
+                      </Typography>
                     </Tooltip>
                   ) : (
-                    concatDots(data.title, 60)
-                  )
-                ) : (
-                  concatDots(data.title, 60)
-                )}
-              </Typography>
-            ) : (
-              <Box
-                sx={{
-                  height: 20,
-                  marginBottom: 2,
-                  width: "100%",
-                  background: "#c2c2c2",
-                  borderRadius: "4px",
-                }}
-              ></Box>
-            )}
-            {data.description && (
-              preview ? (
-                showDescriptionTooltip ? (
-                  <Tooltip
-                    title="Tu descripción abarca más caracteres de los que se
-              visualizaran en la carta de tu blog pero se visualizara de
-              forma completa en el detalle del blog"
-                  >
                     <Typography
                       sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
                       color="text.primary"
                     >
                       {concatDots(data.description, 120)}
                     </Typography>
-                  </Tooltip>
+                  )
                 ) : (
                   <Typography
                     sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
@@ -164,40 +171,32 @@ export default function BlogCard({
                   >
                     {concatDots(data.description, 120)}
                   </Typography>
-                )
-              ) : (
-                <Typography
-                  sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
-                  color="text.primary"
-                >
-                  {concatDots(data.description, 120)}
+                ))}
+              {console.log("preview", preview)}
+              {preview ? (
+                <Typography fontSize={"14px"} align="left">
+                  {moment().format("DD-MM-YYYY")}
                 </Typography>
-              )
-            )}
-            {console.log("preview", preview)}
-            {preview ? (
-              <Typography fontSize={"14px"} align="left">
-                {moment().format("DD-MM-YYYY")}
-              </Typography>
-            ) : (
-              <Typography fontSize={"14px"} align="left">
-                {moment(data.createdAt).format("DD-MM-YYYY")}
-              </Typography>
-            )}
-          </CardContent>
-          <CardMedia
-            sx={{
-              borderRadius: "1rem",
-              xs: { display: "none" },
-              width: { xs: "100px" },
-              height: { xs: "100px" },
-              objectFit: "cover",
-            }}
-            component="img"
-            image={data.image ? data.image : Image.src}
-            alt="Paella dish"
-          />
-        </Stack>
+              ) : (
+                <Typography fontSize={"14px"} align="left">
+                  {moment(data.createdAt).format("DD-MM-YYYY")}
+                </Typography>
+              )}
+            </CardContent>
+            <CardMedia
+              sx={{
+                borderRadius: "1rem",
+                xs: { display: "none" },
+                width: { xs: "100px" },
+                height: { xs: "100px" },
+                objectFit: "cover",
+              }}
+              component="img"
+              image={data.image ? data.image : Image.src}
+              alt="Paella dish"
+            />
+          </Stack>
+        </Link>
       </Card>
     </Box>
   );

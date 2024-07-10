@@ -71,7 +71,7 @@ export default async function Home({ params }: any) {
                   })}
               </Stack>
               <Stack justifyContent={"center"} direction={"row"} mt={4} mb={4}>
-                <Link href={"/tendencias"}>
+                <Link href={"/tendencias"} style={{textDecoration: 'none'}}>
                   <Button variant="contained">Ver más</Button>
                 </Link>
               </Stack>
@@ -102,7 +102,7 @@ export default async function Home({ params }: any) {
                   })}
               </Stack>
               <Stack justifyContent={"center"} direction={"row"} mt={4} mb={4}>
-                <Link href={"/lo-mas-nuevo"}>
+                <Link href={"/lo-mas-nuevo"} style={{textDecoration: 'none'}} >
                   <Button variant="contained">Ver más</Button>
                 </Link>
               </Stack>
