@@ -6,6 +6,7 @@ import CustomTag from "../tag";
 import moment from "moment";
 import Image from "./../../../assets/images/post-placeholder.jpg";
 import { concatDots } from "@/app/helpers/text";
+import CustomCard from "../card";
 
 interface Props {
   data:any
@@ -15,7 +16,7 @@ export default function BlogCardHorizontal({data}:Props) {
   console.log('data user component ',data.user[0])
 
   return (
-    <Box>
+    <CustomCard>
       <Box sx={{ marginBottom: 1 }}>
         <UserAvatar
           user={{ name: data.user[0].name, lastName: data.user[0].lastName, image: data.user[0].avatar, slug:data.user[0].slug }}
@@ -49,6 +50,6 @@ export default function BlogCardHorizontal({data}:Props) {
           />
         </Box>
       </Box>
-    </Box>
+    </CustomCard>
   );
 }

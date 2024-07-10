@@ -1,10 +1,8 @@
 
 import React from "react";
-import { getBlog } from "@/app/client/blogs";
 import MainWrapper from "@/app/components/blogDetail/mainWrapper";
 import { cookies } from "next/headers";
 import { axiosIntance } from "@/app/client";
-import { ImageResponse } from "next/server";
 
 
 const getData = async (slug: string) => {

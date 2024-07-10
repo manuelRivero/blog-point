@@ -42,11 +42,10 @@ export default function RelatedBlogsWrapper({ data }: Props) {
       >
         Blogs relacionados
       </Typography>
-      <CustomCard>
         {categoryData.map((e: any, i: number) => {
-          return <BlogCardHorizontal data={e} key={"related-blog" + "-" + i} />;
+
+          return <Box sx={{marginBottom: '1rem'}}><BlogCardHorizontal data={e} key={"related-blog" + "-" + i} /></Box>;
         })}
-      </CustomCard>
     </Box>
   );
 }
