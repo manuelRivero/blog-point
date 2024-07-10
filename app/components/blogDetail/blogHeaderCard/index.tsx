@@ -5,9 +5,10 @@ import moment from "moment";
 import CustomTag from "../../shared/tag";
 import { Category } from "@/app/data/categories";
 import LikeWrapper from "./likeWrapper";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import SharedMenuWrapper from "./SharedMenuWrapper";
 import CustomTagWrapper from "../CustomTagWrapper";
+import { axiosIntance } from "@/app/client";
 
 interface Props {
   data: {
@@ -29,6 +30,35 @@ interface Props {
     category: Category;
     targetLike: boolean;
   };
+}
+
+export async function generateMetadata({ params }: any) {
+  const cookie = cookies().get("token");
+
+  try {
+    const { data } = await axiosIntance.get("/blogs/" + params.slug, {
+      headers: {
+        Cookie: cookie ? `token=${cookie?.value}` : "",
+      },
+    });
+    return {
+      openGraph: {
+        title: data.title,
+        description: data.description,
+        type: "article",
+        images: [
+          {
+            url: data.image,
+            width: 1200,
+            height: 630,
+            alt: data.title,
+          },
+        ],
+      },
+    };
+  } catch (error) {
+    return null;
+  }
 }
 export default function BlogHeaderCard({ data }: Props) {
   const headersList = headers();
