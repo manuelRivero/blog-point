@@ -77,7 +77,6 @@ export default function ProfileInfo({ onChangeEditing, data }: Props) {
     onChangeEditing(true);
   };
   const submit = async (values: any) => {
-    console.log("submit");
     const form = new FormData();
     form.append(
       "profileData",

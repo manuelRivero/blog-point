@@ -29,9 +29,7 @@ export async function generateMetadata({ params }: any) {
         Cookie: cookie ? `token=${cookie?.value}` : "",
       },
     });
-    console.log("Metadata", data);
    const metadataBase = new URL(data.blog.image.split('com')[0]+ 'com');
-   console.log("metadataBase", metadataBase)
     return {
       metadataBase: metadataBase.origin,
       title: "Historial Medico | " + data.blog.title,

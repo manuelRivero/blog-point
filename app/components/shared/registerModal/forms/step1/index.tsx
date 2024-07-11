@@ -32,7 +32,6 @@ export default function Step1({
     resolver: yupResolver(schema),
   });
   const submit = (values: any) => {
-    console.log("values", values);
     onSubmit(values);
   };
   useEffect(() => {

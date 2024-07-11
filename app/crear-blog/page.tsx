@@ -443,7 +443,6 @@ export default function CreateBlog() {
                                         const { data } = await uploadImage(
                                           form
                                         );
-                                        console.log("data", data.url);
                                         success(data.url);
                                       } catch (error) {
                                         failure("Error al subir la imagen");
@@ -465,7 +464,6 @@ export default function CreateBlog() {
                                 image_advtab: true,
                               }}
                               onEditorChange={(e) => {
-                                console.log("text editor on change", e);
                                 field.onChange(e);
                               }}
                             />

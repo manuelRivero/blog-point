@@ -71,7 +71,6 @@ export default function CategorySelection() {
       const ids = new URLSearchParams(searchParams.toString()).getAll(
           "category"
         );
-        console.log('target', ids, categories);
         const categoriesFromParams = ids.map((id: any) => {
           const target: any =
             categories.find((e: any) => e._id === id) ?? null;

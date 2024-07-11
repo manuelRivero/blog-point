@@ -172,7 +172,6 @@ export default function BlogCard({
                     {concatDots(data.description, 120)}
                   </Typography>
                 ))}
-              {console.log("preview", preview)}
               {preview ? (
                 <Typography fontSize={"14px"} align="left">
                   {moment().format("DD-MM-YYYY")}

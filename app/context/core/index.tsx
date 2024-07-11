@@ -84,7 +84,6 @@ export const CoreProvider: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const handleLogout = async () => {
-      console.log("handleLogout", dispatch);
 
       setInfoModal(dispatch, {
         status: "error",
@@ -109,7 +108,6 @@ export const CoreProvider: React.FC<Props> = (props) => {
           user: { id: user.data?._id },
           refreshToken: user.tokens?.refresh_token,
         });
-        console.log("response", response);
         tokens = {
           token: response.data.token,
           refreshToken: response.data.refreshToken,
@@ -125,7 +123,6 @@ export const CoreProvider: React.FC<Props> = (props) => {
     };
     responseInterceptor.current = axiosIntance.interceptors.response.use(
       async (response) => {
-        console.log("response", response);
         return response;
       },
       async (error: any) => {
@@ -207,8 +204,6 @@ export async function setNotificationsData(
   dispatch: React.Dispatch<any>,
   data: any
 ) {
-  console.log("dispatch");
-
   dispatch({
     type: "SET_NOTIFICATIONS_DATA",
     payload: data,
@@ -238,7 +233,6 @@ export async function setNotificationsEnabled(dispatch: React.Dispatch<any>) {
   });
 }
 export async function setUserData(dispatch: React.Dispatch<any>, data: any) {
-  console.log("set user data");
   const user = localStorage.getItem("user");
 
   let parseUser;
@@ -256,7 +250,6 @@ export async function setUserProfileData(
   dispatch: React.Dispatch<any>,
   profileData: any
 ) {
-  console.log("set user data");
   const user = localStorage.getItem("user");
 
   let parseUser;
@@ -327,7 +320,6 @@ export async function setDeviceToken(
   deviceToken: any
 ) {
   const user = localStorage.getItem("user");
-  console.log("dispatch token device", deviceToken);
   if (user) {
     const parseUser = JSON.parse(user);
     localStorage.setItem(
@@ -372,7 +364,6 @@ export async function setRegisterModal(
 }
 
 export async function setInfoModal(dispatch: React.Dispatch<any>, data: any) {
-  console.log("dispatch modal");
   dispatch({
     type: "SET_INFO_MODAL",
     payload: data,

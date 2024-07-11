@@ -12,8 +12,6 @@ interface Props {
   data:any
 }
 export default function BlogCardHorizontal({data}:Props) {
-  console.log('data blog component ',data)
-  console.log('data user component ',data.user[0])
 
   return (
     <CustomCard>

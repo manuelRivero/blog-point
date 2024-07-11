@@ -10,7 +10,6 @@ import CategoryRow from "./components/home/categoryRow";
 import Link from "next/link";
 
 async function getData({ page = 0 }) {
-  //console.log('page get data',page)
   try {
     const [
       { data: categoriesData },
@@ -21,7 +20,6 @@ async function getData({ page = 0 }) {
       getPopular(0, 5),
       getRecent(0, 5),
     ]);
-    // console.log(categoriesData, blogsData);
     return {
       categoriesData,
       blogsData,
@@ -36,7 +34,6 @@ async function getData({ page = 0 }) {
 export default async function Home({ params }: any) {
   const { page } = params;
   const data = await getData({ page });
-  //console.log('data home',data)
 
   return (
     <main>
@@ -52,7 +49,6 @@ export default async function Home({ params }: any) {
               <Stack direction="column" spacing={4}>
                 {data &&
                   data.blogsData.blogs[0].data.map((e: any, index: number) => {
-                    // console.log("blog", e);
                     return (
                       <BlogCard
                         key={index}
@@ -83,7 +79,6 @@ export default async function Home({ params }: any) {
               <Stack direction="column" spacing={4}>
                 {data &&
                   data.recentData.blogs[0].data.map((e: any, index: number) => {
-                    // console.log("blog", e);
                     return (
                       <BlogCard
                         key={index}

@@ -72,7 +72,6 @@ interface CardData {
   category: string;
 }
 export default function EditBlog({ data }) {
-  console.log(data)
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
   //form
@@ -465,7 +464,6 @@ export default function EditBlog({ data }) {
                                         const { data } = await uploadImage(
                                           form
                                         );
-                                        console.log("data", data.url);
                                         success(data.url);
                                       } catch (error) {
                                         failure("Error al subir la imagen");
@@ -487,7 +485,6 @@ export default function EditBlog({ data }) {
                                 image_advtab: true,
                               }}
                               onEditorChange={(e) => {
-                                console.log("text editor on change", e);
                                 field.onChange(e);
                               }}
                             />

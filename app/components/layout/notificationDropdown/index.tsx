@@ -31,7 +31,6 @@ export default function NotificationDropdown({
   setAskedForNotifications,
   hasPermissions,
 }: Props) {
-  console.log("notification status", askedForNotifications, hasPermissions);
   const [{ notificationsData }] = useCore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isSupported = () =>

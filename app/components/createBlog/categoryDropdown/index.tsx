@@ -109,7 +109,6 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
   };
   React.useEffect(() => {
     const getData = async () => {
-      console.log("category call");
       try {
         const { data } = await getCategories({ page });
         setCategories(data.categories);
@@ -124,7 +123,6 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
 
   React.useEffect(()=>{
     if (field.value && field.value !== "") {
-      console.log("field.value",field.value)
       setSelectedValue({_id:field.value.id, name:field.value.title});
     }
   },[field.value]);

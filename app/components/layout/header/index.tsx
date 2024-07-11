@@ -65,15 +65,12 @@ export default function Header() {
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
-    console.log("permissions", permission);
     if (permission === "granted") {
       setHasPermissions(true);
     } else if (permission === "denied") {
       setHasPermissions(false);
-      console.log("Denied for the notification");
     } else if (permission === "default") {
       setHasPermissions(null);
-      console.log("Default for the notification");
     }
   }
 
@@ -106,7 +103,6 @@ export default function Header() {
     if (token) {
       setDeviceToken(coreDispatch, token);
       await postDeviceId(token);
-      console.log("token message", token);
       onMessage(messaging, (payload) => {
         handleMessage(payload);
       });
@@ -123,7 +119,6 @@ export default function Header() {
       !user.tokens?.device_token &&
       (notificationStatus === "default" ? askedForNotifications : true)
     ) {
-      console.log("user", user);
       requestPermission();
     }
   }, [user, askedForNotifications, notificationStatus]);

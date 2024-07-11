@@ -37,9 +37,7 @@ export default function LoginModal() {
   //states
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
 
-  console.log("showLoginModal", showLoginModal);
   const submit = async (values: any) => {
-    console.log("values");
     setLoadingSubmit(true);
     try {
       const {

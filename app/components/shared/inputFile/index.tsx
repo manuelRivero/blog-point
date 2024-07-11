@@ -35,7 +35,6 @@ export default function CustomInputFile({
     if (reset) {
       setFile(null);
     }
-    console.log("reset", reset);
         // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset]);
 

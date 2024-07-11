@@ -28,7 +28,6 @@ export default function ProfileAvatar({
   avatar = null,
 }: Props) {
   const [{ showLoginModal, user }, coreDispatch] = useCore();
-  console.log("same user", isSameUser);
   const [file, setFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);

@@ -30,7 +30,6 @@ export default function MyBlogs() {
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
-  console.log(" blogsPaginationData / 10", blogsPaginationData / 10);
   const handlePageChange = (event: any) => {
     setPage(event.selected);
   };
@@ -64,7 +63,6 @@ export default function MyBlogs() {
       if (user && user.data) {
         try {
           const { data } = await getUserBlog(user?.data?._id, page);
-          console.log("data blog mis blog", data);
           setBlogs(
             data.blogs[0].data.map((e: any) => ({
               _id: e._id,

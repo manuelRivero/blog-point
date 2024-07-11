@@ -28,10 +28,8 @@ export default function MainSearch() {
   const searchHandler = async () => {
     if (inputRef.current.length >= 3) {
       setIsOpen(true);
-      console.log("change", inputRef.current);
       const { data } = await findBlogs(inputRef.current);
       setSuggestions(data.blogs[0].data);
-      console.log("main search data", data);
     } else {
       setIsOpen(false);
     }

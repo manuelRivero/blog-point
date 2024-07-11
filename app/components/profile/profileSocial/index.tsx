@@ -106,7 +106,6 @@ export default function ProfileSocial({ onChangeEditing, data }: Props) {
       setLoadingSubmit(false);
     }
   };
-  console.log("data", data);
   return (
     <Box sx={{ position: "relative", marginTop: 2 }}>
       <CustomCard>

@@ -6,8 +6,6 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 interface Props { blogs: any }
 
 export default function ProfileBlogCard({ blogs }: Props) {
-  console.log('profile blog',blogs)
-  console.log('profile blog titulo',blogs.blogs[0].data[0].title)
   return (
     <Box sx={{ padding: 2 }}>
       <Stack direction="row" spacing={2}>

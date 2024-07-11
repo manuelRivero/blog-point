@@ -15,7 +15,6 @@ const status: any = {
 export default function InfoModal() {
   const [{ infoModal }, coreDispatch] = useCore();
   const onAnimationEnd = () => {
-    console.log("animation end");
     if (infoModal?.onAnimationEnd) {
       infoModal.onAnimationEnd();
     }

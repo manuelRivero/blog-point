@@ -37,7 +37,6 @@ export default function BlogHorizontalCard({ data, onDelete }: Props) {
   // crear el endpoint
   // pasar el id del blog al endpoint
   // pasarle la funciòn al confirmModal component y que la ejecute al darle click en aceptar
-  console.log("data mis blog", pathname);
   return (
     <>
       <Box

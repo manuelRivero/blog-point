@@ -45,7 +45,6 @@ export default function MainWrapper({ data, blogs }: Props) {
   };
 
   const onChangeAvatar = async (avatar: Blob) => {
-    console.log("submit");
     const form = new FormData();
     form.append("image", avatar);
     try {
@@ -129,7 +128,6 @@ export default function MainWrapper({ data, blogs }: Props) {
       >
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>
           {!data.data.isSameUser && blogs.blogs[0].data.map((e: any) => {
-            console.log("profile blog", e)
             return (
               <BlogCard
                 key={e._id}

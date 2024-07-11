@@ -43,7 +43,6 @@ export default function RegisterModal() {
     });
     try {
       const response = await register(form);
-      //console.log('register modal data response', response)
       setLoginModal(coreDispatch, false);
       setInfoModal(coreDispatch, {
         status: "success",
@@ -59,7 +58,6 @@ export default function RegisterModal() {
         onAnimationEnd: null,
       });
     } catch (error: any) {
-      console.log("error", error.response.data);
       
       // set step for error
       setRegisterModal(coreDispatch, false)

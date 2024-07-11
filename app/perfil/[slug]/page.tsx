@@ -20,7 +20,6 @@ async function getData(slug: string) {
 
     return {profileData, blogData};
   } catch (error) {
-    //console.log('get data 123')
     return null
   }
 }

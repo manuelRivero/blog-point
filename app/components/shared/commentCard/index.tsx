@@ -73,8 +73,6 @@ export default function CommentCard({ data }: Props) {
     [data]
   );
 
-  console.log('userCommentCard',userData)
-
   //form
   const { control, handleSubmit, reset, setValue } = useForm<Values>({
     resolver: yupResolver(schema),
@@ -148,7 +146,6 @@ export default function CommentCard({ data }: Props) {
           data._id,
           0
         );
-        console.log("response data", response.data);
         setResponses(response.data.responses);
       }
     };

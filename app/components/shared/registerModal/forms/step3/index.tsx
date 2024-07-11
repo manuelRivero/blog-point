@@ -54,7 +54,6 @@ export default function Step3({ onSubmit, resetForm, initialValues }: Props) {
     resolver: yupResolver(schema),
   });
   const submit = (values: any) => {
-    console.log("values", values);
     onSubmit(values);
   };
   const checkRegex = () => {
