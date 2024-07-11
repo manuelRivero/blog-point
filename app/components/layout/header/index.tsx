@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import firebaseApp from "../../../firebase";
-import { getToken, getMessaging, onMessage } from "firebase/messaging";
+import { getToken, getMessaging, onMessage, deleteToken } from "firebase/messaging";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -99,6 +99,7 @@ export default function Header() {
     const messaging = getMessaging(firebaseApp);
     // Generate Device Token for notification
 
+    
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
     });
