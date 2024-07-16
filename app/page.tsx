@@ -54,7 +54,7 @@ export default async function Home({ params }: any) {
                         key={index}
                         userAvatar={{
                           name: e.user[0].name,
-                          lastName: e.user[0].name,
+                          lastName: e.user[0].lastName,
                           image: e.user[0].avatar,
                           slug: e.user[0].slug,
                         }}
@@ -84,7 +84,7 @@ export default async function Home({ params }: any) {
                         key={index}
                         userAvatar={{
                           name: e.user[0].name,
-                          lastName: e.user[0].name,
+                          lastName: e.user[0].lastName,
                           image: e.user[0].avatar,
                           slug: e.user[0].slug,
                         }}

@@ -9,7 +9,6 @@ import {
 import { Box, Modal, Typography, Stack, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-
 import SocialLoginButton from "../socialLoginButton";
 import CustomButton from "../customButton";
 import { useRouter } from "next/navigation";
@@ -58,10 +57,9 @@ export default function RegisterModal() {
         onAnimationEnd: null,
       });
     } catch (error: any) {
-      
       // set step for error
-      setRegisterModal(coreDispatch, false)
-     
+      setRegisterModal(coreDispatch, false);
+
       setInfoModal(coreDispatch, {
         status: "error",
         title: "No se ha podido completar el registro",
@@ -73,7 +71,7 @@ export default function RegisterModal() {
             setUserData(null);
             setStep(1);
             setInfoModal(coreDispatch, null);
-            setRegisterModal(coreDispatch, true)
+            setRegisterModal(coreDispatch, true);
           },
         },
         onAnimationEnd: null,
@@ -105,7 +103,7 @@ export default function RegisterModal() {
     if (!showRegisterModal) {
       setStep(1);
     }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showRegisterModal]);
 
   useEffect(() => {
@@ -115,7 +113,7 @@ export default function RegisterModal() {
     } else {
       setResetForms(false);
     }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showRegisterModal]);
 
   return (
@@ -139,11 +137,15 @@ export default function RegisterModal() {
           borderRadius: "1rem",
         }}
       >
-        <Stack direction="row" justifyContent="flex-end" sx={{marginBottom: '1rem'}}>
-            <IconButton onClick={() => setLoginModal(coreDispatch, false)}>
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          sx={{ marginBottom: "1rem" }}
+        >
+          <IconButton onClick={() => setLoginModal(coreDispatch, false)}>
             <CloseIcon />
-            </IconButton>
-          </Stack>
+          </IconButton>
+        </Stack>
         {step > 1 && (
           <IconButton onClick={() => setStep(step - 1)}>
             <ArrowBackIcon />
@@ -187,7 +189,11 @@ export default function RegisterModal() {
             >
               {`Agrega tu foto de perfil (Opcional)`}
             </Typography>
-            <ProfileAvatar onChange={handleImage} isSameUser={true} avatar={null}/>
+            <ProfileAvatar
+              onChange={handleImage}
+              isSameUser={true}
+              avatar={null}
+            />
           </Stack>
         )}
         {step === 1 && (
@@ -234,6 +240,17 @@ export default function RegisterModal() {
               isLoading={loadingSubmit}
             />
           )}
+          <Typography
+            onClick={() => {
+              setRegisterModal(coreDispatch, false);
+              setLoginModal(coreDispatch, true);
+            }}
+            fontSize={12}
+            align="center"
+            sx={{ cursor: "pointer" }}
+          >
+            Si ya tienes cuenta inicia sesión
+          </Typography>
         </Box>
         {step <= 1 && (
           <>

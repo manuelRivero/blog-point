@@ -124,7 +124,7 @@ export default function ContentWrapper({
                         <BlogCard
                           userAvatar={{
                             name: e.user[0].name,
-                            lastName: e.user[0].name,
+                            lastName: e.user[0].lastName,
                             image: e.user[0].avatar,
                             slug: e.user[0].slug,
                           }}

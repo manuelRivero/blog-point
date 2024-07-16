@@ -421,7 +421,7 @@ export default function EditBlog({ data }) {
                         showTitleTooltip={showTitleAlert}
                         userAvatar={{
                           name: user.data.name,
-                          lastName: user.data.name,
+                          lastName: user.data.lastName,
                           image: user.data.avatar,
                         }}
                       />

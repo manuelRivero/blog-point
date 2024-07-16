@@ -9,9 +9,17 @@ import { Box, Typography } from "@mui/material";
 import CustomButton from "../../../customButton";
 import CustomInput from "../../../customInput";
 
+const textRegex = /^(?!.*\s\s)[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/;
+
 const schema = yup.object({
-  name: yup.string().required("Campo requerido"),
-  lastName: yup.string().required("Campo requerido"),
+  name: yup
+    .string()
+    .matches(textRegex, "Nombre inválido")
+    .required("Campo requerido"),
+  lastName: yup
+    .string()
+    .matches(textRegex, "Apellido inválido")
+    .required("Campo requerido"),
 });
 interface Props {
   onSubmit: (values: any) => void;
@@ -51,6 +59,7 @@ export default function Step2({ onSubmit, resetForm, initialValues }: Props) {
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
+              maxLength={30}
               type="text"
               error={fieldState.error}
               value={field.value}
@@ -72,6 +81,7 @@ export default function Step2({ onSubmit, resetForm, initialValues }: Props) {
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
+              maxLength={30}
               type="text"
               error={fieldState.error}
               value={field.value}

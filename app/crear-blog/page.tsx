@@ -17,6 +17,7 @@ import CustomCard from "../components/shared/card";
 import CustomInput from "../components/shared/customInput";
 import CustomInputFile from "../components/shared/inputFile";
 import BlogCard from "../components/blogCard";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -32,7 +33,7 @@ import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "../helpers/cropImage";
 import { uploadImage } from "../client/uploads";
 import CustomButton from "../components/shared/customButton";
-import { createBlog } from "../client/blogs";
+import { createBlog, getSupportBlogs } from "../client/blogs";
 import {
   setInfoModal,
   setLoginModal,
@@ -42,7 +43,17 @@ import {
 import CategoryDropdown from "../components/createBlog/categoryDropdown";
 
 import introJs from "intro.js";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import BlogCardHorizontal from "../components/shared/blogCardHorizontal";
+import { Navigation } from "swiper/modules";
+
+// Import Swiper styles
+import "swiper/css/navigation";
+import "swiper/css";
+import Loader from "../components/shared/loader";
+import PageLoading from "../components/shared/pageLoader";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const tutorialData = {
   category:
@@ -75,7 +86,7 @@ interface CardData {
 export default function CreateBlog() {
   const [{ user }, coreDispatch] = useCore();
   const router = useRouter();
-  const isMobile = useMediaQuery('(max-width:1200px)');
+  const isMobile = useMediaQuery("(max-width:1200px)");
   //form
   const {
     control,
@@ -93,6 +104,7 @@ export default function CreateBlog() {
     image: null,
     category: "",
   });
+  const [supportBlogs, setSupportBlogs] = useState<any[]>([]);
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -103,6 +115,8 @@ export default function CreateBlog() {
   const [showDescriptionAlert, setShowDescriptionAlert] =
     useState<boolean>(false);
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showSupportBlogs, setShowSupportBlogs] = useState<boolean>(false);
 
   const watchCategory = watch("category");
 
@@ -131,6 +145,10 @@ export default function CreateBlog() {
     const objectUrl: string = URL.createObjectURL(e);
     setImageSrc(objectUrl);
     setShowCrop(true);
+  };
+
+  const handleShowSupportBlogs = () => {
+    setShowSupportBlogs((prev: boolean) => !prev);
   };
 
   const descriptionLenghtHandler = (status: boolean) => {
@@ -213,14 +231,30 @@ export default function CreateBlog() {
   useEffect(() => {
     const intro = introJs();
     intro.setOption("nextLabel", " Siguiente ");
-    intro.setOption("dontShowAgain", true)
-    intro.setOption("dontShowAgainLabel", "No mostrar de nuevo este tutorial")
+    intro.setOption("dontShowAgain", true);
+    intro.setOption("dontShowAgainLabel", "No mostrar de nuevo este tutorial");
     intro.setOption("prevLabel", " Anterior ");
     intro.setOption("doneLabel", " Entendido ");
     intro.start();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const { data } = await getSupportBlogs(0);
+        setSupportBlogs(data.blogs[0].data);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, []);
+
+  if (loading) {
+    return <PageLoading />;
+  }
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -229,7 +263,64 @@ export default function CreateBlog() {
       <Typography variant="h1" component={"h1"} align="center">
         Crear blog
       </Typography>
-      <Box sx={{ marginTop: "2rem" }}>
+      <Box sx={{ marginTop: "2rem", padding: 1 }}>
+        {supportBlogs.length > 0 && (
+          <Box sx={{ marginBottom: "2rem" }}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              spacing={1}
+              sx={{ marginBottom: "1rem" }}
+            >
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                spacing={1}
+                sx={{ marginBottom: "1rem" }}
+              >
+                <Typography variant="h4">Ver contenido de ayuda</Typography>
+                <Button onClick={() => handleShowSupportBlogs()}>
+                  {showSupportBlogs ? (
+                    <KeyboardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </Button>
+              </Stack>
+              <Button>Ver tutorial</Button>
+            </Stack>
+            {showSupportBlogs && (
+              <Swiper
+                modules={[Navigation]}
+                navigation={true}
+                slidesPerView={1}
+                spaceBetween={"50px"}
+              >
+                {supportBlogs.map((e) => (
+                  <SwiperSlide style={{ width: "100%" }} key={e._id}>
+                    <Grid container justifyContent={"center"}>
+                      <Grid item xs={11} sx={{ padding: ".5rem" }}>
+                        <BlogCard
+                          userAvatar={{
+                            name: e.user[0].name,
+                            lastName: e.user[0].lastName,
+                            image: e.user[0].avatar,
+                            slug: e.user[0].slug,
+                          }}
+                          data={{ ...e, category: e.category[0].name }}
+                          preview={false}
+                          showDescriptionTooltip={false}
+                          showTitleTooltip={false}
+                        />
+                      </Grid>
+                    </Grid>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+          </Box>
+        )}
         <CustomCard>
           <form onSubmit={handleSubmit(submit)}>
             <Grid container spacing={8} sx={{ placeContent: "center" }}>
@@ -239,7 +330,7 @@ export default function CreateBlog() {
                   component={"h2"}
                   sx={{ marginBottom: "1rem" }}
                 >
-                  Información de tu blog
+                  Información
                 </Typography>
                 <div data-intro={tutorialData.category}>
                   <Box sx={{ marginBottom: "1rem" }}>
@@ -376,7 +467,6 @@ export default function CreateBlog() {
                     Pista: Tu título abarca más caracteres de los que se
                     visualizaran en la carta de tu blog pero se visualizara de
                     forma completa en el detalle del blog.
-
                   </Typography>
                 )}
                 {isMobile && (
@@ -385,8 +475,8 @@ export default function CreateBlog() {
                     component={"p"}
                     sx={{ color: "#c2c2c2" }}
                   >
-                    Pista: Tu descripción se mostrará en dispositivos con una pantalla más grande
-                    
+                    Pista: Tu descripción se mostrará en dispositivos con una
+                    pantalla más grande
                   </Typography>
                 )}
                 <div data-intro={tutorialData.preview}>
@@ -399,15 +489,16 @@ export default function CreateBlog() {
                         showTitleTooltip={showTitleAlert}
                         userAvatar={{
                           name: user.data.name,
-                          lastName: user.data.name,
+                          lastName: user.data.lastName,
                           image: user.data.avatar,
-                          slug: user.data.slug
+                          slug: user.data.slug,
                         }}
                       />
                     )}
                   </Box>
                 </div>
               </Grid>
+
               <Grid item xs={12}>
                 <Typography
                   variant="h2"

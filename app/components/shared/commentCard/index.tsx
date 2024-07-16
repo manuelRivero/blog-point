@@ -18,6 +18,8 @@ import { createResponse, getCommentsResponses } from "@/app/client/blogs";
 import { useParams } from "next/navigation";
 import { setInfoModal, useCore } from "@/app/context/core";
 import CustomButton from "../customButton";
+import 'moment/locale/es'; // Importar configuración regional en español (si es necesario)
+moment.locale('es'); // Configurar el idioma/especificación regional
 
 const schema = yup.object({
   response: yup.string().required("Campo requerido"),
@@ -97,7 +99,7 @@ export default function CommentCard({ data }: Props) {
         });
         setResponses([
           {
-            createdAt: moment.now().toString(),
+            createdAt: moment().format("DD-MM-YYYY"),
             _id: response.data.data[0].comments.responses._id,
             user: [
               {
@@ -201,7 +203,7 @@ export default function CommentCard({ data }: Props) {
                       name: e.user[0].name,
                       lastName: e.user[0].lastName,
                       image: e.user[0].avatar,
-                      slug: e.user[0].slug
+                      slug: e.user[0].slug,
                     }}
                   />
                   <Typography fontSize={"14px"} align="right">

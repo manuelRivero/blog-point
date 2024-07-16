@@ -21,6 +21,8 @@ import Link from "next/link";
 import { concatDots } from "@/app/helpers/text";
 import CustomTag from "../shared/tag";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ModeCommentIcon from "@mui/icons-material/ModeComment";
 
 interface Props {
   data: Data;
@@ -35,14 +37,17 @@ interface Props {
   };
 }
 interface Data {
+  createdAt: string;
   title: string;
   image: string | null;
   description: string;
   date?: string;
   link?: string;
   rate?: number;
+  likes?: { user: string; _id: string }[];
   category: string;
   slug?: string;
+  comments: any[];
 }
 export default function BlogCard({
   data,
@@ -58,6 +63,7 @@ export default function BlogCard({
       sx={{
         textDecoration: "none",
         width: "100%",
+        pointerEvents: preview ? 'all' : 'none'
       }}
     >
       <Card
@@ -77,7 +83,7 @@ export default function BlogCard({
           avatar={<Avatar user={userAvatar} />}
         />
         <Link
-          href={"/detalle-del-blog/" + data.slug}
+          href={!preview ? "" : "/detalle-del-blog/" + data.slug}
           style={{ textDecoration: "none", color: "inherit" }}
         >
           <Stack direction={"row"} gap={{ xs: 2, lg: 4 }}>
@@ -172,15 +178,53 @@ export default function BlogCard({
                     {concatDots(data.description, 120)}
                   </Typography>
                 ))}
-              {preview ? (
-                <Typography fontSize={"14px"} align="left">
-                  {moment().format("DD-MM-YYYY")}
-                </Typography>
-              ) : (
-                <Typography fontSize={"14px"} align="left">
-                  {moment(data.createdAt).format("DD-MM-YYYY")}
-                </Typography>
-              )}
+              <Stack direction={"row"} spacing={6} alignItems="center">
+                {preview ? (
+                  <Typography fontSize={"14px"} align="left">
+                    {moment().format("DD-MM-YYYY")}
+                  </Typography>
+                ) : (
+                  <Typography fontSize={"14px"} align="left">
+                    {moment(data.createdAt).format("DD-MM-YYYY")}
+                  </Typography>
+                )}
+                {!preview && (
+                  <>
+                    <Stack
+                      direction={"row"}
+                      spacing={2}
+                      alignItems={"center"}
+                      component="div"
+                    >
+                      <Stack
+                        direction={"row"}
+                        sx={{ fontSize: "18px" }}
+                        alignItems={"center"}
+                        component="div"
+                      >
+                        <ThumbUpIcon fontSize={"inherit"} color="disabled" />
+                        <Typography variant="body1" fontSize={"16px"}>
+                          {data.likes?.length}
+                        </Typography>
+                      </Stack>
+                      <Stack
+                        direction={"row"}
+                        sx={{ fontSize: "16px" }}
+                        alignItems={"center"}
+                        component="div"
+                      >
+                        <ModeCommentIcon
+                          fontSize={"inherit"}
+                          color="disabled"
+                        />
+                        <Typography variant="body1" fontSize={"16px"}>
+                          {data.comments?.length}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </>
+                )}
+              </Stack>
             </CardContent>
             <CardMedia
               sx={{

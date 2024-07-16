@@ -10,9 +10,11 @@ const Categories = () => {
         <CategorySelection />
       </Box>
       <ContentWrapper
-      type="category"
+        type="category"
         hasTitle={false}
-        emptyStateTitle={'Selecciona una categoría y empiza a explorar el mejor contenido'}
+        emptyStateTitle={
+          "Selecciona una categoría y empiza a explorar el mejor contenido"
+        }
         data={[]}
         metadata={[{ count: 0 }]}
       />

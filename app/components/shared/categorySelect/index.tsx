@@ -11,13 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { alpha } from "@mui/material/styles";
 import { getAllCategories } from "@/app/client/category";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-
-const lista = ["Categoría 1", "Categoría 2", "Categoría 3"];
 
 export default function CategorySelection() {
   const searchParams = useSearchParams();
@@ -40,7 +38,10 @@ export default function CategorySelection() {
   }, []);
 
   const handleCategoryChange = (event, value) => {
-    if (value) {
+    if (
+      value &&
+      !selectedCategories.some((category: string) => category === value)
+    ) {
       const newSelectedCategories = [...selectedCategories, value];
       setSelectedCategories(newSelectedCategories);
       setSearchTerm("");
@@ -56,31 +57,31 @@ export default function CategorySelection() {
 
   useEffect(() => {
     router.push(
-      `${selectedCategories.map((element: any, index: number) => {
-        const target: any =
-          categories.find((e: any) => e.name === element) ?? null;
-        if (target) {
-          return `${index === 0 ? "?" : "&"}category=${target._id}`;
-        }
-      }).join("")}`
+      `${selectedCategories
+        .map((element: any, index: number) => {
+          const target: any =
+            categories.find((e: any) => e.name === element) ?? null;
+          if (target) {
+            return `${index === 0 ? "?" : "&"}category=${target._id}`;
+          }
+        })
+        .join("")}`
     );
   }, [selectedCategories]);
 
   useEffect(() => {
-    if(categories){
+    if (categories) {
       const ids = new URLSearchParams(searchParams.toString()).getAll(
-          "category"
-        );
-        const categoriesFromParams = ids.map((id: any) => {
-          const target: any =
-            categories.find((e: any) => e._id === id) ?? null;
-          if (target) {
-              return target.name
-          }
-        });
-        setSelectedCategories(categoriesFromParams);
+        "category"
+      );
+      const categoriesFromParams = ids.map((id: any) => {
+        const target: any = categories.find((e: any) => e._id === id) ?? null;
+        if (target) {
+          return target.name;
+        }
+      });
+      setSelectedCategories(categoriesFromParams);
     }
-    
   }, [categories]);
 
   return (
@@ -155,9 +156,16 @@ export default function CategorySelection() {
           <Chip
             key={category} // Ensure unique key for each chip
             label={category}
-            sx={(theme)=>({background: theme.palette.secondary.main, color:"#fff"})}
+            sx={(theme) => ({
+              background: theme.palette.secondary.main,
+              color: "#fff",
+            })}
             onDelete={() => handleRemoveCategory(category)}
-            deleteIcon={<IconButton aria-label="delete"><CloseIcon sx={{color:'#fff'}} /></IconButton>} // Add delete icon
+            deleteIcon={
+              <IconButton aria-label="delete">
+                <CloseIcon sx={{ color: "#fff" }} />
+              </IconButton>
+            } // Add delete icon
           />
         ))}
       </Stack>

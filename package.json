@@ -41,6 +41,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-paginate": "^8.2.0",
     "react-toastify": "^10.0.5",
+    "swiper": "^11.1.4",
     "typescript": "5.1.6",
     "yup": "^1.2.0"
   },

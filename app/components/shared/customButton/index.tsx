@@ -8,7 +8,7 @@ interface Props {
   disabled: boolean;
   isLoading: boolean;
   color: "primary" | "inherit" | "secondary" | "success" | "error" | "info" | "warning"
-  variant: "outlined" | "contained";
+  variant: "outlined" | "contained" | "ghost";
   type:"submit" | "button"
 }
 export default function CustomButton({

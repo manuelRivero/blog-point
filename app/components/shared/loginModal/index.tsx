@@ -3,11 +3,19 @@ import {
   setInfoModal,
   setLoginModal,
   setLoginRedirection,
+  setRegisterModal,
   setUserData,
   setUserTokens,
   useCore,
 } from "@/app/context/core";
-import { Box, Button, IconButton, Modal, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 // form
@@ -43,10 +51,11 @@ export default function LoginModal() {
       const {
         data: { token, refreshToken },
       } = await login(values);
-      await setUserTokens(coreDispatch, {token, refreshToken});
+      await setUserTokens(coreDispatch, { token, refreshToken });
       axiosIntance.defaults.headers.Authorization = "Bearer" + " " + token;
       const data = await me();
-      const { name, lastName, email, avatar, slug, social, _id  } = data.data.data;
+      const { name, lastName, email, avatar, slug, social, _id } =
+        data.data.data;
       await setUserData(coreDispatch, {
         _id,
         name,
@@ -64,7 +73,7 @@ export default function LoginModal() {
         hasSubmit: null,
         onAnimationEnd: () => {
           router.push(loginRedirection);
-          setLoginRedirection(coreDispatch, "/")
+          setLoginRedirection(coreDispatch, "/");
           setInfoModal(coreDispatch, null);
           reset();
         },
@@ -90,7 +99,7 @@ export default function LoginModal() {
     if (!showLoginModal) {
       reset();
     }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showLoginModal]);
   return (
     <Modal
@@ -114,9 +123,13 @@ export default function LoginModal() {
         }}
       >
         <Box>
-          <Stack direction="row" justifyContent="flex-end" sx={{marginBottom: '1rem'}}>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            sx={{ marginBottom: "1rem" }}
+          >
             <IconButton onClick={() => setLoginModal(coreDispatch, false)}>
-            <CloseIcon />
+              <CloseIcon />
             </IconButton>
           </Stack>
           <Typography
@@ -191,6 +204,17 @@ export default function LoginModal() {
               isLoading={loadingSubmit}
             />
           </Box>
+          <Typography
+            onClick={() => {
+              setLoginModal(coreDispatch, false);
+              setRegisterModal(coreDispatch, true);
+            }}
+            fontSize={12}
+            align="center"
+            sx={{ cursor: "pointer", marginTop: 2 }}
+          >
+            Si aún no tienes cuenta, regístrate aquí
+          </Typography>
         </form>
 
         <Box

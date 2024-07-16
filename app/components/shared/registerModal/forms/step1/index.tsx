@@ -8,9 +8,14 @@ import * as yup from "yup";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import CustomButton from "../../../customButton";
 import CustomInput from "../../../customInput";
+let emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{1,}))$/;
 
 const schema = yup.object({
-  email: yup.string().email("Email invalido").required("Campo requerido"),
+  email: yup
+    .string()
+    .matches(emailRegex, "Email inválido")
+    .required("Campo requerido"),
 });
 interface Props {
   onSubmit: (values: any) => void;
@@ -37,7 +42,7 @@ export default function Step1({
   useEffect(() => {
     if (resetForm) {
       reset();
-      clearErrors()
+      clearErrors();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetForm]);
@@ -63,6 +68,7 @@ export default function Step1({
           control={control}
           render={({ field, fieldState }) => (
             <CustomInput
+              maxLength={30}
               type="text"
               error={fieldState.error}
               value={field.value}
