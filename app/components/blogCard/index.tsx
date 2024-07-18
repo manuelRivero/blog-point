@@ -63,7 +63,7 @@ export default function BlogCard({
       sx={{
         textDecoration: "none",
         width: "100%",
-        pointerEvents: preview ? 'all' : 'none'
+        pointerEvents: !preview ? 'all' : 'none'
       }}
     >
       <Card
@@ -83,7 +83,7 @@ export default function BlogCard({
           avatar={<Avatar user={userAvatar} />}
         />
         <Link
-          href={!preview ? "" : "/detalle-del-blog/" + data.slug}
+          href={preview ? "" : "/detalle-del-blog/" + data.slug}
           style={{ textDecoration: "none", color: "inherit" }}
         >
           <Stack direction={"row"} gap={{ xs: 2, lg: 4 }}>

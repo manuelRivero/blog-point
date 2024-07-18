@@ -38,6 +38,8 @@ export default function CategorySelection() {
   }, []);
 
   const handleCategoryChange = (event, value) => {
+    console.log('event, value', event, value);
+    
     if (
       value &&
       !selectedCategories.some((category: string) => category === value)

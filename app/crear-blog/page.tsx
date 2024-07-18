@@ -147,6 +147,16 @@ export default function CreateBlog() {
     setShowCrop(true);
   };
 
+  const handleTutorial = () => {
+    const intro = introJs();
+    intro.setOption("nextLabel", " Siguiente ");
+    intro.setOption("dontShowAgain", true);
+    intro.setOption("dontShowAgainLabel", "No mostrar de nuevo este tutorial");
+    intro.setOption("prevLabel", " Anterior ");
+    intro.setOption("doneLabel", " Entendido ");
+    intro.start();
+  };
+
   const handleShowSupportBlogs = () => {
     setShowSupportBlogs((prev: boolean) => !prev);
   };
@@ -273,12 +283,7 @@ export default function CreateBlog() {
               spacing={1}
               sx={{ marginBottom: "1rem" }}
             >
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                spacing={1}
-                sx={{ marginBottom: "1rem" }}
-              >
+              <Stack direction={"row"} alignItems={"center"} spacing={1}>
                 <Typography variant="h4">Ver contenido de ayuda</Typography>
                 <Button onClick={() => handleShowSupportBlogs()}>
                   {showSupportBlogs ? (
@@ -288,7 +293,15 @@ export default function CreateBlog() {
                   )}
                 </Button>
               </Stack>
-              <Button>Ver tutorial</Button>
+              <Button variant="contained" onClick={() => handleTutorial()}>
+                <Typography
+                  sx={{
+                    textTransform: "none",
+                  }}
+                >
+                  Ver tutorial
+                </Typography>
+              </Button>
             </Stack>
             {showSupportBlogs && (
               <Swiper
