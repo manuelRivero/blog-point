@@ -177,6 +177,7 @@ export default function CreateBlog() {
     form.append("content", values.content);
     form.append("category", values.category.id);
     try {
+      setLoadingSubmit(true)
       const { data } = await createBlog(form);
       setInfoModal(coreDispatch, {
         status: "success",
@@ -207,6 +208,8 @@ export default function CreateBlog() {
         },
         onAnimationEnd: null,
       });
+    } finally {
+      setLoadingSubmit(false)
     }
   };
 
@@ -481,16 +484,6 @@ export default function CreateBlog() {
                     Pista: Tu título abarca más caracteres de los que se
                     visualizaran en la carta de tu blog pero se visualizara de
                     forma completa en el detalle del blog.
-                  </Typography>
-                )}
-                {isMobile && (
-                  <Typography
-                    variant="body1"
-                    component={"p"}
-                    sx={{ color: "#c2c2c2" }}
-                  >
-                    Pista: Tu descripción se mostrará en dispositivos con una
-                    pantalla más grande
                   </Typography>
                 )}
                 <div data-intro={tutorialData.preview}>

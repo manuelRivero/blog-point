@@ -232,6 +232,7 @@ export default function CategoryDropdown({ field, error }: Props) {
           placeholder="Busca y selecciona"
           value={selectedValue ? selectedValue.name : value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if(selectedValue) return
             debouncedChangeHandler();
             setValue(e.target.value);
             inputRef.current = e.target.value;

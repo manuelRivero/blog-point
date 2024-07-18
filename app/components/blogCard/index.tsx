@@ -140,44 +140,49 @@ export default function BlogCard({
                 <Box
                   sx={{
                     height: 20,
-                    marginBottom: 2,
+                    marginBottom: 1,
                     width: "100%",
                     background: "#c2c2c2",
                     borderRadius: "4px",
                   }}
                 ></Box>
               )}
-              {data.description &&
-                (preview ? (
-                  showDescriptionTooltip ? (
-                    <Tooltip
-                      title="Tu descripción abarca más caracteres de los que se
+
+{data.description ? (
+                <Typography
+                  variant="h5"
+                  color="text.primary"
+                  component="h4"
+                  sx={{ mb: 1, fontSize: { xs: "14px" } }}
+                >
+                  {preview ? (
+                    showDescriptionTooltip ? (
+                      <Tooltip
+                        title="Tu título abarca más caracteres de los que se
               visualizaran en la carta de tu blog pero se visualizara de
               forma completa en el detalle del blog"
-                    >
-                      <Typography
-                        sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
-                        color="text.primary"
                       >
-                        {concatDots(data.description, 120)}
-                      </Typography>
-                    </Tooltip>
+                        <span>{concatDots(data.description, 60)}</span>
+                      </Tooltip>
+                    ) : (
+                      concatDots(data.description, 60)
+                    )
                   ) : (
-                    <Typography
-                      sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
-                      color="text.primary"
-                    >
-                      {concatDots(data.description, 120)}
-                    </Typography>
-                  )
-                ) : (
-                  <Typography
-                    sx={{ mb: 1.5, display: { xs: "none", lg: "block" } }}
-                    color="text.primary"
-                  >
-                    {concatDots(data.description, 120)}
-                  </Typography>
-                ))}
+                    concatDots(data.description, 60)
+                  )}
+                </Typography>
+              ) : (
+                <Box
+                  sx={{
+                    height: 32,
+                    marginBottom: 1,
+                    width: "100%",
+                    background: "#c2c2c2",
+                    borderRadius: "4px",
+                  }}
+                ></Box>
+              )}
+              
               <Stack direction={"row"} spacing={6} alignItems="center">
                 {preview ? (
                   <Typography fontSize={"14px"} align="left">
