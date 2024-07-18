@@ -8,7 +8,7 @@ interface CategoryForm {
 
 interface GetCategoriesParams {
   page: number;
-  pageSize?:number
+  pageSize?: number;
 }
 
 interface GetCategoriesResponse {
@@ -33,6 +33,12 @@ export const getCategories = (
   });
 };
 
-export const getAllCategories = (): Promise<GetCategoriesResponse> => {
-  return axiosIntance.get("/category/get-all");
+export const getAllCategories = (
+  searchText: string
+): Promise<GetCategoriesResponse> => {
+  return axiosIntance.get("/category/get-all", {
+    params: {
+      searchText,
+    },
+  });
 };

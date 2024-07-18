@@ -261,7 +261,7 @@ export default function EditBlog({ data }) {
                       render={({ field, fieldState }) => (
                         <CategoryDropdown
                           field={field}
-                          fieldState={fieldState}
+                          error={fieldState.error}
                         />
                       )}
                     />

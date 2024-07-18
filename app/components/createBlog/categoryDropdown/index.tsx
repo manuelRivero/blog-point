@@ -4,9 +4,22 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CustomInput from "../../shared/customInput";
-import { Box, Modal, Stack, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  ClickAwayListener,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  MenuList,
+  Modal,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 // form
@@ -14,45 +27,63 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { setInfoModal, useCore } from "@/app/context/core";
-import { createCategory, getCategories } from "@/app/client/category";
+import {
+  createCategory,
+  getAllCategories,
+  getCategories,
+} from "@/app/client/category";
 import CustomButton from "../../shared/customButton";
 import { Category } from "@/app/data/categories";
+import debounce from "lodash.debounce";
 
 interface Form {
   name: string;
 }
 interface Props {
   field: any;
-  fieldState: ControllerFieldState;
+  error: any;
 }
-
-const categoriesList: Category[] = [
-  { _id: "1", name: "Medicina general" },
-  { _id: "2", name: "Apuntes" },
-  { _id: "3", name: "Anatomía" },
-];
 
 const schema = yup.object({
   name: yup.string().required("Campo requerido"),
 });
 
-export default function CategoryDropdown({ field, fieldState }: Props) {
+export default function CategoryDropdown({ field, error }: Props) {
   const [, coreDispatch] = useCore();
+  const inputRef = React.useRef<string>("");
 
   //form
   const { control, handleSubmit, reset } = useForm<Form>({
     resolver: yupResolver(schema),
   });
   //states
-  const [page, setPage] = React.useState(0);
   const [formAlert, setFormAlert] = React.useState<null | string>(null);
   const [loadingSubmit, setLoadingSubmit] = React.useState<boolean>(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [value, setValue] = React.useState<string>("");
   const [openCategoryModal, setOpenCategoryModal] =
     React.useState<boolean>(false);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   const [selectedValue, setSelectedValue] = React.useState<Category | null>(
     null
+  );
+  const searchHandler = async () => {
+    if (inputRef.current.length >= 2) {
+      setIsOpen(true);
+      const { data } = await getAllCategories(inputRef.current);
+      console.log("getAllCategories", data);
+
+      setCategories(data.categories);
+    } else {
+      setIsOpen(false);
+      setCategories([]);
+    }
+  };
+  const debouncedChangeHandler = React.useMemo(
+    () => debounce(searchHandler, 1000),
+    []
   );
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -63,18 +94,37 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
   };
   const handleCategoryClick = (e: Category) => {
     setSelectedValue(e);
+    setIsOpen(false)
     field.onChange({ title: e.name, id: e._id });
   };
 
-  const handleNewCategory = () => {};
-
+  const getHighlightedText = (text: string, highlight: string) => {
+    // Split on highlight term and include term into parts, ignore case
+    const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+    return (
+      <span>
+        {parts.map((part, i) => (
+          <span
+            key={i}
+            style={
+              part.toLowerCase() === highlight.toLowerCase()
+                ? { fontWeight: "bold" }
+                : {}
+            }
+          >
+            {part}
+          </span>
+        ))}{" "}
+      </span>
+    );
+  };
   const submit = async (values: Form) => {
     try {
       setLoadingSubmit(true);
       const { data } = await createCategory({ ...values });
       const newCategoriesList = categories ? categories : [];
       setCategories([data.category, ...newCategoriesList]);
-      setOpenCategoryModal(false)
+      setOpenCategoryModal(false);
       setInfoModal(coreDispatch, {
         status: "success",
         title: "Se ha creado la categoría",
@@ -107,85 +157,182 @@ export default function CategoryDropdown({ field, fieldState }: Props) {
       setLoadingSubmit(false);
     }
   };
-  React.useEffect(() => {
-    const getData = async () => {
-      try {
-        const { data } = await getCategories({ page });
-        setCategories(data.categories);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    getData();
-    
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  React.useEffect(()=>{
-    if (field.value && field.value !== "") {
-      setSelectedValue({_id:field.value.id, name:field.value.title});
+  const handleEmpty = () => {
+    if (categories.length === 0 && inputRef.current.length < 2) {
+      return (
+        <Typography variant="body1" textAlign={"center"}>
+          Busca la categoría que mejor defina tu blog.
+        </Typography>
+      );
     }
-  },[field.value]);
-
+    if (categories.length === 0 && inputRef.current.length >= 2) {
+      return (
+        <Typography variant="body1" textAlign={"center"}>
+          No encontramos resultados, adelante crea una nueva categoría.
+        </Typography>
+      );
+    }
+  };
+  console.log("field state", error);
   return (
     <div>
+      <InputLabel
+        sx={(theme) => ({
+          marginBottom: ".25rem",
+          marginLeft: ".8rem",
+        })}
+      >
+        Categoría
+      </InputLabel>
       <Box
         sx={{
+          width: "100%",
           position: "relative",
+          "& > .MuiInput-root": {
+            width: "100%",
+          },
         }}
       >
-        <CustomInput
-          outline={true}
-          error={fieldState.error}
-          label="Categoría"
-          placeholder="Selecciona"
-          onChange={() => {}}
-          type="text"
-          value={selectedValue?.name || ""}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            right: 16,
-            top: 35,
-            cursor: "pointer",
+        <Input
+          ref={inputRef}
+          sx={(theme) => ({
+            position: "relative",
+            "&: after": {
+              display: "none",
+            },
+            "&: before": {
+              display: "none",
+            },
+
+            "& .MuiInputBase-input": {
+              fontWeight: selectedValue ? "bold" : "regular",
+              borderRadius: 2,
+              position: "relative",
+              backgroundColor: "#fff",
+              fontSize: 16,
+              width: "100%",
+              padding: "10px 12px",
+              border: `1px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+              transition: theme.transitions.create([
+                "border-color",
+                "background-color",
+                "box-shadow",
+              ]),
+              // Use the system font instead of the default Roboto font.
+              fontFamily: "OpenSans",
+              "&:focus": {
+                boxShadow: `${alpha(
+                  theme.palette.primary.main,
+                  0.25
+                )} 0 0 0 0.2rem`,
+                borderColor: theme.palette.primary.main,
+              },
+            },
+          })}
+          placeholder="Busca y selecciona"
+          value={selectedValue ? selectedValue.name : value}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            debouncedChangeHandler();
+            setValue(e.target.value);
+            inputRef.current = e.target.value;
           }}
-          onClick={handleClick}
-        >
-          <KeyboardArrowDownIcon />
-        </Box>
-      </Box>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        {categories?.map((e: Category) => {
-          return (
-            <MenuItem
-              key={e._id}
-              onClick={() => {
-                handleClose();
-                handleCategoryClick(e);
+          endAdornment={
+            <InputAdornment
+              position="end"
+              sx={{ position: "absolute", right: "1rem", top: "1.4rem" }}
+            >
+              <Stack direction={"row"} spacing={1} justifyContent="flex-end">
+                {selectedValue && (
+                  <IconButton
+                    onClick={() => {
+                      setSelectedValue(null);
+                      inputRef.current = "";
+                      setValue("");
+                      field.onChange(undefined);
+                      setCategories([])
+                    }}
+                    aria-label="toggle password visibility"
+                    edge="end"
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                )}
+                {!selectedValue && (
+                  <IconButton
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-label="toggle password visibility"
+                    edge="end"
+                  >
+                    <KeyboardArrowDownIcon />
+                  </IconButton>
+                )}
+              </Stack>
+            </InputAdornment>
+          }
+        />
+        {isOpen && (
+          <ClickAwayListener onClickAway={() => setIsOpen(false)}>
+            <Paper
+              sx={{
+                zIndex: 100,
+                borderRadius: 4,
+                padding: 2,
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "100%",
+                transform: "translateY(100%) translateY(5px)",
               }}
             >
-              {e.name}
-            </MenuItem>
-          );
-        })}
-        <MenuItem onClick={()=> {setOpenCategoryModal(true); handleNewCategory();}}>
-          <Stack direction="row" spacing={4}>
-            <Typography>
-              Agregar nueva categoría
-            </Typography>
-            <AddCircleOutlineIcon color="primary" />
-          </Stack>
-        </MenuItem>
-      </Menu>
+              {categories.length > 0 ? (
+                <MenuList sx={{ maxHeight: "250px", overflow: "auto" }}>
+                  {categories.map((e: Category) => {
+                    return (
+                      <MenuItem
+                        key={e._id}
+                        sx={{
+                          borderRadius: 2,
+                          border: "#c2c2c2",
+                          boxShadow: " 0 0 15px -5px rgba(0,0,0, .1)",
+                          marginBottom: 1,
+                          whiteSpace: "break-spaces",
+                        }}
+                        onClick={() => handleCategoryClick(e)}
+                      >
+                        <Box>
+                          <Typography variant="body1">
+                            {getHighlightedText(e.name, value)}
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    );
+                  })}
+                </MenuList>
+              ) : (
+                handleEmpty()
+              )}
+
+              <Stack
+                onClick={() => {
+                  setOpenCategoryModal(true);
+                }}
+                direction="row"
+                spacing={4}
+                justifyContent={"center"}
+                sx={{ padding: 2, cursor: "pointer" }}
+              >
+                <Typography>Agregar nueva categoría</Typography>
+                <AddCircleOutlineIcon color="primary" />
+              </Stack>
+            </Paper>
+          </ClickAwayListener>
+        )}
+      </Box>
+      {error && (
+        <Typography sx={{ marginLeft: ".8rem", fontSize: 12 }} color={"error"}>
+          Campo requerido, selecciona de la lista
+        </Typography>
+      )}
       <Modal
         open={openCategoryModal}
         onClose={() => setOpenCategoryModal(false)}

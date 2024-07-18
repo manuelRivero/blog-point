@@ -198,6 +198,7 @@ export default function BlogCard({
                     >
                       <Stack
                         direction={"row"}
+                        spacing={1}
                         sx={{ fontSize: "18px" }}
                         alignItems={"center"}
                         component="div"
@@ -209,6 +210,7 @@ export default function BlogCard({
                       </Stack>
                       <Stack
                         direction={"row"}
+                        spacing={1}
                         sx={{ fontSize: "16px" }}
                         alignItems={"center"}
                         component="div"

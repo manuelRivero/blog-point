@@ -265,6 +265,7 @@ export default function CreateBlog() {
   if (loading) {
     return <PageLoading />;
   }
+  console.log("errors", errors)
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -353,7 +354,7 @@ export default function CreateBlog() {
                       render={({ field, fieldState }) => (
                         <CategoryDropdown
                           field={field}
-                          fieldState={fieldState}
+                          error={fieldState.error}
                         />
                       )}
                     />
@@ -382,7 +383,7 @@ export default function CreateBlog() {
                             field.onChange(e.target.value);
                             setCardData({ ...cardData, title: e.target.value });
                           }}
-                          label="Título del blog"
+                          label="Título"
                           outline={true}
                           placeholder="Escribe el titulo del blog"
                         />
@@ -416,7 +417,7 @@ export default function CreateBlog() {
                               description: e.target.value,
                             });
                           }}
-                          label="Descripción blog"
+                          label="Descripción"
                           outline={true}
                           multiline={true}
                           rows={5}
@@ -443,7 +444,7 @@ export default function CreateBlog() {
                             handlePreview(e);
                             field.onChange(e);
                           }}
-                          label="Imagen del blog"
+                          label="Imagen"
                         />
                       )}
                     />
