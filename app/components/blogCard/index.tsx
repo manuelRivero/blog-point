@@ -162,13 +162,13 @@ export default function BlogCard({
               visualizaran en la carta de tu blog pero se visualizara de
               forma completa en el detalle del blog"
                       >
-                        <span>{concatDots(data.description, 60)}</span>
+                        <span>{concatDots(data.description, 120)}</span>
                       </Tooltip>
                     ) : (
-                      concatDots(data.description, 60)
+                      concatDots(data.description, 120)
                     )
                   ) : (
-                    concatDots(data.description, 60)
+                    concatDots(data.description, 120)
                   )}
                 </Typography>
               ) : (
