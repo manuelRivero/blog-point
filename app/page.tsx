@@ -9,6 +9,7 @@ import { getBlogs, getPopular, getRecent } from "./client/blogs";
 import CategoryRow from "./components/home/categoryRow";
 import Link from "next/link";
 
+export const revalidate = 60;
 async function getData({ page = 0 }) {
   try {
     const [
