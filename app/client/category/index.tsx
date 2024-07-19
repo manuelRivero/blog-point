@@ -30,6 +30,11 @@ export const getCategories = (
       pageSize: data.pageSize,
       page: data.page,
     },
+    headers: {
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    },
   });
 };
 
@@ -39,6 +44,11 @@ export const getAllCategories = (
   return axiosIntance.get("/category/get-all", {
     params: {
       searchText,
+    },
+    headers: {
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': '0',
     },
   });
 };
