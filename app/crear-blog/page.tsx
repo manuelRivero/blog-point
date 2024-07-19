@@ -11,6 +11,7 @@ import {
   Slider,
   Typography,
   Stack,
+  CardMedia,
 } from "@mui/material";
 import React, { useState, useId, useEffect } from "react";
 import CustomCard from "../components/shared/card";
@@ -177,7 +178,7 @@ export default function CreateBlog() {
     form.append("content", values.content);
     form.append("category", values.category.id);
     try {
-      setLoadingSubmit(true)
+      setLoadingSubmit(true);
       const { data } = await createBlog(form);
       setInfoModal(coreDispatch, {
         status: "success",
@@ -209,7 +210,7 @@ export default function CreateBlog() {
         onAnimationEnd: null,
       });
     } finally {
-      setLoadingSubmit(false)
+      setLoadingSubmit(false);
     }
   };
 
@@ -268,7 +269,7 @@ export default function CreateBlog() {
   if (loading) {
     return <PageLoading />;
   }
-  console.log("errors", errors)
+  console.log("errors", errors);
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -448,6 +449,7 @@ export default function CreateBlog() {
                             field.onChange(e);
                           }}
                           label="Imagen"
+                          imageSrc={cardData.image}
                         />
                       )}
                     />
@@ -465,7 +467,7 @@ export default function CreateBlog() {
               </Grid>
               <Grid item xs={12} sm={6} lg={6}>
                 <Typography variant="h2" component={"h2"}>
-                  Previsualicación
+                  Previsualización
                 </Typography>
                 <Typography
                   variant="body1"

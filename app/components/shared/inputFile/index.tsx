@@ -1,6 +1,13 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Box, Button, InputLabel, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CardMedia,
+  InputLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { FieldError } from "react-hook-form";
 
 interface Props {
@@ -9,6 +16,7 @@ interface Props {
   handleCancel: () => void;
   error: FieldError | undefined;
   reset: boolean;
+  imageSrc?: string;
 }
 
 export default function CustomInputFile({
@@ -17,6 +25,7 @@ export default function CustomInputFile({
   error,
   handleCancel,
   reset,
+  imageSrc,
 }: Props) {
   const [file, setFile] = useState<File | null>(null);
 
@@ -35,7 +44,7 @@ export default function CustomInputFile({
     if (reset) {
       setFile(null);
     }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset]);
 
   return (
@@ -47,6 +56,21 @@ export default function CustomInputFile({
       >
         {label}
       </InputLabel>
+      {imageSrc !== null && (
+        <CardMedia
+          sx={{
+            borderRadius: "1rem",
+            xs: { display: "none" },
+            width: { xs: "100px" },
+            height: { xs: "100px" },
+            objectFit: "cover",
+            marginY: 1
+          }}
+          component="img"
+          image={imageSrc}
+          alt="Paella dish"
+        />
+      )}
       <Box sx={{ marginBottom: ".25rem" }}>
         {file ? (
           <Typography variant="body1" component="p">

@@ -379,7 +379,7 @@ export default function EditBlog({ data }) {
               </Grid>
               <Grid item xs={12} sm={6} lg={6}>
                 <Typography variant="h2" component={"h2"}>
-                  Previsualicación
+                  Previsualización
                 </Typography>
                 <Typography
                   variant="body1"
