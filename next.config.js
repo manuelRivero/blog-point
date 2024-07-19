@@ -18,6 +18,24 @@ const nextConfig = {
         },
       ],
     },
+    {
+      source: "/lo-mas-nuevo",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "no-store",
+        },
+      ],
+    },
+    {
+      source: "/tendencias",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "no-store",
+        },
+      ],
+    },
   ],
   reactStrictMode: false,
   sassOptions: {
