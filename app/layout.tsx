@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   viewport:
     "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
-    { rel: "apple-touch-icon", url: "icon.png" },
-    { rel: "icon", url: "icon.png" },
+    { rel: "apple-touch-icon", url: "/icon.png" },
+    { rel: "icon", url: "/favicon.png" },
   ],
   openGraph: {
     title: "Historial Medico",
