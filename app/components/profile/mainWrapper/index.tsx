@@ -23,6 +23,7 @@ import { updateProfile } from "@/app/client/user";
 import { Blog } from "@/app/data/blog";
 import BlogCard from "../../blogCard";
 import { logout } from "@/app/client/auth";
+import BackButton from "../../shared/BackButton";
 
 interface Props {
   data: any;
@@ -106,9 +107,7 @@ export default function MainWrapper({ data, blogs }: Props) {
   console.log("user data", data.data);
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
-      <IconButton onClick={() => router.back()}>
-        <ArrowBackIcon />
-      </IconButton>
+      <BackButton />
       <Typography variant="h1" component={"h1"} align="center">
         Perfil
       </Typography>
@@ -129,7 +128,7 @@ export default function MainWrapper({ data, blogs }: Props) {
           {!data.data.isSameUser &&
             blogs.blogs[0].data.map((e: any) => {
               return (
-                <Box sx={{marginBottom: 4}}key={e._id}>
+                <Box sx={{ marginBottom: 4 }} key={e._id}>
                   <BlogCard
                     userAvatar={{
                       name: e.user[0].name,
