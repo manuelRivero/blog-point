@@ -30,10 +30,9 @@ interface Props {
 }
 
 export default function MainWrapper({ data, blogs }: Props) {
-  const [{user}, coreDispatch] = useCore();
+  const [{ user }, coreDispatch] = useCore();
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [isEditingSocial, setIsEditingSocial] = useState<boolean>(false);
-
 
   const router = useRouter();
 
@@ -83,7 +82,7 @@ export default function MainWrapper({ data, blogs }: Props) {
   const handleEmpty = async () => {
     router.replace("/");
 
-    await logout(user?.data?._id!)
+    await logout(user?.data?._id!);
     coreLogout(coreDispatch);
     setInfoModal(coreDispatch, {
       status: "error",
@@ -98,13 +97,13 @@ export default function MainWrapper({ data, blogs }: Props) {
       },
       onAnimationEnd: null,
     });
-  }
+  };
 
   if (!data) {
-    handleEmpty()
+    handleEmpty();
     return null;
   }
-  console.log("user data", data.data)
+  console.log("user data", data.data);
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -127,26 +126,35 @@ export default function MainWrapper({ data, blogs }: Props) {
         })}
       >
         <Box sx={{ maxWidth: 500, width: "100%", position: "relative" }}>
-          {!data.data.isSameUser && blogs.blogs[0].data.map((e: any) => {
-            return (
-              <BlogCard
-                key={e._id}
-                userAvatar={{
-                  name: e.user[0].name,
-                  lastName: e.user[0].lastName,
-                  image: e.user[0].avatar,
-                  slug: e.user[0].slug
-                }}
-                data={{ ...e, category: e.category[0].name }}
-                preview={false}
-                showDescriptionTooltip={false}
-                showTitleTooltip={false}
-              />)
-          })}
-
+          {!data.data.isSameUser &&
+            blogs.blogs[0].data.map((e: any) => {
+              return (
+                <Box sx={{marginBottom: 4}}key={e._id}>
+                  <BlogCard
+                    userAvatar={{
+                      name: e.user[0].name,
+                      lastName: e.user[0].lastName,
+                      image: e.user[0].avatar,
+                      slug: e.user[0].slug,
+                    }}
+                    data={{ ...e, category: e.category[0].name }}
+                    preview={false}
+                    showDescriptionTooltip={false}
+                    showTitleTooltip={false}
+                  />
+                </Box>
+              );
+            })}
         </Box>
 
-        <Box sx={{ maxWidth: 500, width: "100%", position: "relative", marginLeft: { xs: "0 !important",lg: "32px !important" } }}>
+        <Box
+          sx={{
+            maxWidth: 500,
+            width: "100%",
+            position: "relative",
+            marginLeft: { xs: "0 !important", lg: "32px !important" },
+          }}
+        >
           <Box>
             {!isEditingSocial && (
               <CustomCard>
@@ -166,9 +174,9 @@ export default function MainWrapper({ data, blogs }: Props) {
                 </Stack>
                 {!isEditingProfile && (
                   <ProfileStats
-                  isSameUser={data.data.isSameUser}
-                  targetUser={data.data.profileData._id}
-                  following={data.data.profileData.follow}
+                    isSameUser={data.data.isSameUser}
+                    targetUser={data.data.profileData._id}
+                    following={data.data.profileData.follow}
                     data={{
                       fallow: data.data.profileData.fallow,
                       fallowers: data.data.profileData.fallowers,

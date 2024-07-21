@@ -118,7 +118,7 @@ export default function BlogCard({
                   variant="h5"
                   color="text.primary"
                   component="h4"
-                  sx={{ mb: 1, fontSize: { xs: "14px" } }}
+                  sx={{ mb: .25, fontSize: { xs: "14px", fontWeight:"bold" } }}
                 >
                   {preview ? (
                     showTitleTooltip ? (
@@ -150,10 +150,10 @@ export default function BlogCard({
 
 {data.description ? (
                 <Typography
-                  variant="h5"
+                  variant="body1"
                   color="text.primary"
                   component="h4"
-                  sx={{ mb: 1, fontSize: { xs: "14px" } }}
+                  sx={{ mb: "2px", fontSize: { xs: "12px" } }}
                 >
                   {preview ? (
                     showDescriptionTooltip ? (
@@ -185,11 +185,11 @@ export default function BlogCard({
               
               <Stack direction={"row"} spacing={6} alignItems="center">
                 {preview ? (
-                  <Typography fontSize={"14px"} align="left">
+                  <Typography fontSize={"14px"} align="left" sx={{flexShrink:0}}>
                     {moment().format("DD-MM-YYYY")}
                   </Typography>
                 ) : (
-                  <Typography fontSize={"14px"} align="left">
+                  <Typography fontSize={"14px"} align="left"  sx={{flexShrink:0}}>
                     {moment(data.createdAt).format("DD-MM-YYYY")}
                   </Typography>
                 )}
