@@ -1,9 +1,9 @@
 import React from "react";
-import { getProfile } from "@/app/client/user";
 import MainWrapper from "@/app/components/profile/mainWrapper";
 import { cookies } from "next/headers";
 import { axiosIntance } from "@/app/client";
-import { otherUserBlogs } from "@/app/client/blogs";
+
+export const revalidate = 10
 
 async function getData(slug: string) {
   const cookie = cookies().get("token");

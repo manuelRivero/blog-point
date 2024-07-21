@@ -63,7 +63,7 @@ export default function BlogCard({
       sx={{
         textDecoration: "none",
         width: "100%",
-        pointerEvents: !preview ? 'all' : 'none'
+        pointerEvents: !preview ? "all" : "none",
       }}
     >
       <Card
@@ -118,7 +118,11 @@ export default function BlogCard({
                   variant="h5"
                   color="text.primary"
                   component="h4"
-                  sx={{ mb: .25, fontSize: { xs: "14px", fontWeight:"bold" } }}
+                  sx={{
+                    mb: 0.25,
+                    fontSize: { xs: "14px", md: "16px" },
+                    fontWeight: "bold",
+                  }}
                 >
                   {preview ? (
                     showTitleTooltip ? (
@@ -148,12 +152,12 @@ export default function BlogCard({
                 ></Box>
               )}
 
-{data.description ? (
+              {data.description ? (
                 <Typography
                   variant="body1"
                   color="text.primary"
                   component="h4"
-                  sx={{ mb: "2px", fontSize: { xs: "12px" } }}
+                  sx={{ mb: "2px", fontSize: { xs: "12px", md: "14px" } }}
                 >
                   {preview ? (
                     showDescriptionTooltip ? (
@@ -182,14 +186,22 @@ export default function BlogCard({
                   }}
                 ></Box>
               )}
-              
+
               <Stack direction={"row"} spacing={6} alignItems="center">
                 {preview ? (
-                  <Typography fontSize={"14px"} align="left" sx={{flexShrink:0}}>
+                  <Typography
+                    fontSize={"14px"}
+                    align="left"
+                    sx={{ flexShrink: 0 }}
+                  >
                     {moment().format("DD-MM-YYYY")}
                   </Typography>
                 ) : (
-                  <Typography fontSize={"14px"} align="left"  sx={{flexShrink:0}}>
+                  <Typography
+                    fontSize={"14px"}
+                    align="left"
+                    sx={{ flexShrink: 0 }}
+                  >
                     {moment(data.createdAt).format("DD-MM-YYYY")}
                   </Typography>
                 )}
