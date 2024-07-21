@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { axiosIntance } from "@/app/client";
 
 export const revalidate = 10
+export const dynamic = "force-dynamic";
 
 async function getData(slug: string) {
   const cookie = cookies().get("token");
