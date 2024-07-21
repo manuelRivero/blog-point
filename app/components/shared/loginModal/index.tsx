@@ -73,6 +73,7 @@ export default function LoginModal() {
         hasSubmit: null,
         onAnimationEnd: () => {
           router.push(loginRedirection);
+          router.refresh();
           setLoginRedirection(coreDispatch, "/");
           setInfoModal(coreDispatch, null);
           reset();

@@ -74,7 +74,7 @@ export default function HeaderMenu() {
               </Typography>
             </MenuItem>
             <Divider />
-            <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch); router.push("/")}} >
+            <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch); router.push("/"); router.refresh();}} >
               <Typography variant="body1" component={"p"}>
                 Cerrar sesión
               </Typography>

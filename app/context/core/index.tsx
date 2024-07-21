@@ -95,6 +95,7 @@ export const CoreProvider: React.FC<Props> = (props) => {
             setInfoModal(dispatch, null);
             setLoginModal(dispatch, true);
             router.push("/");
+            router.refresh();
             logout(dispatch);
           },
         },
