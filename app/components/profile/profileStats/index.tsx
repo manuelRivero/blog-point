@@ -1,66 +1,183 @@
-import React from "react";
-import { Stack, Tooltip, Typography } from "@mui/material";
-import { useCore } from "@/app/context/core";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { numify } from "numify";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import { follow, unFollow } from "@/app/client/user";
 
 interface Props {
-  data:{
-    fallowers: number,
-    fallow: number,
-    blogs:number
-  }
+  data: {
+    fallowers: number;
+    fallow: number;
+    blogs: number;
+  };
+  targetUser: string;
+  following: boolean;
+  isSameUser: boolean;
 }
-export default function ProfileStats({data}:Props) {
+export default function ProfileStats({ data, targetUser, following, isSameUser }: Props) {
+  const [isFollowing, setIsFollowing] = useState<boolean>(following);
+  const [followersCount, setFollowersCount] = useState<number>(data.fallowers);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  console.log("isSameUser", isSameUser);
+  const handleFollow = async () => {
+    try {
+      setIsLoading(true);
+      const response = await follow(targetUser);
+      setFollowersCount((prev) => prev + 1);
+      setIsFollowing(true);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  const handleUnFollow = async () => {
+    try {
+      setIsLoading(true);
+      const response = await unFollow(targetUser);
+      setFollowersCount((prev) => prev - 1);
+      setIsFollowing(false);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleStatus = () => {
+    if (isLoading) {
+      return (
+        <Box sx={{padding:".5rem"}}>
+          <CircularProgress size={"1rem"} color="inherit" />
+        </Box>
+      );
+    } else if(!isLoading && !isSameUser ) {
+      return !isFollowing ? (
+        <>
+          <Button
+            variant="text"
+            sx={(theme) => ({ fontFamily: "OpenSans", textTransform: "none" })}
+            endIcon={<PersonAddAlt1Icon />}
+            onClick={handleFollow}
+          >
+            Seguir
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            variant="text"
+            sx={(theme) => ({
+              fontFamily: "OpenSans",
+              textTransform: "none",
+              color: theme.palette.error.main,
+            })}
+            endIcon={<PersonRemoveIcon />}
+            onClick={handleUnFollow}
+          >
+            Dejar de seguir
+          </Button>
+        </>
+      );
+    }
+  };
   return (
-    <Stack direction={"row"} spacing={2} sx={{ paddingTop:2, justifyContent: "center", marginTop:2, borderTop:"solid 1px rgba(194, 194, 194, .5)" }}>
-      
-      <Stack
-        direction={"column"}
-        sx={(theme) => ({
-          justifyContent: "center",
-          color: theme.palette.primary.main,
-          alignItems:"center"
-        })}
-      >
-        <Typography variant="h6" component={"h5"} color="text.primary" sx={{marginBotom:"4px"}}>
-          <strong>{data.fallowers}</strong>
-        </Typography>
-        <Typography variant="body1" color="text.primary" sx={{marginTop:0}}>
-          Seguidos
-        </Typography>
+    <Stack
+      direction={{xs:"column",md:"row"}}
+      alignItems={{xs:"center", md:"flex-end"}}
+      spacing={4}
+      sx={{
+        paddingTop: 2,
+        justifyContent: "space-between",
+        marginTop: 2,
+        borderTop: "solid 1px rgba(194, 194, 194, .5)",
+      }}
+    >
+      <Stack direction={"row"} spacing={2}>
+        <Stack
+          direction={"column"}
+          sx={(theme) => ({
+            justifyContent: "center",
+            alignItems: "center",
+          })}
+        >
+          <Typography
+            variant="h6"
+            component={"h5"}
+            sx={{ height: "24px" }}
+            color="text.primary"
+          >
+            {numify(data.fallow)}
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            sx={{ marginTop: 0 }}
+          >
+            Seguidos
+          </Typography>
+        </Stack>
+        <Stack
+          direction={"column"}
+          sx={(theme) => ({
+            justifyContent: "center",
+            color: theme.palette.primary.main,
+            alignItems: "center",
+          })}
+        >
+          <Typography
+            variant="h6"
+            component={"h5"}
+            sx={{ height: "24px" }}
+            color="text.primary"
+          >
+            {numify(followersCount)}
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            sx={{ marginTop: 0 }}
+          >
+            Seguidores
+          </Typography>
+        </Stack>
+        <Stack
+          direction={"column"}
+          sx={(theme) => ({
+            justifyContent: "center",
+            color: theme.palette.primary.main,
+            alignItems: "center",
+          })}
+        >
+          <Typography
+            variant="h6"
+            component={"h5"}
+            sx={{ height: "24px" }}
+            color="text.primary"
+          >
+            {numify(data.blogs)}
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            sx={{ marginTop: 0 }}
+          >
+            Blogs
+          </Typography>
+        </Stack>
       </Stack>
-      
-      <Stack
-        direction={"column"}
-        sx={(theme) => ({
-          justifyContent: "center",
-          color: theme.palette.primary.main,
-          alignItems:"center"
-        })}
-      >
-        <Typography variant="h6" component={"h5"} color="text.primary" sx={{marginBotom:"4px"}}>
-          <strong>{data.fallowers}</strong>
-        </Typography>
-        <Typography variant="body1" color="text.primary" sx={{marginTop:0}}>
-          Seguidores
-        </Typography>
-      </Stack>
-      <Stack
-        direction={"column"}
-        sx={(theme) => ({
-          justifyContent: "center",
-          color: theme.palette.primary.main,
-          alignItems:"center"
 
-        })}
-      >
-        <Typography variant="h6" component={"h5"} color="text.primary" sx={{marginBotom:"4px"}}>
-         <strong>{data.blogs}</strong>
-        </Typography>
-        <Typography variant="body1" color="text.primary" sx={{marginTop:0}}>
-          Blogs
-        </Typography>
-      </Stack>
+      <Box>
+        <Stack direction={"row"} alignItems="center" spacing={1}>
+          {handleStatus()}
+        </Stack>
+      </Box>
     </Stack>
   );
 }

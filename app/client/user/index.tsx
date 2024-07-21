@@ -9,3 +9,10 @@ export const getProfile = () : Promise<AxiosResponse> => {
     return axiosIntance.post("/user/update-profile", form);
   };
   
+  export const follow = (id:string) : Promise<AxiosResponse> => {
+    return axiosIntance.post("/user/follow", {id})
+  }
+
+  export const unFollow = (id:string) : Promise<AxiosResponse> => {
+    return axiosIntance.post("/user/unfollow", {id})
+  }

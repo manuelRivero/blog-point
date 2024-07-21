@@ -104,7 +104,7 @@ export default function MainWrapper({ data, blogs }: Props) {
     handleEmpty()
     return null;
   }
-
+  console.log("user data", data.data)
   return (
     <Container sx={{ marginTop: "2rem", paddingBottom: 8 }}>
       <IconButton onClick={() => router.back()}>
@@ -166,6 +166,9 @@ export default function MainWrapper({ data, blogs }: Props) {
                 </Stack>
                 {!isEditingProfile && (
                   <ProfileStats
+                  isSameUser={data.data.isSameUser}
+                  targetUser={data.data.profileData._id}
+                  following={data.data.profileData.follow}
                     data={{
                       fallow: data.data.profileData.fallow,
                       fallowers: data.data.profileData.fallowers,

@@ -231,11 +231,13 @@ export default function ProfileInfo({ onChangeEditing, data }: Props) {
       {data.profileData.bio ? (
         <Typography variant="body1">{data.profileData.bio}</Typography>
       ) : (
-        data.isSameUser && (
+        data.isSameUser ? (
           <Typography variant="body1" sx={{ color: "#c2c2c2" }}>
             Aun no has agregado contenido a tu biografía
           </Typography>
-        )
+        ) : (<Typography variant="body1" sx={{ color: "#c2c2c2" }}>
+          Este usuario aún no ha agregado contenido a su biografía	
+        </Typography>)
       )}
     </Box>
   );

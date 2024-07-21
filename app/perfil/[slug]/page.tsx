@@ -17,9 +17,10 @@ async function getData(slug: string) {
         Cookie: cookie ? `token=${cookie?.value}` : "",
       },
     }) ])
-
+    console.log("data", {profileData, blogData})
     return {profileData, blogData};
   } catch (error) {
+    console.log("error profile", error)
     return null
   }
 }
