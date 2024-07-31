@@ -145,7 +145,7 @@ export default function DonationsContentWrapper() {
             <Stack direction={"row"} justifyContent={"center"}>
               <Link
                 target="_blank"
-                href={`https://auth.mercadopago.com.ar/authorization?client_id=${process.env.NEXT_PUBLIC_MERCADOPAGO_APP_ID}&response_type=code&platform_id=mp&state=${user._id}&redirect_uri=https%3A%2F%2Fblog-point-nine.vercel.app%2F/procesando-vinculacion`}
+                href={`https://auth.mercadopago.com.ar/authorization?client_id=${process.env.NEXT_PUBLIC_MERCADOPAGO_APP_ID}&response_type=code&platform_id=mp&state=${user.data._id}&redirect_uri=https%3A%2F%2Fblog-point-nine.vercel.app%2F/procesando-vinculacion`}
                 style={{ textDecoration: "none" }}
               >
                 <Button variant="contained">Activar donaciones</Button>
