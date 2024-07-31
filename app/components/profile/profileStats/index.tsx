@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,8 @@ import {
 import { numify } from "numify";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import { follow, unFollow } from "@/app/client/user";
+import { createAccessToken, follow, unFollow } from "@/app/client/user";
+import Link from "next/link";
 
 interface Props {
   data: {
@@ -22,11 +23,28 @@ interface Props {
   following: boolean;
   isSameUser: boolean;
 }
-export default function ProfileStats({ data, targetUser, following, isSameUser }: Props) {
+export default function ProfileStats({
+  data,
+  targetUser,
+  following,
+  isSameUser,
+}: Props) {
   const [isFollowing, setIsFollowing] = useState<boolean>(following);
   const [followersCount, setFollowersCount] = useState<number>(data.fallowers);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   console.log("isSameUser", isSameUser);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const repsonse = await createAccessToken();
+        console.log("AccessToken", repsonse);
+      } catch (error) {
+        console.log("AccessToken", error.response);
+      }
+    };
+
+    getData();
+  }, []);
   const handleFollow = async () => {
     try {
       setIsLoading(true);
@@ -53,11 +71,11 @@ export default function ProfileStats({ data, targetUser, following, isSameUser }
   const handleStatus = () => {
     if (isLoading) {
       return (
-        <Box sx={{padding:".5rem"}}>
+        <Box sx={{ padding: ".5rem" }}>
           <CircularProgress size={"1rem"} color="inherit" />
         </Box>
       );
-    } else if(!isLoading && !isSameUser ) {
+    } else if (!isLoading && !isSameUser) {
       return !isFollowing ? (
         <>
           <Button
@@ -89,8 +107,8 @@ export default function ProfileStats({ data, targetUser, following, isSameUser }
   };
   return (
     <Stack
-      direction={{xs:"column",md:"row"}}
-      alignItems={{xs:"center", md:"flex-end"}}
+      direction={{ xs: "column", md: "row" }}
+      alignItems={{ xs: "center", md: "flex-end" }}
       spacing={4}
       sx={{
         paddingTop: 2,
@@ -99,77 +117,87 @@ export default function ProfileStats({ data, targetUser, following, isSameUser }
         borderTop: "solid 1px rgba(194, 194, 194, .5)",
       }}
     >
-      <Stack direction={"row"} spacing={2}>
-        <Stack
-          direction={"column"}
-          sx={(theme) => ({
-            justifyContent: "center",
-            alignItems: "center",
-          })}
-        >
-          <Typography
-            variant="h6"
-            component={"h5"}
-            sx={{ height: "24px" }}
-            color="text.primary"
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        spacing={2}
+        sx={{
+          width: "100%",
+        }}
+      >
+        <Stack direction={"row"} spacing={2}>
+          <Stack
+            direction={"column"}
+            sx={(theme) => ({
+              justifyContent: "center",
+              alignItems: "center",
+            })}
           >
-            {numify(data.fallow)}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ marginTop: 0 }}
+            <Typography
+              variant="h6"
+              component={"h5"}
+              sx={{ height: "24px" }}
+              color="text.primary"
+            >
+              {numify(data.fallow)}
+            </Typography>
+            <Typography
+              variant="body1"
+              color="text.primary"
+              sx={{ marginTop: 0 }}
+            >
+              Seguidos
+            </Typography>
+          </Stack>
+          <Stack
+            direction={"column"}
+            sx={(theme) => ({
+              justifyContent: "center",
+              color: theme.palette.primary.main,
+              alignItems: "center",
+            })}
           >
-            Seguidos
-          </Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          sx={(theme) => ({
-            justifyContent: "center",
-            color: theme.palette.primary.main,
-            alignItems: "center",
-          })}
-        >
-          <Typography
-            variant="h6"
-            component={"h5"}
-            sx={{ height: "24px" }}
-            color="text.primary"
+            <Typography
+              variant="h6"
+              component={"h5"}
+              sx={{ height: "24px" }}
+              color="text.primary"
+            >
+              {numify(followersCount)}
+            </Typography>
+            <Typography
+              variant="body1"
+              color="text.primary"
+              sx={{ marginTop: 0 }}
+            >
+              Seguidores
+            </Typography>
+          </Stack>
+          <Stack
+            direction={"column"}
+            sx={(theme) => ({
+              justifyContent: "center",
+              color: theme.palette.primary.main,
+              alignItems: "center",
+            })}
           >
-            {numify(followersCount)}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ marginTop: 0 }}
-          >
-            Seguidores
-          </Typography>
-        </Stack>
-        <Stack
-          direction={"column"}
-          sx={(theme) => ({
-            justifyContent: "center",
-            color: theme.palette.primary.main,
-            alignItems: "center",
-          })}
-        >
-          <Typography
-            variant="h6"
-            component={"h5"}
-            sx={{ height: "24px" }}
-            color="text.primary"
-          >
-            {numify(data.blogs)}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ marginTop: 0 }}
-          >
-            Blogs
-          </Typography>
+            <Typography
+              variant="h6"
+              component={"h5"}
+              sx={{ height: "24px" }}
+              color="text.primary"
+            >
+              {numify(data.blogs)}
+            </Typography>
+            <Typography
+              variant="body1"
+              color="text.primary"
+              sx={{ marginTop: 0 }}
+            >
+              Blogs
+            </Typography>
+          </Stack>
         </Stack>
       </Stack>
 

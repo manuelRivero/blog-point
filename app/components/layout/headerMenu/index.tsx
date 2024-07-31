@@ -73,6 +73,11 @@ export default function HeaderMenu() {
                 Perfil
               </Typography>
             </MenuItem>
+            <MenuItem component={Link} onClick={()=> setIsOpen(false)} href={`/donaciones`}>
+              <Typography variant="body1" component={"p"}>
+                Donaciones
+              </Typography>
+            </MenuItem>
             <Divider />
             <MenuItem  onClick={()=> {setIsOpen(false); logout(coreDispatch); router.push("/"); router.refresh();}} >
               <Typography variant="body1" component={"p"}>
