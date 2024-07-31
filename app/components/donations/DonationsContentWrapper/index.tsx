@@ -140,6 +140,7 @@ export default function DonationsContentWrapper() {
               nuestro centro de ayuda.
             </Typography>
           </Box>
+          
 
           <Stack direction={"row"} justifyContent={"center"}>
             <Link
