@@ -218,7 +218,7 @@ export default function LoginModal() {
           </Typography>
         </form>
 
-        <Box
+        {/* <Box
           sx={{
             height: "1px",
             border: "solid 1px #c2c2c2",
@@ -240,7 +240,7 @@ export default function LoginModal() {
               background="#fff"
             />
           </Box>
-        </Box>
+        </Box> */}
         <Box
           sx={{
             display: "flex",

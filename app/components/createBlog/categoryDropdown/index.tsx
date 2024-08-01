@@ -161,7 +161,7 @@ export default function CategoryDropdown({ field, error }: Props) {
     if (categories.length === 0 && inputRef.current.length < 2) {
       return (
         <Typography variant="body1" textAlign={"center"}>
-          Busca la categoría que mejor defina tu blog.
+          Busca la categoría que mejor defina tu publicación.
         </Typography>
       );
     }

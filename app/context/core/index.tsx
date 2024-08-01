@@ -166,16 +166,15 @@ export const CoreProvider: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const getData = async () => {
-      const { data } = await getNotifications();
+      const { data } = await getNotifications(0, 10);
 
       setNotificationsData(
         dispatch,
         data.notifications[0].data.map((e: any) => ({
           type: e.type,
-          blogName: e.titleBlog,
-          title: e.title,
+          redirectSlug: e.redirectSlug,
           body: e.body,
-          blogSlug: e.slugBlog,
+          title: e.title,
         }))
       );
       setNotificationsMetaData(dispatch, data.notifications[0].metadata[0]);

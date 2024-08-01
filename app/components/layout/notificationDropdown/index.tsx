@@ -16,9 +16,16 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import NotificationBox from "../../shared/notificationBox";
-import { useCore } from "@/app/context/core";
+import {
+  setNotificationsData,
+  setNotificationsMetaData,
+  useCore,
+} from "@/app/context/core";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Notification } from "@/app/data/notifications";
+import { getNotifications } from "@/app/client/notifications";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loader from "../../shared/loader";
 
 interface Props {
   askedForNotifications: boolean | null;
@@ -31,12 +38,42 @@ export default function NotificationDropdown({
   setAskedForNotifications,
   hasPermissions,
 }: Props) {
-  const [{ notificationsData }] = useCore();
+  const [{ notificationsData, notificationsMetaData }, dispatch] = useCore();
+  const [page, setPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isSupported = () =>
     "Notification" in window &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
+
+  const notificationTypes = {
+    comment: `/detalle-del-blog/`,
+    "like-post": `/detalle-del-blog/`,
+    response: "/detalle-del-blog/",
+    follow: `/perfil/`,
+  };
+
+  const getData = async () => {
+    console.log("getData");
+
+    try {
+      const { data } = await getNotifications(page + 1, 10);
+      setPage((prev) => prev + 1);
+
+      setNotificationsData(dispatch, [
+        ...data.notifications[0].data.map((e: any) => ({
+          type: e.type,
+          redirectSlug: e.redirectSlug,
+          body: e.body,
+          title: e.title,
+        })),
+        ...notificationsData,
+      ]);
+      setNotificationsMetaData(dispatch, data.notifications[0].metadata[0]);
+    } catch (error) {
+      console.log("Trending error", error);
+    }
+  };
 
   return (
     <Box
@@ -65,14 +102,15 @@ export default function NotificationDropdown({
               bottom: 0,
               right: 0,
               width: 320,
-              padding: 2,
-              height: "fit-content",
+              padding: .5,
               transform: "translateY(100%)",
               zIndex: 100,
+              height: 200,
             }}
+            id="scrollableDiv"
           >
             {isSupported() ? (
-              <MenuList>
+              <MenuList sx={{ height: "100%" }}>
                 {!askedForNotifications && !hasPermissions && (
                   <Box>
                     <Typography variant="body1">
@@ -98,41 +136,81 @@ export default function NotificationDropdown({
                     <Typography variant="body1">Ya casi estamos</Typography>
                   </Box>
                 )}
-                {hasPermissions &&
-                  notificationsData.map((e: Notification, i) => {
-                    return (
-                      <MenuItem
-                        key={i}
-                        component={Link}
-                        onClick={() => setIsOpen(false)}
-                        href={"/detalle-del-blog/" + e.blogSlug}
-                      >
-                        <NotificationBox data={e} />
-                      </MenuItem>
-                    );
-                  })}
-                {(askedForNotifications && hasPermissions) ||
-                  (hasPermissions && notificationsData.length === 0 && (
-                    <Typography variant="body1">
-                      No hay notificaciones
-                    </Typography>
-                  ))}
+                <InfiniteScroll
+                  scrollableTarget="scrollableDiv"
+                  style={{ height: "250px" }}
+                  dataLength={notificationsMetaData.count} //This is important field to render the next data
+                  next={getData}
+                  hasMore={Boolean(
+                    notificationsMetaData.count > notificationsData.length
+                  )}
+                  loader={<Loader />}
+                  endMessage={
+                    <Stack
+                      direction="column"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Typography variant={"body1"} sx={{ marginTop: 2 }}>
+                        No hay más notificaciones
+                      </Typography>
+                    </Stack>
+                  }
+                >
+                  {hasPermissions &&
+                    notificationsData.reverse().map((e: Notification, i) => {
+                      console.log(e);
+
+                      return (
+                        <MenuItem
+                          key={i}
+                          component={Link}
+                          onClick={() => setIsOpen(false)}
+                          href={`${notificationTypes[e.type] + e.redirectSlug}`}
+                          sx={{borderBottom:'solid 1px rgba(0,0,0, .1)'}}
+                        >
+                          <NotificationBox data={e} />
+                        </MenuItem>
+                      );
+                    })}
+                </InfiniteScroll>
               </MenuList>
             ) : (
-              <MenuList>
-                {!isSupported() &&
-                  notificationsData.map((e: Notification, i) => {
-                    return (
-                      <MenuItem
-                        key={i}
-                        component={Link}
-                        onClick={() => setIsOpen(false)}
-                        href={"/detalle-del-blog/" + e.blogSlug}
-                      >
-                        <NotificationBox data={e} />
-                      </MenuItem>
-                    );
-                  })}
+              <MenuList sx={{ height: "100%" }}>
+                <InfiniteScroll
+                  scrollableTarget="scrollableDiv"
+                  dataLength={notificationsMetaData.count} //This is important field to render the next data
+                  next={getData}
+                  hasMore={Boolean(
+                    notificationsMetaData.count > notificationsData.length
+                  )}
+                  loader={<Loader />}
+                  endMessage={
+                    <Stack
+                      direction="column"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Typography variant={"body1"} sx={{ marginTop: 2 }}>
+                        No hay más notificaciones
+                      </Typography>
+                    </Stack>
+                  }
+                >
+                  {!isSupported() &&
+                    notificationsData.reverse().map((e: Notification, i) => {
+                      return (
+                        <MenuItem
+                          key={i}
+                          component={Link}
+                          onClick={() => setIsOpen(false)}
+                          href={`${notificationTypes[e.type] + e.redirectSlug}`}
+                        >
+                          <NotificationBox data={e} />
+                        </MenuItem>
+                      );
+                    })}
+                </InfiniteScroll>
               </MenuList>
             )}
           </Paper>

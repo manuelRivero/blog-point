@@ -128,8 +128,8 @@ export default function BlogCard({
                     showTitleTooltip ? (
                       <Tooltip
                         title="Tu título abarca más caracteres de los que se
-              visualizaran en la carta de tu blog pero se visualizara de
-              forma completa en el detalle del blog"
+              visualizaran en la tarjeta de tu publicación pero se visualizara de
+              forma completa en el detalle de la misma"
                       >
                         <span>{concatDots(data.title, 60)}</span>
                       </Tooltip>
@@ -163,8 +163,8 @@ export default function BlogCard({
                     showDescriptionTooltip ? (
                       <Tooltip
                         title="Tu título abarca más caracteres de los que se
-              visualizaran en la carta de tu blog pero se visualizara de
-              forma completa en el detalle del blog"
+              visualizaran en la carta de tu publicación pero se visualizara de
+              forma completa en el detalle de la misma"
                       >
                         <span>{concatDots(data.description, 120)}</span>
                       </Tooltip>

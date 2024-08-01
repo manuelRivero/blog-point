@@ -1,9 +1,9 @@
 export interface Notification {
-    type: "like-post" | "comment" | "response";
+    type: "like-post" | "comment" | "response" | "follow";
     blogName: string;
     link?: string;
     title: string;
     body: string;
     id: string;
-    blogSlug: string;
+    redirectSlug: string;
   }

@@ -27,7 +27,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import firebaseApp from "../../../firebase";
-import { getToken, getMessaging, onMessage, deleteToken } from "firebase/messaging";
+import {
+  getToken,
+  getMessaging,
+  onMessage,
+  deleteToken,
+} from "firebase/messaging";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -78,13 +83,14 @@ export default function Header() {
     const handleMessage = (event: any) => {
       const { data } = event;
       if (data.idUserBlog === user?.data?._id) {
-        setNotification(coreDispatch, {
+        let notificationData: any = {
           type: data.type,
-          blogName: data.titleBlog,
-          title: data.title,
+          redirectSlug: data.redirectSlug,
           body: data.body,
-          blogSlug: data.slugBlog,
-        });
+          title: data.title,
+        };
+
+        setNotification(coreDispatch, notificationData);
         toast(
           <Box>
             <Typography variant="h6">{data.title} </Typography>
@@ -96,7 +102,6 @@ export default function Header() {
     const messaging = getMessaging(firebaseApp);
     // Generate Device Token for notification
 
-    
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
     });
@@ -205,9 +210,7 @@ export default function Header() {
                 </Button>
               </>
             )}
-            {!user && isMobile && (
-              <MobileAccountMenu />
-            )}
+            {!user && isMobile && <MobileAccountMenu />}
             {!isMobile && (
               <Button
                 onClick={handleCreateBlog}
@@ -215,7 +218,7 @@ export default function Header() {
                 color="secondary"
                 startIcon={<AddIcon />}
               >
-                Crear Blog
+                Crear publicación
               </Button>
             )}
           </Stack>

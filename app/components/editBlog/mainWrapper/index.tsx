@@ -45,14 +45,14 @@ import introJs from "intro.js";
 
 const tutorialData = {
   category:
-    "Selecciona la categoría de tu blog, puedes crear nuevas categorías, si no encuentras una que describa el contenido de tu blog.",
-  title: "Este es el titulo para tu blog.",
-  description: "Añade una breve descripción sobre el contenido de tu blog.",
-  image: "Puedes seleccionar una imagen para tu blog",
+    "Selecciona la categoría de tu publicación, puedes crear nuevas categorías, si no encuentras una que describa tu contenido.",
+  title: "Este es el titulo para tu publicación.",
+  description: "Añade una breve descripción sobre el contenido de tu publicación.",
+  image: "Puedes seleccionar una imagen para tu publicación",
   preview:
-    "Así lucira tu blog en los resultados de busqueda, asegurate que la información de tu blog se visualice de forma correcta",
+    "Así lucira tu publicación en los resultados de busqueda, asegurate que la información se visualice de forma correcta",
   content:
-    "En este editor de texto enriquecido es donde puedes crear el contenido de tu blog, puedes agregar imágenes y videos para hacer tu blog más atractivo",
+    "En este editor de texto enriquecido es donde puedes crear el contenido de tu publicación, puedes agregar imágenes y videos para hacerla más atractivo",
 };
 
 const schema = yup.object({
@@ -239,7 +239,7 @@ export default function EditBlog({ data }) {
         <ArrowBackIcon />
       </IconButton>
       <Typography variant="h1" component={"h1"} align="center">
-        Editar blog
+        Editar publicación blog
       </Typography>
       <Box sx={{ marginTop: "2rem" }}>
         <CustomCard>
@@ -251,7 +251,7 @@ export default function EditBlog({ data }) {
                   component={"h2"}
                   sx={{ marginBottom: "1rem" }}
                 >
-                  Información de tu blog
+                  Información de tu publicación
                 </Typography>
                 <div data-intro={tutorialData.category}>
                   <Box sx={{ marginBottom: "1rem" }}>
@@ -290,9 +290,9 @@ export default function EditBlog({ data }) {
                             field.onChange(e.target.value);
                             setCardData({ ...cardData, title: e.target.value });
                           }}
-                          label="Título del blog"
+                          label="Título"
                           outline={true}
-                          placeholder="Escribe el titulo del blog"
+                          placeholder="Escribe el titulo de la publicación"
                         />
                       )}
                     />
@@ -324,18 +324,18 @@ export default function EditBlog({ data }) {
                               description: e.target.value,
                             });
                           }}
-                          label="Descripción blog"
+                          label="Descripción"
                           outline={true}
                           multiline={true}
                           rows={5}
-                          placeholder="Escribe la descripción del blog"
+                          placeholder="Escribe la descripción de la publicación"
                         />
                       )}
                     />
                   </Box>
                 </div>
                 <div data-intro={tutorialData.image}>
-                {!toogleInputFile && <Typography sx={{mb:2, ml:1.5}}>Imagen del blog</Typography>}
+                {!toogleInputFile && <Typography sx={{mb:2, ml:1.5}}>Imagen</Typography>}
                   {toogleInputFile && <Box sx={{ marginBottom: "1rem" }}>
                     <Controller
                       name={"image"}
@@ -386,7 +386,7 @@ export default function EditBlog({ data }) {
                   component={"p"}
                   sx={{ color: "#c2c2c2", marginBottom: 2 }}
                 >
-                  Esta es la visualización de tu blog en los resultados de
+                  Esta es la visualización de tu publicación en los resultados de
                   busqueda.
                 </Typography>
                 {showTitleAlert && (
@@ -396,8 +396,8 @@ export default function EditBlog({ data }) {
                     sx={{ color: "#c2c2c2" }}
                   >
                     Pista: Tu título abarca más caracteres de los que se
-                    visualizaran en la carta de tu blog pero se visualizara de
-                    forma completa en el detalle del blog.
+                    visualizaran en la tarjeta de tu publicación pero se visualizara de
+                    forma completa en el detalle de la misma.
                   </Typography>
                 )}
                 {showDescriptionAlert && (
@@ -407,8 +407,8 @@ export default function EditBlog({ data }) {
                     sx={{ color: "#c2c2c2" }}
                   >
                     Pista: Tu descripción abarca más caracteres de los que se
-                    visualizaran en la carta de tu blog pero se visualizara de
-                    forma completa en el detalle del blog.
+                    visualizaran en la carta de tu publicación pero se visualizara de
+                    forma completa en el detalle de la misma.
                   </Typography>
                 )}
                 <div data-intro={tutorialData.preview}>
@@ -435,7 +435,7 @@ export default function EditBlog({ data }) {
                   component={"h2"}
                   sx={{ marginBottom: "1rem" }}
                 >
-                  Contenido de tu blog
+                  Contenido
                 </Typography>
                 <div data-intro={tutorialData.content}>
                   <Box>
@@ -510,7 +510,7 @@ export default function EditBlog({ data }) {
                     align="center"
                     color={"error"}
                   >
-                    Parece que la información de tu blog está incompleta, por
+                    Parece que la información de tu publicación está incompleta, por
                     favor verificala antes de continuar.
                   </Typography>
                 )}

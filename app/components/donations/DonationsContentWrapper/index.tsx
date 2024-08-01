@@ -46,9 +46,9 @@ export default function DonationsContentWrapper() {
               <li>
                 <Typography variant="body1" component={"p"}>
                   <b>Activación de Donaciones: </b>Para habilitar la opción de
-                  recibir donaciones en tu blog, simplemente debes hacer clic en
+                  recibir donaciones en tu publicación, simplemente debes hacer clic en
                   el botón "Activar Donaciones". Al hacerlo, estarás dando el
-                  primer paso para conectar tu blog con nuestra plataforma de
+                  primer paso para conectar tu publicación con nuestra plataforma de
                   pagos.
                 </Typography>
               </li>
@@ -66,7 +66,7 @@ export default function DonationsContentWrapper() {
                   <b>Conexión de Cuentas: </b>Al vincular tu cuenta de Mercado
                   Pago con tu perfil en nuestra plataforma, estarás autorizando
                   a Mercado Pago a procesar las donaciones que recibas a través
-                  de tu blog. Tus datos personales y financieros estarán siempre
+                  de tu publicación. Tus datos personales y financieros estarán siempre
                   protegidos bajo los estándares de seguridad más altos.
                 </Typography>
               </li>
@@ -141,7 +141,7 @@ export default function DonationsContentWrapper() {
             </Typography>
           </Box>
 
-          {user && (
+          {user && user.data && (
             <Stack direction={"row"} justifyContent={"center"}>
               <Link
                 target="_blank"
