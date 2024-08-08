@@ -39,6 +39,7 @@ import { useEffect } from "react";
 import { postDeviceId } from "@/app/client/auth";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import MobileAccountMenu from "../mobileAccountMenu";
+import NotificationsWarningModal from "../../shared/NotificationsWarningModal";
 
 export default function Header() {
   const isMobile = useMediaQuery("(max-width:1024px)");
@@ -69,13 +70,20 @@ export default function Header() {
   };
 
   async function requestPermission() {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      setHasPermissions(true);
-    } else if (permission === "denied") {
-      setHasPermissions(false);
-    } else if (permission === "default") {
-      setHasPermissions(null);
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        setHasPermissions(true);
+      } else if (permission === "denied") {
+        console.log("Permission denied");
+        setHasPermissions(false);
+      } else if (permission === "default") {
+        console.log("Permission default");
+        setHasPermissions(null);
+        setAskedForNotifications(null);
+      }
+    } catch (error) {
+      console.log("requestPermission error", error);
     }
   }
 
@@ -134,96 +142,110 @@ export default function Header() {
     }
   }, [user, hasPermissions]);
 
-  return (
-    <AppBar
-      position="static"
-      sx={{
-        height: 60,
-        borderBottom: "solid 1px #fff",
-        justifyContent: "center",
-      }}
-    >
-      <ToastContainer />
-      <Toolbar variant="dense" sx={{ width: "100%" }}>
-        <Stack
-          direction="row"
-          sx={{
-            width: "100%",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Box>
-              <Link href={"/"} style={{ textDecoration: "none" }}>
-                <Typography variant="h6" color={"#fff"} component="h1">
-                  Historial Medico
-                </Typography>
-              </Link>
-            </Box>
-          </Stack>
+  console.log(
+    "askedForNotifications && hasPermissions",
+    askedForNotifications,
+    hasPermissions,
+    Notification.permission
+  );
 
-          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-            {user && (
-              <>
-                <Box>
-                  <HeaderMenu />
-                </Box>
-                <Box position="relative">
-                  <NotificationDropdown
-                    hasPermissions={hasPermissions}
-                    askedForNotifications={askedForNotifications}
-                    setAskedForNotifications={() =>
-                      setAskedForNotifications(true)
-                    }
-                  />
-                </Box>
-              </>
-            )}
-            {!user && !isMobile && (
-              <>
+  return (
+    <>
+      <AppBar
+        position="static"
+        sx={{
+          height: 60,
+          borderBottom: "solid 1px #fff",
+          justifyContent: "center",
+        }}
+      >
+        <ToastContainer />
+        <Toolbar variant="dense" sx={{ width: "100%" }}>
+          <Stack
+            direction="row"
+            sx={{
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Stack direction="row" sx={{ alignItems: "center" }}>
+              <Box>
+                <Link href={"/"} style={{ textDecoration: "none" }}>
+                  <Typography variant="h6" color={"#fff"} component="h1">
+                    Historial Medico
+                  </Typography>
+                </Link>
+              </Box>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+              {user && (
+                <>
+                  <Box>
+                    <HeaderMenu />
+                  </Box>
+                  <Box position="relative">
+                    <NotificationDropdown
+                      hasPermissions={hasPermissions}
+                      askedForNotifications={askedForNotifications}
+                      setAskedForNotifications={() =>
+                        setAskedForNotifications(true)
+                      }
+                    />
+                  </Box>
+                </>
+              )}
+              {!user && !isMobile && (
+                <>
+                  <Button
+                    onClick={() => setLoginModal(coreDispatch, true)}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        borderColor: "#fff",
+                      },
+                    }}
+                  >
+                    Inicia sesión
+                  </Button>
+                  <Button
+                    onClick={() => setRegisterModal(coreDispatch, true)}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        borderColor: "#fff",
+                      },
+                    }}
+                  >
+                    Crear cuenta
+                  </Button>
+                </>
+              )}
+              {!user && isMobile && <MobileAccountMenu />}
+              {!isMobile && (
                 <Button
-                  onClick={() => setLoginModal(coreDispatch, true)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    color: "#fff",
-                    "&:hover": {
-                      borderColor: "#fff",
-                    },
-                  }}
+                  onClick={handleCreateBlog}
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<AddIcon />}
                 >
-                  Inicia sesión
+                  Crear publicación
                 </Button>
-                <Button
-                  onClick={() => setRegisterModal(coreDispatch, true)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    color: "#fff",
-                    "&:hover": {
-                      borderColor: "#fff",
-                    },
-                  }}
-                >
-                  Crear cuenta
-                </Button>
-              </>
-            )}
-            {!user && isMobile && <MobileAccountMenu />}
-            {!isMobile && (
-              <Button
-                onClick={handleCreateBlog}
-                variant="contained"
-                color="secondary"
-                startIcon={<AddIcon />}
-              >
-                Crear publicación
-              </Button>
-            )}
+              )}
+            </Stack>
           </Stack>
-        </Stack>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+      <NotificationsWarningModal
+        showModal={
+          askedForNotifications && hasPermissions === null ? true : false
+        }
+      />
+    </>
   );
 }

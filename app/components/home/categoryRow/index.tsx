@@ -1,5 +1,5 @@
 "use client";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import CustomTag from "../../shared/tag";
 import { useRouter } from "next/navigation";
@@ -12,9 +12,10 @@ interface Props {
 
 export default function CategoryRow({categories}:Props) {
   const router = useRouter();
-  var param = encodeURIComponent("categoría");
+  const isMobile = useMediaQuery("(max-width:1024px)");
 
   return (
+    !isMobile ?
     <>
     <Typography variant="h3" sx={{marginBottom:2}}>
       Descubre más categorias
@@ -60,6 +61,6 @@ export default function CategoryRow({categories}:Props) {
           </Typography>
         </Box>
       </Stack>
-    </>
+    </> : null
   );
 }

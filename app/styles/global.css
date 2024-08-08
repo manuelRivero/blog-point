@@ -16,3 +16,21 @@
   height: auto;
   width: 100%;
 }
+
+.category-swiper-wrapper .swiper-button-prev:after{
+  display: none;
+}
+.category-swiper-wrapper .swiper-button-next:after{
+  display: none;
+}
+
+.category-swiper-wrapper .swiper-button-prev{
+  left: -15px;
+}
+.category-swiper-wrapper .swiper-button-next{
+  right: -15px;
+}
+
+.category-swiper-wrapper .swiper-slide {
+  height: auto ;
+}

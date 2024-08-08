@@ -1,15 +1,14 @@
-//"use client";
-import { useEffect } from "react";
-
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import BlogCard from "./components/blogCard";
 import Hero from "./components/home/hero";
 import { getCategories } from "./client/category";
-import { getBlogs, getPopular, getRecent } from "./client/blogs";
+import { getPopular, getRecent } from "./client/blogs";
 import CategoryRow from "./components/home/categoryRow";
 import Link from "next/link";
 import { cookies, headers } from "next/headers";
 import { axiosIntance } from "./client";
+import MobileCategoryRow from "./components/home/mobileCategoryRow";
+
 
 export const revalidate = 60;
 async function getData({ page = 0 }) {
@@ -53,6 +52,9 @@ export default async function Home({ params }: any) {
       <Hero categories={data ? data.categoriesData.categories : []} />
       <Container sx={{ paddingBottom: 8, marginTop: 4 }}>
         <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <MobileCategoryRow categories={data ? data.categoriesData.categories : []} />
+          </Grid>
           <Grid item xs={12} sm={8} lg={8}>
             {data?.fromFollows.blogs[0].data.length > 0 && (
               <Box sx={{ marginBottom: 4 }}>
