@@ -3,8 +3,6 @@ import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
-import "swiper/css/navigation";
-import "swiper/css";
 import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import CustomTag from "../../shared/tag";
 import { useRouter } from "next/navigation";
@@ -12,6 +10,8 @@ import { Category } from "@/app/data/categories";
 import SearchIcon from "@mui/icons-material/Search";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Link from "next/link";
+import "swiper/css/navigation";
+import "swiper/css";
 interface Props {
   categories: Category[];
 }
@@ -20,12 +20,9 @@ export default function MobileCategoryRow({ categories }: Props) {
   const isMobile = useMediaQuery("(max-width:1024px)");
 
   const router = useRouter();
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
 
   return isMobile && categories.length > 0 ? (
     <>
-    
       <Typography variant="h3" sx={{ marginBottom: 2 }}>
         Categorías
       </Typography>
@@ -38,8 +35,9 @@ export default function MobileCategoryRow({ categories }: Props) {
         observer={true}
         observeParents={true}
         navigation={{
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
+          prevEl: ".swiper-button-next",
+          nextEl: ".swiper-button-prev",
+          enabled: true,
         }}
       >
         <SwiperSlide style={{ width: "auto" }}>
@@ -64,10 +62,10 @@ export default function MobileCategoryRow({ categories }: Props) {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div ref={nextRef} className="swiper-button-next">
+      <div className="swiper-button-next">
         <NavigateNextIcon />
       </div>
-      <div ref={prevRef} className="swiper-button-prev">
+      <div className="swiper-button-prev">
         <NavigateNextIcon sx={{ transform: "rotate(180deg)" }} />
       </div>
     </Box>
