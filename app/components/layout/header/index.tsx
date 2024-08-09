@@ -141,13 +141,6 @@ export default function Header() {
     }
   }, [user, hasPermissions]);
 
-  console.log(
-    "askedForNotifications && hasPermissions",
-    askedForNotifications,
-    hasPermissions,
-    Notification.permission
-  );
-
   return (
     <>
       <AppBar
