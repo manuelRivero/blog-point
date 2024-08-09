@@ -1,11 +1,8 @@
 "use client";
 import {
   AppBar,
-  IconButton,
   Toolbar,
   Typography,
-  MenuItem,
-  MenuList,
   Button,
   Stack,
   Box,
@@ -40,6 +37,8 @@ import { postDeviceId } from "@/app/client/auth";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import MobileAccountMenu from "../mobileAccountMenu";
 import NotificationsWarningModal from "../../shared/NotificationsWarningModal";
+import logo from "./../../../assets/images/logo.png";
+import Image from "next/image";
 
 export default function Header() {
   const isMobile = useMediaQuery("(max-width:1024px)");
@@ -172,9 +171,18 @@ export default function Header() {
             <Stack direction="row" sx={{ alignItems: "center" }}>
               <Box>
                 <Link href={"/"} style={{ textDecoration: "none" }}>
-                  <Typography variant="h6" color={"#fff"} component="h1">
-                    Historial Medico
-                  </Typography>
+                  {isMobile ? (
+                    <Stack direction="row" alignItems="center">
+                      <Image width={55} height={35} src={logo.src} alt="logo" />
+                      <Typography variant="h6" color={"#fff"} component="h1">
+                        HM
+                      </Typography>
+                    </Stack>
+                  ) : (
+                    <Typography variant="h6" color={"#fff"} component="h1">
+                      Historial Medico
+                    </Typography>
+                  )}
                 </Link>
               </Box>
             </Stack>
